@@ -31,18 +31,18 @@ ehthumbs.db
 Thumbs.db
 desktop.ini
 
-# --- File di configurazione Locale (DATABASE) ---
-# Importante: ignoriamo il file con le password personali.
-# Ogni membro del team dovrà crearlo a mano sul proprio PC.
+# --- File di configurazione Locale (DATABASE & CLOUDINARY) ---
+# Ignoriamo il file con le password personali
 src/main/resources/db.properties
+
+# --- Eccezioni ---
+# Non ignorare il file di esempio che serve alle ragazze per capire cosa scrivere
+!src/main/resources/db.properties.example
 
 # --- Log e file temporanei ---
 *.log
 hs_err_pid*
 replay_pid*
 
-# --- Maven Wrapper (se lo usate) ---
+# --- Maven Wrapper ---
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/resources/*.properties
-# Eccezione: non ignorare i properties generici, solo quello del DB
-!src/main/resources/db.properties
