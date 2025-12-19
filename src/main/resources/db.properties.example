@@ -1,0 +1,4 @@
+db.driver=com.mysql.cj.jdbc.Driver
+db.url=jdbc:mysql://localhost:3306/tickema_db
+db.user=INSERICI_QUI_IL_TUO_NOME_UTENTE
+db.password=INSERISCI_QUI_LA_TUA_PASSWORD
