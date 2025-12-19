@@ -5,4 +5,4 @@ db.password=INSERISCI_QUI_LA_TUA_PASSWORD
 
 
 #Cloudinary Config è uguale per tutti,quindi non toccarla,cancella questo commento però
-cloudinary.url=CLOUDINARY_URL=cloudinary://436333226592914:OyGNb2KV-xd0bPDLQVNAgWuW8pc@dj8a3noqe
+cloudinary.url=cloudinary://436333226592914:OyGNb2KV-xd0bPDLQVNAgWuW8pc@dj8a3noqe
