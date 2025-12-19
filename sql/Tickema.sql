@@ -4,7 +4,7 @@ USE Tickema;
 
 -- Disabilita check chiavi esterne per popolamento veloce
 SET FOREIGN_KEY_CHECKS = 0;
-
+--
 -- ============================================================
 -- 1. CREAZIONE TABELLE (Esattamente come da SDD)
 -- ============================================================
