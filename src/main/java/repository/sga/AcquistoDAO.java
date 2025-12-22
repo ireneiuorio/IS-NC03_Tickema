@@ -1,4 +1,5 @@
-package repository.SGA;
+package repository.sga;
+
 import entity.sga.Acquisto;
 
 import java.sql.*;
@@ -176,22 +177,6 @@ public class AcquistoDAO {
         return acquisto;
     }
 
-    //Calcola totale incassi per periodo
-    public double doCalcolaTotaleIncassi(LocalDateTime dataInizio, LocalDateTime dataFine) throws SQLException {
-        String query = "SELECT SUM(importoTotale) as totale FROM ACQUISTO WHERE stato = 'Completato' AND dataOraAcquisto BETWEEN ? AND ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setTimestamp(1, Timestamp.valueOf(dataInizio));
-            ps.setTimestamp(2, Timestamp.valueOf(dataFine));
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getDouble("totale");
-                }
-            }
-        }
-        return 0.0;
-    }
 
     //Conta acquisti per utente
     public int doCountAcquistiByUtente(int idAccount) throws SQLException {

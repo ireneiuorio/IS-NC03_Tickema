@@ -1,4 +1,4 @@
-package repository.SGA;
+package repository.sga;
 
 import entity.sga.Acquisto;
 import entity.sga.Pagamento;
