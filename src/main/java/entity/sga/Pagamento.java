@@ -1,4 +1,4 @@
-package entity.SGA;
+package entity.sga;
 
 import java.time.LocalDateTime;
 

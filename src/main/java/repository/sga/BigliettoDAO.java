@@ -1,6 +1,6 @@
 package repository.SGA;
 
-import entity.SGA.Biglietto;
+import entity.sga.Biglietto;
 
 import java.sql.*;
 import java.time.LocalDateTime;

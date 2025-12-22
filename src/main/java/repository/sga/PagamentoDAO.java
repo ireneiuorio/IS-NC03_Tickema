@@ -1,7 +1,7 @@
 package repository.SGA;
 
-import entity.SGA.Acquisto;
-import entity.SGA.Pagamento;
+import entity.sga.Acquisto;
+import entity.sga.Pagamento;
 
 import java.sql.*;
 import java.time.LocalDateTime;
