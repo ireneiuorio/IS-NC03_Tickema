@@ -1,6 +1,7 @@
 package entity.spg;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class Tariffa {
@@ -31,10 +32,12 @@ public class Tariffa {
     }
 
     public void setTipo(String tipo) {
-        if (tipo == null || (!tipo.equals("INTERO") && !tipo.equals("RIDOTTO"))) {
-            throw new IllegalArgumentException("Il tipo deve essere INTERO oppure RIDOTTO.");
+        if (tipo == null || tipo.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Il tipo della tariffa è un campo obbligatorio."
+            );
         }
-        this.tipo = tipo;
+        this.tipo = tipo.trim().toUpperCase();
     }
 
     public String getNome() {
@@ -62,12 +65,58 @@ public class Tariffa {
         this.percentualeSconto = percentualeSconto;
     }
 
+    public BigDecimal applicaSconto(BigDecimal prezzoBase) {
+        if (prezzoBase == null || prezzoBase.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException(
+                    "Il prezzo base deve essere maggiore o uguale a zero."
+            );
+        }
+        BigDecimal fattoreSconto = percentualeSconto.divide(
+                new BigDecimal("100"),
+                4,
+                RoundingMode.HALF_UP
+        );
+
+        BigDecimal importoSconto = prezzoBase.multiply(fattoreSconto);
+
+        // Sottrae lo sconto dal prezzo base
+        BigDecimal prezzoFinale = prezzoBase.subtract(importoSconto);
+
+        // Arrotonda a 2 decimali
+        return prezzoFinale.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal calcolaImportoSconto(BigDecimal prezzoBase) {
+        if (prezzoBase == null || prezzoBase.compareTo(BigDecimal.ZERO) < 0) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal prezzoScontato = applicaSconto(prezzoBase);
+        return prezzoBase.subtract(prezzoScontato).setScale(2, RoundingMode.HALF_UP);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tariffa tariffa = (Tariffa) o;
         return idTariffa == tariffa.idTariffa && Objects.equals(tipo, tariffa.tipo) && Objects.equals(nome, tariffa.nome) && Objects.equals(percentualeSconto, tariffa.percentualeSconto);
+    }
+
+    public boolean haSconto() {
+        return percentualeSconto.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    public boolean isTariffaIntera() {
+        return percentualeSconto.compareTo(BigDecimal.ZERO) == 0;
+    }
+
+    public String getDescrizione() {
+        if (isTariffaIntera()) {
+            return String.format("%s - %s (tariffa intera)", tipo, nome);
+        }
+        return String.format("%s - %s (%.0f%% di sconto)",
+                tipo, nome, percentualeSconto);
     }
 
     @Override

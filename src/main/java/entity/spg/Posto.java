@@ -6,11 +6,14 @@ public class Posto {
     private int idPosto;
     private int fila;
     private int numeroPosto;
-    private int idSala;
-    private int idProgrammazione;
     private String stato;
 
-    public Posto() { }
+    private int idSala;
+    private int idProgrammazione;
+
+    public Posto() {
+        this.stato = "DISPONIBILE";
+    }
 
     public Posto(int idPosto, int fila, int numeroPosto, int idSala, int idProgrammazione, String stato) {
         this.idPosto = idPosto;
@@ -72,7 +75,31 @@ public class Posto {
     }
 
     public void setStato(String stato) {
-        this.stato = stato;
+        if (stato == null || stato.trim().isEmpty()) {
+            throw new IllegalArgumentException("Lo stato del posto è un campo obbligatorio.");
+        }
+
+        String statoUpper = stato.toUpperCase();
+        if (!statoUpper.equals("DISPONIBILE") &&
+                !statoUpper.equals("OCCUPATO")) {
+            throw new IllegalArgumentException(
+                    "Stato non valido. Stati ammessi: DISPONIBILE, OCCUPATO, PRENOTATO"
+            );
+        }
+
+        this.stato = statoUpper;
+    }
+
+    public boolean isDisponibile() {
+        return this.stato.equals("DISPONIBILE");
+    }
+
+    public void occupa() {
+        this.stato = "OCCUPATO";
+    }
+
+    public void libera() {
+        this.stato = "DISPONIBILE";
     }
 
     @Override

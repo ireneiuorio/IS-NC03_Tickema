@@ -1,5 +1,7 @@
 package entity.spg;
 
+import entity.sgc.Film;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -9,15 +11,21 @@ public class Programmazione {
     private LocalDate dataProgrammazione;
     private String tipo;
     private BigDecimal prezzoBase;
-    private String stato; // DISPONIBILE, ANNULLATA, IN_CORSO, CONCLUSA
+    private String stato; // DISPONIBILE, ANNULLATA, IN CORSO, CONCLUSA
 
-    // Foreign keys
     private int idFilm;
     private int idSala;
     private int idSlotOrario;
     private int idTariffa;
 
-    public Programmazione() { }
+    private Tariffa tariffa;
+    private SlotOrari slotOrario;
+    private Sala sala;
+    private Film film;
+
+    public Programmazione() {
+        this.stato = "DISPONIBILE";
+    }
 
     public Programmazione(int idProgrammazione, LocalDate dataProgrammazione, String tipo, BigDecimal prezzoBase, String stato, int idFilm, int idSala, int idSlotOrario, int idTariffa) {
         this.idProgrammazione = idProgrammazione;
@@ -25,6 +33,7 @@ public class Programmazione {
         this.setTipo(tipo);
         this.setPrezzoBase(prezzoBase);
         this.setStato(stato);
+
         this.idFilm = idFilm;
         this.idSala = idSala;
         this.idSlotOrario = idSlotOrario;
@@ -55,7 +64,7 @@ public class Programmazione {
     }
 
     public void setTipo(String tipo) {
-        this.tipo = tipo;
+        this.tipo = tipo.toUpperCase();
     }
 
     public BigDecimal getPrezzoBase() {
@@ -77,7 +86,7 @@ public class Programmazione {
         if (stato == null || stato.trim().isEmpty()) {
             throw new IllegalArgumentException("Lo stato della programmazione è un campo obbligatorio.");
         }
-        this.stato = stato;
+        this.stato = stato.toUpperCase();
     }
 
     public int getIdFilm() {
@@ -112,6 +121,66 @@ public class Programmazione {
         this.idTariffa = idTariffa;
     }
 
+    public boolean isDisponibile() {
+        return this.stato.equals("DISPONIBILE");
+    }
+
+    public boolean isAnnullata() {
+        return this.stato.equals("ANNULLATA");
+    }
+
+    public boolean isInCorso() {
+        return this.stato.equals("IN CORSO");
+    }
+
+    public boolean isConclusa() {
+        return this.stato.equals("CONCLUSA");
+    }
+
+    public void annulla() {
+        this.stato = "ANNULLATA";
+    }
+
+    public BigDecimal calcolaPrezzoFinale() {
+        if (tariffa != null && tariffa.haSconto()) {
+            return tariffa.applicaSconto(prezzoBase);
+        }
+        return prezzoBase;
+    }
+
+    public boolean haTariffaRidotta() {
+        return tariffa != null && tariffa.haSconto();
+    }
+
+    public String getDescrizione() {
+        StringBuilder sb = new StringBuilder();
+
+        if (film != null) {
+            sb.append(film.getTitolo());
+        } else {
+            sb.append("Film ID: ").append(idFilm);
+        }
+
+        sb.append(" - ").append(dataProgrammazione);
+
+        if (slotOrario != null) {
+            sb.append(" ore ").append(slotOrario.getOraInizio());
+        }
+
+        if (sala != null) {
+            sb.append(" (").append(sala.getNome()).append(")");
+        }
+
+        sb.append(" - ").append(tipo);
+        sb.append(" - €").append(prezzoBase);
+
+        if (haTariffaRidotta()) {
+            sb.append(" (").append(tariffa.getNome()).append(")");
+        }
+
+        return sb.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,5 +207,49 @@ public class Programmazione {
                 ", idSlotOrario=" + idSlotOrario +
                 ", idTariffa=" + idTariffa +
                 '}';
+    }
+
+    public Film getFilm() {
+        return film;
+    }
+
+    public void setFilm(Film film) {
+        this.film = film;
+        if (film != null) {
+            this.idFilm = film.getIdFilm();
+        }
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+        if (sala != null) {
+            this.idSala = sala.getIdSala();
+        }
+    }
+
+    public SlotOrari getSlotOrario() {
+        return slotOrario;
+    }
+
+    public void setSlotOrario(SlotOrari slotOrario) {
+        this.slotOrario = slotOrario;
+        if (slotOrario != null) {
+            this.idSlotOrario = slotOrario.getIdSlot();
+        }
+    }
+
+    public Tariffa getTariffa() {
+        return tariffa;
+    }
+
+    public void setTariffa(Tariffa tariffa) {
+        this.tariffa = tariffa;
+        if (tariffa != null) {
+            this.idTariffa = tariffa.getIdTariffa();
+        }
     }
 }
