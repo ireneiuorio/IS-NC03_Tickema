@@ -1,10 +1,11 @@
-package it.unisa.tickerma.controller;
+package it.unisa.tickema.controller;
 
 import it.unisa.tickema.model.DBManager;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.sql.Connection;
 

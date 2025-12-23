@@ -1,4 +1,4 @@
-package it.unisa.tickerma.controller;
+package it.unisa.tickema.controller;
 
 import com.cloudinary.utils.ObjectUtils;
 import it.unisa.tickema.model.CloudinaryConfig;
