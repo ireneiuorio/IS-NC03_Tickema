@@ -7,34 +7,15 @@ import entity.sgp.Posto;
 import entity.sgp.Programmazione;
 import entity.sgu.Utente;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * FACADE PATTERN per il processo di ACQUISTO BIGLIETTI
- *
- * Responsabilità:
- * - Coordinare il flusso completo di acquisto tra più sottosistemi
- * - Nascondere la complessità dell'interazione tra Service multipli
- * - Gestire la transazionalità dell'operazione
- * - Fornire un'interfaccia semplificata al Controller
- *
- * Sottosistemi coordinati:
- * 1. ProgrammazioneService - verifica programmazione valida
- * 2. PostoService - gestione e assegnazione posti
- * 3. TariffaService - calcolo prezzi con sconti
- * 4. AcquistoService - creazione acquisto
- * 5. PagamentoService - elaborazione pagamento
- * 6. BigliettoService - generazione biglietti digitali
- * 7. SaldoService - gestione saldo utente
- */
+//FACADE PATTERN per il processo di ACQUISTO BIGLIETTI
+
 public class AcquistoFacade {
 
-    // Dipendenze verso i Service Layer
     private Connection connection;
     private ProgrammazioneService programmazioneService;
     private PostoService postoService;
@@ -44,11 +25,6 @@ public class AcquistoFacade {
     private BigliettoService bigliettoService;
     private SaldoService saldoService;
 
-    /**
-     * COSTRUTTORE
-     * Inizializza tutti i service necessari con la stessa connessione
-     * (importante per la gestione transazionale)
-     */
     public AcquistoFacade(Connection connection) {
         this.connection = connection;
         this.programmazioneService = new ProgrammazioneService(connection);
@@ -60,54 +36,21 @@ public class AcquistoFacade {
         this.saldoService = new SaldoService(connection);
     }
 
-    // ========================================================
-    // METODO PRINCIPALE: PROCESSO COMPLETO DI ACQUISTO
-    // ========================================================
+    //ELABORA ACQUISTO COMPLETO
 
-    /**
-     * ELABORA ACQUISTO COMPLETO
-     *
-     * Questo è il metodo PRINCIPALE che il Controller chiama.
-     * Coordina l'intero flusso di acquisto in modo transazionale.
-     *
-     * Flusso:
-     * 1. Verifica programmazione disponibile
-     * 2. Verifica disponibilità posti
-     * 3. Assegna posti automaticamente (con logica intelligente)
-     * 4. Calcola importo totale con tariffe
-     * 5. Crea record Acquisto
-     * 6. Elabora pagamento (carta/saldo/misto)
-     * 7. Genera biglietti digitali con QR Code
-     * 8. Aggiorna stato posti a "Occupato"
-     *
-     * @param utente Utente che effettua l'acquisto
-     * @param idProgrammazione ID della programmazione selezionata
-     * @param numeroBiglietti Numero di biglietti da acquistare
-     * @param metodoPagamento "Carta", "Saldo", o "Misto"
-     * @param importoCarta Importo pagato con carta (0 se solo saldo)
-     * @param importoSaldo Importo pagato con saldo (0 se solo carta)
-     * @return RisultatoAcquisto con tutti i dettagli
-     * @throws SQLException Se si verifica un errore di database
-     * @throws IllegalStateException Se l'acquisto non può essere completato
-     */
     public RisultatoAcquisto elaboraAcquisto(
             Utente utente,
             int idProgrammazione,
             int numeroBiglietti,
-            String metodoPagamento,
-            BigDecimal importoCarta,
-            BigDecimal importoSaldo
+            boolean usaSaldo
     ) throws SQLException, IllegalStateException {
 
         RisultatoAcquisto risultato = new RisultatoAcquisto();
 
         try {
-            // Disabilita auto-commit per gestione transazionale
             connection.setAutoCommit(false);
 
-            // ====================================================
             // STEP 1: VERIFICA PROGRAMMAZIONE
-            // ====================================================
             Programmazione programmazione = programmazioneService
                     .getProgrammazioneById(idProgrammazione);
 
@@ -126,9 +69,7 @@ public class AcquistoFacade {
 
             risultato.setProgrammazione(programmazione);
 
-            // ====================================================
             // STEP 2: VERIFICA DISPONIBILITÀ POSTI
-            // ====================================================
             List<Posto> postiDisponibili = postoService
                     .verificaDisponibilitaPosti(idProgrammazione, numeroBiglietti);
 
@@ -139,9 +80,7 @@ public class AcquistoFacade {
                 );
             }
 
-            // ====================================================
             // STEP 3: ASSEGNA POSTI AUTOMATICAMENTE
-            // ====================================================
             RisultatoAssegnazione assegnazione = postoService
                     .assegnaPostiAutomatico(postiDisponibili, numeroBiglietti);
 
@@ -150,11 +89,9 @@ public class AcquistoFacade {
             risultato.setVicinanzaGarantita(assegnazione.isVicinanzaGarantita());
             risultato.setMessaggioPosti(assegnazione.getMessaggio());
 
-            // ====================================================
             // STEP 4: CALCOLA IMPORTO TOTALE
-            // ====================================================
-            BigDecimal prezzoBase = programmazione.getPrezzoBase();
-            BigDecimal importoTotale = calcolaImportoConTariffa(
+            double prezzoBase = programmazione.getPrezzoBase();
+            double importoTotale = calcolaImportoConTariffa(
                     prezzoBase,
                     numeroBiglietti,
                     programmazione.getTariffa() != null ?
@@ -163,34 +100,26 @@ public class AcquistoFacade {
 
             risultato.setImportoTotale(importoTotale);
 
-            // ====================================================
             // STEP 5: CREA ACQUISTO
-            // ====================================================
             Acquisto acquisto = acquistoService.creaAcquisto(
                     utente,
                     numeroBiglietti,
-                    importoTotale.doubleValue()
+                    importoTotale
             );
 
             risultato.setAcquisto(acquisto);
 
-            // ====================================================
-            // STEP 6: ELABORA PAGAMENTO
-            // ====================================================
+            // STEP 6: ELABORA PAGAMENTO (automaticamente misto se necessario)
             List<Pagamento> pagamenti = elaboraPagamento(
                     acquisto.getIdAcquisto(),
                     utente.getIdAccount(),
-                    metodoPagamento,
                     importoTotale,
-                    importoCarta,
-                    importoSaldo
+                    usaSaldo
             );
 
             risultato.setPagamenti(pagamenti);
 
-            // ====================================================
             // STEP 7: GENERA BIGLIETTI DIGITALI
-            // ====================================================
             List<Biglietto> biglietti = new ArrayList<>();
 
             for (Posto posto : postiAssegnati) {
@@ -198,21 +127,17 @@ public class AcquistoFacade {
                         acquisto.getIdAcquisto(),
                         programmazione.getIdProgrammazione(),
                         posto.getIdPosto(),
-                        importoTotale.divide(BigDecimal.valueOf(numeroBiglietti))
+                        importoTotale / numeroBiglietti
                 );
                 biglietti.add(biglietto);
             }
 
             risultato.setBiglietti(biglietti);
 
-            // ====================================================
             // STEP 8: AGGIORNA STATO POSTI
-            // ====================================================
             postoService.assegnaPosti(postiAssegnati, acquisto.getIdAcquisto());
 
-            // ====================================================
             // COMMIT TRANSAZIONE
-            // ====================================================
             connection.commit();
             risultato.setSuccesso(true);
             risultato.setMessaggioFinale(
@@ -221,7 +146,6 @@ public class AcquistoFacade {
             );
 
         } catch (Exception e) {
-            // ROLLBACK in caso di errore
             try {
                 connection.rollback();
             } catch (SQLException rollbackEx) {
@@ -235,7 +159,6 @@ public class AcquistoFacade {
             throw new IllegalStateException("Acquisto fallito: " + e.getMessage(), e);
 
         } finally {
-            // Ripristina auto-commit
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException e) {
@@ -246,66 +169,49 @@ public class AcquistoFacade {
         return risultato;
     }
 
-    // ========================================================
-    // METODI PRIVATI DI SUPPORTO
-    // ========================================================
-
-    /**
-     * CALCOLA IMPORTO CON TARIFFA APPLICATA
-     */
-    private BigDecimal calcolaImportoConTariffa(
-            BigDecimal prezzoBase,
+    //Calcola importo con tariffa applicata
+    private double calcolaImportoConTariffa(
+            double prezzoBase,
             int numeroBiglietti,
             int idTariffa
     ) throws SQLException {
 
-        BigDecimal prezzoUnitario = prezzoBase;
+        double prezzoUnitario = prezzoBase;
 
-        // Applica sconto se c'è una tariffa
         if (idTariffa > 0) {
             prezzoUnitario = tariffaService.applicaSconto(prezzoBase, idTariffa);
         }
 
-        return prezzoUnitario.multiply(BigDecimal.valueOf(numeroBiglietti));
+        return prezzoUnitario * numeroBiglietti;
     }
 
-    /**
-     * ELABORA PAGAMENTO (gestisce Carta, Saldo, Misto)
-     *
-     * Delega al PagamentoService la logica specifica del metodo scelto
-     */
+    //ELABORA PAGAMENTO - LOGICA AUTOMATICA
+
+     //Se usaSaldo = true:
+     //Verifica saldo disponibile
+     //Se saldo >= importo → paga tutto con saldo
+    //Se saldo < importo → usa tutto il saldo + integra con carta (AUTOMATICO)
+    //Se usaSaldo = false:
+    // Paga tutto con carta
     private List<Pagamento> elaboraPagamento(
             int idAcquisto,
             int idAccount,
-            String metodoPagamento,
-            BigDecimal importoTotale,
-            BigDecimal importoCarta,
-            BigDecimal importoSaldo
+            double importoTotale,
+            boolean usaSaldo
     ) throws SQLException {
 
         List<Pagamento> pagamenti = new ArrayList<>();
 
-        switch (metodoPagamento.toLowerCase()) {
-            case "carta":
-                // Solo carta
-                Pagamento pagamentoCarta = pagamentoService.effettuaPagamento(
-                        idAcquisto,
-                        "Carta",
-                        importoTotale,
-                        "Saldo"
-                );
-                pagamenti.add(pagamentoCarta);
-                break;
+        if (usaSaldo) {
+            // Recupera saldo disponibile dell'utente
+            double saldoDisponibile = saldoService.getSaldoDisponibile(idAccount);
 
-            case "saldo":
-                // Solo saldo
-                boolean saldoSufficiente = saldoService.utilizzaSaldo(
-                        idAccount,
-                        importoTotale
-                );
+            if (saldoDisponibile >= importoTotale) {
+                // CASO 1: Saldo sufficiente - paga tutto con saldo
+                boolean saldoUtilizzato = saldoService.utilizzaSaldo(idAccount, importoTotale);
 
-                if (!saldoSufficiente) {
-                    throw new IllegalStateException("Saldo insufficiente");
+                if (!saldoUtilizzato) {
+                    throw new IllegalStateException("Impossibile utilizzare il saldo");
                 }
 
                 Pagamento pagamentoSaldo = pagamentoService.effettuaPagamento(
@@ -315,69 +221,68 @@ public class AcquistoFacade {
                         "Saldo"
                 );
                 pagamenti.add(pagamentoSaldo);
-                break;
 
-            case "misto":
-                // Pagamento misto: usa tutto il saldo + differenza con carta
+            } else if (saldoDisponibile > 0) {
+                // CASO 2: Saldo insufficiente - PAGAMENTO MISTO AUTOMATICO
 
-                // 1. Usa saldo disponibile
-                if (importoSaldo.compareTo(BigDecimal.ZERO) > 0) {
-                    boolean saldoUtilizzato = saldoService.utilizzaSaldo(
-                            idAccount,
-                            importoSaldo
-                    );
+                // 2.1 Usa tutto il saldo disponibile
+                boolean saldoUtilizzato = saldoService.utilizzaSaldo(idAccount, saldoDisponibile);
 
-                    if (!saldoUtilizzato) {
-                        throw new IllegalStateException(
-                                "Impossibile utilizzare il saldo"
-                        );
-                    }
-
-                    Pagamento acconto = pagamentoService.effettuaPagamento(
-                            idAcquisto,
-                            "Saldo",
-                            importoSaldo,
-                            "Acconto"
-                    );
-                    pagamenti.add(acconto);
+                if (!saldoUtilizzato) {
+                    throw new IllegalStateException("Impossibile utilizzare il saldo");
                 }
 
-                // 2. Paga differenza con carta
-                if (importoCarta.compareTo(BigDecimal.ZERO) > 0) {
-                    Pagamento restoCarta = pagamentoService.effettuaPagamento(
-                            idAcquisto,
-                            "Carta",
-                            importoCarta,
-                            "Saldo"
-                    );
-                    pagamenti.add(restoCarta);
-                }
-                break;
-
-            default:
-                throw new IllegalArgumentException(
-                        "Metodo di pagamento non valido: " + metodoPagamento
+                Pagamento acconto = pagamentoService.effettuaPagamento(
+                        idAcquisto,
+                        "Saldo",
+                        saldoDisponibile,
+                        "Acconto"
                 );
+                pagamenti.add(acconto);
+
+                // 2.2 Calcola differenza e paga con carta
+                double differenza = importoTotale - saldoDisponibile;
+
+                Pagamento restoCarta = pagamentoService.effettuaPagamento(
+                        idAcquisto,
+                        "Carta",
+                        differenza,
+                        "Saldo"
+                );
+                pagamenti.add(restoCarta);
+
+            } else {
+                // CASO 3: Saldo zero o negativo - paga tutto con carta
+                Pagamento pagamentoCarta = pagamentoService.effettuaPagamento(
+                        idAcquisto,
+                        "Carta",
+                        importoTotale,
+                        "Saldo"
+                );
+                pagamenti.add(pagamentoCarta);
+            }
+
+        } else {
+            // Utente non vuole usare il saldo - paga tutto con carta
+            Pagamento pagamentoCarta = pagamentoService.effettuaPagamento(
+                    idAcquisto,
+                    "Carta",
+                    importoTotale,
+                    "Saldo"
+            );
+            pagamenti.add(pagamentoCarta);
         }
 
         return pagamenti;
     }
 
-    // ========================================================
-    // METODI PUBBLICI AGGIUNTIVI
-    // ========================================================
-
-    /**
-     * VERIFICA SE UN ACQUISTO È POSSIBILE
-     * (utile per validazione pre-checkout)
-     */
+    //VERIFICA SE UN ACQUISTO È POSSIBILE
     public boolean verificaAcquistoPossibile(
             int idProgrammazione,
             int numeroBiglietti
     ) throws SQLException {
 
         try {
-            // Verifica programmazione
             Programmazione prog = programmazioneService
                     .getProgrammazioneById(idProgrammazione);
 
@@ -385,7 +290,6 @@ public class AcquistoFacade {
                 return false;
             }
 
-            // Verifica posti disponibili
             int postiDisponibili = postoService
                     .contaPostiDisponibili(idProgrammazione);
 
@@ -396,11 +300,8 @@ public class AcquistoFacade {
         }
     }
 
-    /**
-     * CALCOLA ANTEPRIMA PREZZO
-     * (mostra all'utente il prezzo finale prima del checkout)
-     */
-    public BigDecimal calcolaAnteprimaPrezzo(
+    //CALCOLA ANTEPRIMA PREZZO
+    public double calcolaAnteprimaPrezzo(
             int idProgrammazione,
             int numeroBiglietti
     ) throws SQLException {
@@ -420,17 +321,7 @@ public class AcquistoFacade {
     }
 }
 
-
-// ========================================================
-// CLASSE DI RISULTATO
-// ========================================================
-
-/**
- * RISULTATO ACQUISTO
- *
- * Contiene tutti i dettagli dell'operazione di acquisto completata
- * Viene restituito al Controller per mostrare all'utente il riepilogo
- */
+// RISULTATO ACQUISTO
 class RisultatoAcquisto {
     private boolean successo;
     private String messaggioFinale;
@@ -442,7 +333,7 @@ class RisultatoAcquisto {
     private List<Pagamento> pagamenti;
     private List<Biglietto> biglietti;
 
-    private BigDecimal importoTotale;
+    private double importoTotale;
     private boolean vicinanzaGarantita;
 
     public RisultatoAcquisto() {
@@ -453,93 +344,36 @@ class RisultatoAcquisto {
         this.vicinanzaGarantita = false;
     }
 
-    // ========================================================
-    // GETTERS E SETTERS
-    // ========================================================
+    public boolean isSuccesso() { return successo; }
+    public void setSuccesso(boolean successo) { this.successo = successo; }
 
-    public boolean isSuccesso() {
-        return successo;
-    }
+    public String getMessaggioFinale() { return messaggioFinale; }
+    public void setMessaggioFinale(String messaggioFinale) { this.messaggioFinale = messaggioFinale; }
 
-    public void setSuccesso(boolean successo) {
-        this.successo = successo;
-    }
+    public String getMessaggioPosti() { return messaggioPosti; }
+    public void setMessaggioPosti(String messaggioPosti) { this.messaggioPosti = messaggioPosti; }
 
-    public String getMessaggioFinale() {
-        return messaggioFinale;
-    }
+    public Programmazione getProgrammazione() { return programmazione; }
+    public void setProgrammazione(Programmazione programmazione) { this.programmazione = programmazione; }
 
-    public void setMessaggioFinale(String messaggioFinale) {
-        this.messaggioFinale = messaggioFinale;
-    }
+    public Acquisto getAcquisto() { return acquisto; }
+    public void setAcquisto(Acquisto acquisto) { this.acquisto = acquisto; }
 
-    public String getMessaggioPosti() {
-        return messaggioPosti;
-    }
+    public List<Posto> getPostiAssegnati() { return postiAssegnati; }
+    public void setPostiAssegnati(List<Posto> postiAssegnati) { this.postiAssegnati = postiAssegnati; }
 
-    public void setMessaggioPosti(String messaggioPosti) {
-        this.messaggioPosti = messaggioPosti;
-    }
+    public List<Pagamento> getPagamenti() { return pagamenti; }
+    public void setPagamenti(List<Pagamento> pagamenti) { this.pagamenti = pagamenti; }
 
-    public Programmazione getProgrammazione() {
-        return programmazione;
-    }
+    public List<Biglietto> getBiglietti() { return biglietti; }
+    public void setBiglietti(List<Biglietto> biglietti) { this.biglietti = biglietti; }
 
-    public void setProgrammazione(Programmazione programmazione) {
-        this.programmazione = programmazione;
-    }
+    public double getImportoTotale() { return importoTotale; }
+    public void setImportoTotale(double importoTotale) { this.importoTotale = importoTotale; }
 
-    public Acquisto getAcquisto() {
-        return acquisto;
-    }
+    public boolean isVicinanzaGarantita() { return vicinanzaGarantita; }
+    public void setVicinanzaGarantita(boolean vicinanzaGarantita) { this.vicinanzaGarantita = vicinanzaGarantita; }
 
-    public void setAcquisto(Acquisto acquisto) {
-        this.acquisto = acquisto;
-    }
-
-    public List<Posto> getPostiAssegnati() {
-        return postiAssegnati;
-    }
-
-    public void setPostiAssegnati(List<Posto> postiAssegnati) {
-        this.postiAssegnati = postiAssegnati;
-    }
-
-    public List<Pagamento> getPagamenti() {
-        return pagamenti;
-    }
-
-    public void setPagamenti(List<Pagamento> pagamenti) {
-        this.pagamenti = pagamenti;
-    }
-
-    public List<Biglietto> getBiglietti() {
-        return biglietti;
-    }
-
-    public void setBiglietti(List<Biglietto> biglietti) {
-        this.biglietti = biglietti;
-    }
-
-    public BigDecimal getImportoTotale() {
-        return importoTotale;
-    }
-
-    public void setImportoTotale(BigDecimal importoTotale) {
-        this.importoTotale = importoTotale;
-    }
-
-    public boolean isVicinanzaGarantita() {
-        return vicinanzaGarantita;
-    }
-
-    public void setVicinanzaGarantita(boolean vicinanzaGarantita) {
-        this.vicinanzaGarantita = vicinanzaGarantita;
-    }
-
-    /**
-     * Genera un riepilogo testuale dell'acquisto
-     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

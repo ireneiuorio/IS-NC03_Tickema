@@ -319,4 +319,48 @@ public class BigliettoDAO {
         }
         return 0;
     }
+
+
+
+
+    //RECUPERA BIGLIETTI DI UN UTENTE (attraverso la relazione Biglietto -> Acquisto -> Utente)
+    public List<Biglietto> doRetrieveByUtente(int idAccount) throws SQLException {
+        List<Biglietto> biglietti = new ArrayList<>();
+        String query = """
+        SELECT b.*
+        FROM BIGLIETTO b
+        JOIN ACQUISTO a ON b.idAcquisto = a.idAcquisto
+        WHERE a.idAccount = ?
+        ORDER BY b.idBiglietto DESC
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, idAccount);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    biglietti.add(extractBigliettoFromResultSet(rs));
+                }
+            }
+        }
+        return biglietti;
+    }
+
+    //RECUPERA BIGLIETTI VALIDATI DA UN PERSONALE
+    public List<Biglietto> doRetrieveByPersonale(int idPersonale) throws SQLException {
+        List<Biglietto> biglietti = new ArrayList<>();
+        String query = "SELECT * FROM BIGLIETTO WHERE idPersonaleValidazione = ? ORDER BY dataUtilizzo DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, idPersonale);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    biglietti.add(extractBigliettoFromResultSet(rs));
+                }
+            }
+        }
+        return biglietti;
+    }
+
 }

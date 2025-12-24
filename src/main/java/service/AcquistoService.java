@@ -2,7 +2,7 @@ package service;
 
 import entity.sga.Acquisto;
 import entity.sgu.Utente;
-import repository.SGA.AcquistoDAO;
+import repository.sga.AcquistoDAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
