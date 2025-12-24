@@ -9,11 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * SERVICE per la gestione dei Pagamenti
- *
- * NOTA: Pagamenti SIMULATI - restituiscono sempre successo
- */
+//SERVICE per la gestione dei Pagamenti
 public class PagamentoService {
 
     private Connection connection;

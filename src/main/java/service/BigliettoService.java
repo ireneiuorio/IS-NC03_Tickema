@@ -15,15 +15,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * SERVICE per la gestione della logica business dei Biglietti
- *
- * Stati del biglietto:
- * - Emesso: Biglietto acquistato e valido per l'ingresso
- * - Validato: Biglietto scansionato all'ingresso e non più riutilizzabile
- * - Scaduto: Biglietto non utilizzato per una programmazione passata
- * - Rimborsato: Biglietto annullato con accredito al saldo
- */
+//SERVICE per la gestione della logica business dei Biglietti
+
 public class BigliettoService {
 
     private Connection connection;
@@ -158,14 +151,8 @@ public class BigliettoService {
     }
 
 
-    /**
-     * RIMBORSA BIGLIETTO
-     *
-     * Chiamato quando una programmazione viene annullata.
-     * Cambia lo stato da qualsiasi stato a "Rimborsato".
-     *
-     * NOTA: Il rimborso (accredito saldo) viene gestito da SaldoService
-     */
+    //RIMBORSA BIGLIETTO
+
     public boolean rimborsaBiglietto(int idBiglietto) throws SQLException {
         Biglietto biglietto = getBigliettoById(idBiglietto);
 
@@ -179,12 +166,8 @@ public class BigliettoService {
         return bigliettoDAO.doUpdateStato(idBiglietto, "Rimborsato");
     }
 
-    /**
-     * SEGNA BIGLIETTO COME SCADUTO
-     *
-     * Chiamato automaticamente quando una programmazione passa allo stato "Conclusa"
-     * per tutti i biglietti "Emesso" non validati.
-     */
+    //SEGNA BIGLIETTO COME SCADUTO
+
     public boolean scadiBiglietto(int idBiglietto) throws SQLException {
         Biglietto biglietto = getBigliettoById(idBiglietto);
 
@@ -199,11 +182,7 @@ public class BigliettoService {
         return bigliettoDAO.doUpdateStato(idBiglietto, "Scaduto");
     }
 
-    /**
-     * SCADI TUTTI I BIGLIETTI DI UNA PROGRAMMAZIONE
-     *
-     * Chiamato quando una programmazione passa a "Conclusa"
-     */
+    //SCADI TUTTI I BIGLIETTI DI UNA PROGRAMMAZIONE
     public int scadiBigliettiProgrammazione(int idProgrammazione) throws SQLException {
         List<Biglietto> biglietti = bigliettoDAO.doRetrieveByProgrammazione(idProgrammazione);
 
@@ -224,13 +203,7 @@ public class BigliettoService {
         return scaduti;
     }
 
-    /**
-     * VERIFICA SE UN BIGLIETTO È UTILIZZABILE
-     *
-     * Un biglietto è utilizzabile se:
-     * - Stato = "Emesso"
-     * - Data programmazione >= oggi
-     */
+    //VERIFICA SE UN BIGLIETTO È UTILIZZABILE
     public boolean isBigliettoUtilizzabile(int idBiglietto) throws SQLException {
         Biglietto biglietto = getBigliettoById(idBiglietto);
 
@@ -246,30 +219,14 @@ public class BigliettoService {
         return !dataProiezione.isBefore(oggi);
     }
 
-    // ========================================================
-    // STATISTICHE
-    // ========================================================
 
-    /**
-     * CONTA BIGLIETTI PER STATO
-     */
-    public int contaBigliettiPerStato(String stato) throws SQLException {
-        validaStato(stato);
-        List<Biglietto> biglietti = bigliettoDAO.doRetrieveByStato(stato);
-        return biglietti.size();
-    }
 
-    /**
-     * RECUPERA BIGLIETTI PER PROGRAMMAZIONE
-     */
+    //RECUPERA BIGLIETTI PER PROGRAMMAZIONE
     public List<Biglietto> getBigliettiPerProgrammazione(int idProgrammazione)
             throws SQLException {
         return bigliettoDAO.doRetrieveByProgrammazione(idProgrammazione);
     }
 
-    // ========================================================
-    // VALIDAZIONI PRIVATE
-    // ========================================================
 
     private void validaStato(String stato) {
         List<String> statiValidi = List.of("Emesso", "Validato", "Scaduto", "Rimborsato");
