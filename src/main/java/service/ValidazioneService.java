@@ -176,21 +176,7 @@ public class ValidazioneService {
         return validatiOggi.size();
     }
 
-    /**
-     * RECUPERA TUTTI I BIGLIETTI VALIDATI (statistiche)
-     */
-    public List<Biglietto> getTuttiValidati(LocalDate data) throws SQLException {
-        List<Biglietto> tutti = bigliettoDAO.doRetrieveByStato("Validato");
 
-        if (data != null) {
-            return tutti.stream()
-                    .filter(b -> b.getDataUtilizzo() != null &&
-                            b.getDataUtilizzo().toLocalDate().equals(data))
-                    .toList();
-        }
-
-        return tutti;
-    }
 }
 
 

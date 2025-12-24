@@ -1,5 +1,7 @@
 package entity.sga;
 
+import entity.sgu.Utente;
+
 import java.time.LocalDateTime;
 
 public class Acquisto {
