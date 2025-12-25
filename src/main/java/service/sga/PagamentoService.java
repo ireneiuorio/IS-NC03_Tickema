@@ -2,6 +2,8 @@ package service.sga;
 
 import entity.sga.Acquisto;
 import entity.sga.Pagamento;
+import exception.pagamento.PagamentoNonValidoException;
+import exception.pagamento.SalvataggioPagamentoException;
 import repository.sga.PagamentoDAO;
 
 import java.sql.Connection;
@@ -9,7 +11,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//SERVICE per la gestione dei Pagamenti
 public class PagamentoService {
 
     private Connection connection;
@@ -28,11 +29,11 @@ public class PagamentoService {
             String metodoPagamento,
             double importo,
             String tipo
-    ) throws SQLException {
+    ) throws PagamentoNonValidoException, SalvataggioPagamentoException, SQLException {
 
         // Validazioni base
         if (importo <= 0) {
-            throw new IllegalArgumentException("Importo non valido");
+            throw new PagamentoNonValidoException("Importo non valido");
         }
 
         // Crea pagamento
@@ -52,7 +53,7 @@ public class PagamentoService {
         boolean salvato = pagamentoDAO.doSave(pagamento);
 
         if (!salvato) {
-            throw new SQLException("Errore nel salvataggio del pagamento");
+            throw new SalvataggioPagamentoException("Errore nel salvataggio del pagamento");
         }
 
         return pagamento;

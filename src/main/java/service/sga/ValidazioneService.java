@@ -1,7 +1,12 @@
 package service.sga;
 
 import entity.sga.Biglietto;
-import entity.sgu.Utente; //
+import entity.sgu.Utente;
+import exception.biglietto.BigliettoNonTrovatoException;
+import exception.biglietto.BigliettoNonValidoException;
+import exception.validazione.AggiornamentoBigliettoException;
+import exception.validazione.DataValidazioneNonValidaException;
+import exception.validazione.StatoBigliettoNonValidoException;
 import repository.sga.BigliettoDAO;
 
 import java.sql.Connection;
@@ -9,8 +14,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-//SERVICE per la gestione della Validazione Biglietti
 
 public class ValidazioneService {
 
@@ -26,21 +29,21 @@ public class ValidazioneService {
 
     //VALIDA BIGLIETTO tramite QR Code
     public boolean validaBiglietto(String qrCode, int idPersonale)
-            throws SQLException, IllegalArgumentException, IllegalStateException {
+            throws BigliettoNonTrovatoException, BigliettoNonValidoException,
+            StatoBigliettoNonValidoException, DataValidazioneNonValidaException,
+            AggiornamentoBigliettoException, SQLException {
 
         // 1. RECUPERA BIGLIETTO
         Biglietto biglietto = bigliettoService.getBigliettoByQRCode(qrCode);
 
         if (biglietto == null) {
-            throw new IllegalArgumentException(
-                    "Biglietto non trovato. QR Code: " + qrCode
-            );
+            throw new BigliettoNonTrovatoException(qrCode);
         }
 
         // 2. VERIFICA STATO
         if (!"Emesso".equals(biglietto.getStato())) {
             String messaggio = generaMessaggioErroreStato(biglietto);
-            throw new IllegalStateException(messaggio);
+            throw new StatoBigliettoNonValidoException(qrCode, biglietto.getStato(), messaggio);
         }
 
         // 3. VERIFICA DATA PROIEZIONE
@@ -48,13 +51,19 @@ public class ValidazioneService {
         LocalDate dataProiezione = biglietto.getProgrammazione().getDataProgrammazione();
 
         if (dataProiezione.isBefore(oggi)) {
-            throw new IllegalStateException(
+            throw new DataValidazioneNonValidaException(
+                    qrCode,
+                    dataProiezione,
+                    oggi,
                     "Biglietto scaduto. Era valido per il " + dataProiezione
             );
         }
 
         if (dataProiezione.isAfter(oggi)) {
-            throw new IllegalStateException(
+            throw new DataValidazioneNonValidaException(
+                    qrCode,
+                    dataProiezione,
+                    oggi,
                     "Biglietto non ancora valido. Valido per il " + dataProiezione
             );
         }
@@ -72,14 +81,13 @@ public class ValidazioneService {
         boolean aggiornato = bigliettoDAO.doUpdate(biglietto);
 
         if (!aggiornato) {
-            throw new SQLException("Errore nell'aggiornamento del biglietto");
+            throw new AggiornamentoBigliettoException(qrCode, "Errore nell'aggiornamento del biglietto");
         }
 
         return true;
     }
 
     //GENERA MESSAGGIO DI ERRORE IN BASE ALLO STATO
-
     private String generaMessaggioErroreStato(Biglietto biglietto) {
         return switch (biglietto.getStato()) {
             case "Validato" -> {
@@ -108,7 +116,6 @@ public class ValidazioneService {
     }
 
     //VERIFICA STATO BIGLIETTO senza validarlo
-
     public StatoBiglietto verificaStatoBiglietto(String qrCode) throws SQLException {
 
         StatoBiglietto stato = new StatoBiglietto();
@@ -144,7 +151,7 @@ public class ValidazioneService {
                 stato.setMotivo("Biglietto valido e utilizzabile");
             }
 
-        } catch (IllegalArgumentException e) {
+        } catch (BigliettoNonTrovatoException | BigliettoNonValidoException e) {
             stato.setEsiste(false);
             stato.setUtilizzabile(false);
             stato.setMotivo("Biglietto non trovato");
@@ -175,8 +182,6 @@ public class ValidazioneService {
         List<Biglietto> validatiOggi = getBigliettiValidati(idPersonale, oggi);
         return validatiOggi.size();
     }
-
-
 }
 
 
