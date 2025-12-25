@@ -1,4 +1,4 @@
-package service;
+package service.sgu;
 
 import entity.sgu.Utente;
 import exception.EmailGiaRegistrataException;
