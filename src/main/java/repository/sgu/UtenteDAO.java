@@ -6,6 +6,8 @@ import it.unisa.tickema.model.DBManager;
 import java.sql.*;
 
 public class UtenteDAO {
+    public UtenteDAO(Connection connection) {
+    }
 
     //metodo utilizzato per andare a creare un account nuovo nel database, quindi aggiungerlo con tutti i suoi attributi
     public boolean doSave(Utente utente) throws SQLException{

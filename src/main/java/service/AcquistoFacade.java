@@ -3,9 +3,12 @@ package service;
 import entity.sga.Acquisto;
 import entity.sga.Biglietto;
 import entity.sga.Pagamento;
-import entity.sgp.Posto;
-import entity.sgp.Programmazione;
+import entity.spg.Posto;
+import entity.spg.Programmazione
 import entity.sgu.Utente;
+import service.sgp.PostoService;
+import service.sgp.ProgrammazioneService;
+import service.sgp.TariffaService;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -75,6 +75,8 @@ public class SlotOrari {
         this.data = data;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,4 +100,21 @@ public class SlotOrari {
                 ", stato='" + stato + '\'' +
                 '}';
     }
+
+    public boolean puoContenereFilm(int durata) {
+    }
+    
+    public boolean isDisponibile() {
+        return true
+    }
+
+
+    public void occupa() {
+    }
+
+    public void libera() {
+    }
 }
+
+
+
