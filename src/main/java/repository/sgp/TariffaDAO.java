@@ -14,7 +14,7 @@ public class TariffaDAO {
     }
 
     public Tariffa doSave(Tariffa tariffa) throws SQLException {
-        String sql = "INSERT INTO Tariffa (tipo, nome, percentualeSconto) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO tariffa (tipo, nome, percentualeSconto) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, tariffa.getTipo());
             ps.setString(2, tariffa.getNome());

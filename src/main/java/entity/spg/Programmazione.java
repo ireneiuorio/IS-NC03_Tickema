@@ -6,6 +6,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Entità Programmazione
+ * Rappresenta la programmazione di un film in una sala specifica con un certo orario e una tariffa da poter applicare
+ */
 public class Programmazione {
     private int idProgrammazione;
     private LocalDate dataProgrammazione;
@@ -121,18 +125,24 @@ public class Programmazione {
         this.idTariffa = idTariffa;
     }
 
+
+    //Verifica se la programmazione può essere acquistata
     public boolean isDisponibile() {
         return this.stato.equals("DISPONIBILE");
     }
 
+    //Verifica se la programmazione è stata annullata
     public boolean isAnnullata() {
         return this.stato.equals("ANNULLATA");
     }
 
+
+    //Verifica se la programmazione è in corso
     public boolean isInCorso() {
         return this.stato.equals("IN CORSO");
     }
 
+    //Verifica se la programmazioe si è conclusa
     public boolean isConclusa() {
         return this.stato.equals("CONCLUSA");
     }
@@ -141,6 +151,7 @@ public class Programmazione {
         this.stato = "ANNULLATA";
     }
 
+    //Calcola il prezzo finale applicando la tariffa
     public BigDecimal calcolaPrezzoFinale() {
         if (tariffa != null && tariffa.haSconto()) {
             return tariffa.applicaSconto(prezzoBase);
@@ -148,10 +159,12 @@ public class Programmazione {
         return prezzoBase;
     }
 
+    //Verifica se ha una tariffa ridotta applicata
     public boolean haTariffaRidotta() {
         return tariffa != null && tariffa.haSconto();
     }
 
+    //Descrive una programmazione in formato leggibile
     public String getDescrizione() {
         StringBuilder sb = new StringBuilder();
 

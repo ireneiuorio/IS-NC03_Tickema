@@ -14,7 +14,7 @@ public class PostoDAO {
     }
 
     public Posto doSave(Posto posto) throws SQLException {
-        String sql = "INSERT INTO POSTO (stato, fila, numeroPosto, idProgrammazione, idSala) " +
+        String sql = "INSERT INTO posto (stato, fila, numeroPosto, idProgrammazione, idSala) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(
@@ -38,7 +38,7 @@ public class PostoDAO {
     }
 
     public void doSaveBatch(List<Posto> posti) throws SQLException {
-        String sql = "INSERT INTO POSTO (stato, fila, numeroPosto, idProgrammazione, idSala) " +
+        String sql = "INSERT INTO posto (stato, fila, numeroPosto, idProgrammazione, idSala) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -55,7 +55,7 @@ public class PostoDAO {
     }
 
     public Posto doRetrieveByKey(int id) throws SQLException {
-        String sql = "SELECT * FROM POSTO WHERE idPosto = ?";
+        String sql = "SELECT * FROM posto WHERE idPosto = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -70,7 +70,7 @@ public class PostoDAO {
     }
 
     public List<Posto> doRetrieveBySala(int idSala) throws SQLException {
-        String sql = "SELECT * FROM POSTO WHERE idSala = ? ORDER BY fila, numeroPosto";
+        String sql = "SELECT * FROM posto WHERE idSala = ? ORDER BY fila, numeroPosto";
 
         List<Posto> result = new ArrayList<>();
 
@@ -88,7 +88,7 @@ public class PostoDAO {
 
     public List<Posto> doRetrieveBySalaAndProgrammazione(int idSala, int idProgrammazione)
             throws SQLException {
-        String sql = "SELECT * FROM POSTO " +
+        String sql = "SELECT * FROM posto " +
                 "WHERE idSala = ? AND idProgrammazione = ? " +
                 "ORDER BY fila, numeroPosto";
 
@@ -108,7 +108,7 @@ public class PostoDAO {
     }
 
     public List<Posto> doRetrieveDisponibili(int idProgrammazione) throws SQLException {
-        String sql = "SELECT * FROM POSTO " +
+        String sql = "SELECT * FROM posto " +
                 "WHERE idProgrammazione = ? AND stato = 'DISPONIBILE' " +
                 "ORDER BY fila, numeroPosto";
 
@@ -127,7 +127,7 @@ public class PostoDAO {
     }
 
     public int doCountDisponibili(int idProgrammazione) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM POSTO " +
+        String sql = "SELECT COUNT(*) FROM posto " +
                 "WHERE idProgrammazione = ? AND stato = 'DISPONIBILE'";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -144,7 +144,7 @@ public class PostoDAO {
 
 
     public boolean deleteBySala(int idSala) throws SQLException {
-        String sql = "DELETE FROM Posto WHERE idSala = ?";
+        String sql = "DELETE FROM posto WHERE idSala = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, idSala);
             return ps.executeUpdate() > 0;
@@ -152,7 +152,7 @@ public class PostoDAO {
     }
 
     public boolean doUpdate(Posto posto) throws SQLException {
-        String sql = "UPDATE POSTO SET stato = ?, fila = ?, numeroPosto = ?, " +
+        String sql = "UPDATE posto SET stato = ?, fila = ?, numeroPosto = ?, " +
                 "idProgrammazione = ?, idSala = ? WHERE idPosto = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -168,7 +168,7 @@ public class PostoDAO {
     }
 
     public boolean doUpdateStato(int idPosto, String nuovoStato) throws SQLException {
-        String sql = "UPDATE POSTO SET stato = ? WHERE idPosto = ?";
+        String sql = "UPDATE posto SET stato = ? WHERE idPosto = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, nuovoStato);
@@ -180,7 +180,7 @@ public class PostoDAO {
 
     public int doUpdateStatoBatch(List<Integer> idPosti, String nuovoStato)
             throws SQLException {
-        String sql = "UPDATE POSTO SET stato = ? WHERE idPosto = ?";
+        String sql = "UPDATE posto SET stato = ? WHERE idPosto = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             for (Integer idPosto : idPosti) {
@@ -199,7 +199,7 @@ public class PostoDAO {
     }
 
     public boolean doDelete(int idPosto) throws SQLException {
-        String sql = "DELETE FROM POSTO WHERE idPosto = ?";
+        String sql = "DELETE FROM posto WHERE idPosto = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, idPosto);
@@ -208,7 +208,7 @@ public class PostoDAO {
     }
 
     public boolean doDeleteBySala(int idSala) throws SQLException {
-        String sql = "DELETE FROM POSTO WHERE idSala = ?";
+        String sql = "DELETE FROM posto WHERE idSala = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, idSala);
@@ -217,7 +217,7 @@ public class PostoDAO {
     }
 
     public boolean doDeleteByProgrammazione(int idProgrammazione) throws SQLException {
-        String sql = "DELETE FROM POSTO WHERE idProgrammazione = ?";
+        String sql = "DELETE FROM posto WHERE idProgrammazione = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, idProgrammazione);

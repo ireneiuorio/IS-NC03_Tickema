@@ -2,11 +2,15 @@ package entity.spg;
 
 import java.util.Objects;
 
+/**
+ * Entità posto
+ * Rappresenta un posto all'interno di una sala per una specifica programmazione
+ */
 public class Posto {
     private int idPosto;
     private int fila;
     private int numeroPosto;
-    private String stato;
+    private String stato; //DISPONIBILE, OCCUPATO
 
     private int idSala;
     private int idProgrammazione;
@@ -79,19 +83,25 @@ public class Posto {
             throw new IllegalArgumentException("Lo stato del posto è un campo obbligatorio.");
         }
 
+        //Validazione degli stati in modo tale da non inserire stati diversi da quelli definiti
         String statoUpper = stato.toUpperCase();
         if (!statoUpper.equals("DISPONIBILE") &&
                 !statoUpper.equals("OCCUPATO")) {
             throw new IllegalArgumentException(
-                    "Stato non valido. Stati ammessi: DISPONIBILE, OCCUPATO, PRENOTATO"
+                    "Stato non valido. Stati ammessi: DISPONIBILE, OCCUPATO."
             );
         }
 
         this.stato = statoUpper;
     }
 
+    //Verifica del posto a sedere
     public boolean isDisponibile() {
         return this.stato.equals("DISPONIBILE");
+    }
+
+    public boolean isOccupato() {
+        return this.stato.equals("OCCUPATO");
     }
 
     public void occupa() {
@@ -100,6 +110,11 @@ public class Posto {
 
     public void libera() {
         this.stato = "DISPONIBILE";
+    }
+
+    //Identifica in modo leggibile il posto
+    public String getIdentificatore() {
+        return String.format("Fila %d, Posto %d", fila, numeroPosto);
     }
 
     @Override

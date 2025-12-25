@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+/**
+ * Entità Tariffa
+ * Rappresenta una tariffa applicabile ai biglietti con una certa percentuale di sconto sul prezzo di base
+ */
 public class Tariffa {
     private int idTariffa;
     private String tipo; // "INTERO", "RIDOTTO"
@@ -65,18 +69,16 @@ public class Tariffa {
         this.percentualeSconto = percentualeSconto;
     }
 
+
+    //Calcola il prezzo scontato applicando la tariffa al prezzo base --> prezzoScontato = prezzoBase * (1 - percentualeSconto/100)
     public BigDecimal applicaSconto(BigDecimal prezzoBase) {
         if (prezzoBase == null || prezzoBase.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException(
                     "Il prezzo base deve essere maggiore o uguale a zero."
             );
         }
-        BigDecimal fattoreSconto = percentualeSconto.divide(
-                new BigDecimal("100"),
-                4,
-                RoundingMode.HALF_UP
-        );
-
+        //Calcolo dello sconto in valore assoluto
+        BigDecimal fattoreSconto = percentualeSconto.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP);
         BigDecimal importoSconto = prezzoBase.multiply(fattoreSconto);
 
         // Sottrae lo sconto dal prezzo base
@@ -85,6 +87,7 @@ public class Tariffa {
         // Arrotonda a 2 decimali
         return prezzoFinale.setScale(2, RoundingMode.HALF_UP);
     }
+
 
     public BigDecimal calcolaImportoSconto(BigDecimal prezzoBase) {
         if (prezzoBase == null || prezzoBase.compareTo(BigDecimal.ZERO) < 0) {
@@ -103,14 +106,17 @@ public class Tariffa {
         return idTariffa == tariffa.idTariffa && Objects.equals(tipo, tariffa.tipo) && Objects.equals(nome, tariffa.nome) && Objects.equals(percentualeSconto, tariffa.percentualeSconto);
     }
 
+    //Verifica se la tariffa prevede uno sconto
     public boolean haSconto() {
         return percentualeSconto.compareTo(BigDecimal.ZERO) > 0;
     }
 
+    //Verifica se la tariffa in questione è intera, cioè senza nessuno sconto
     public boolean isTariffaIntera() {
         return percentualeSconto.compareTo(BigDecimal.ZERO) == 0;
     }
 
+    //Descrive in formato leggibile la tariffa
     public String getDescrizione() {
         if (isTariffaIntera()) {
             return String.format("%s - %s (tariffa intera)", tipo, nome);

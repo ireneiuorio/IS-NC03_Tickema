@@ -30,7 +30,7 @@ public class ProgrammazioneDAO {
     }
 
     public Programmazione doSave(Programmazione p) throws SQLException {
-        String sql = "INSERT INTO PROGRAMMAZIONE (dataProgrammazione, tipo, prezzoBase, stato, " +
+        String sql = "INSERT INTO programmazione (dataProgrammazione, tipo, prezzoBase, stato, " +
                 "idFilm, idSala, idSlotOrario, idTariffa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(
@@ -61,8 +61,11 @@ public class ProgrammazioneDAO {
         return p;
     }
 
+
+
+
     public Programmazione doRetrieveByKey(int id) throws SQLException {
-        String sql = "SELECT * FROM PROGRAMMAZIONE WHERE idProgrammazione = ?";
+        String sql = "SELECT * FROM programmazione WHERE idProgrammazione = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -76,6 +79,7 @@ public class ProgrammazioneDAO {
         return null;
     }
 
+    //Recupera una programmazione con tutti gli oggetti caricati
     public Programmazione doRetrieveByKeyWithRelations(int id) throws SQLException {
         Programmazione prog = doRetrieveByKey(id);
 
@@ -86,8 +90,9 @@ public class ProgrammazioneDAO {
         return prog;
     }
 
+    //Recupera le programmazioni di un film nello specifico e li ordina per data e ora
     public List<Programmazione> doRetrieveAllByFilm(int idFilm) throws SQLException {
-        String sql = "SELECT p.* FROM PROGRAMMAZIONE p " +
+        String sql = "SELECT p.* FROM programmazione p " +
                 "JOIN SLOTORARI s ON p.idSlotOrario = s.idSlot " +
                 "WHERE p.idFilm = ? " +
                 "ORDER BY p.dataProgrammazione, s.oraInizio";
@@ -107,7 +112,7 @@ public class ProgrammazioneDAO {
     }
 
     public List<Programmazione> doRetrieveByData(LocalDate data) throws SQLException {
-        String sql = "SELECT p.* FROM PROGRAMMAZIONE p " +
+        String sql = "SELECT p.* FROM programmazione p " +
                 "JOIN SLOTORARI s ON p.idSlotOrario = s.idSlot " +
                 "WHERE p.dataProgrammazione = ? " +
                 "ORDER BY s.oraInizio, p.idSala";
@@ -126,9 +131,10 @@ public class ProgrammazioneDAO {
         return result;
     }
 
+    //Recupera le programmazioni di una sala in una specifica data
     public List<Programmazione> doRetrieveBySalaAndData(int idSala, LocalDate data)
             throws SQLException {
-        String sql = "SELECT p.* FROM PROGRAMMAZIONE p " +
+        String sql = "SELECT p.* FROM programmazione p " +
                 "JOIN SLOTORARI s ON p.idSlotOrario = s.idSlot " +
                 "WHERE p.idSala = ? AND p.dataProgrammazione = ? " +
                 "ORDER BY s.oraInizio";
@@ -148,8 +154,9 @@ public class ProgrammazioneDAO {
         return result;
     }
 
+    //Recupera quelle programmazioni che non sono annullate o concluse
     public List<Programmazione> doRetrieveDisponibili() throws SQLException {
-        String sql = "SELECT p.* FROM PROGRAMMAZIONE p " +
+        String sql = "SELECT p.* FROM programmazione p " +
                 "JOIN SLOTORARI s ON p.idSlotOrario = s.idSlot " +
                 "WHERE p.stato = 'DISPONIBILE' " +
                 "ORDER BY p.dataProgrammazione, s.oraInizio";
@@ -168,7 +175,7 @@ public class ProgrammazioneDAO {
 
 
     public boolean doUpdate(Programmazione p) throws SQLException {
-        String sql = "UPDATE PROGRAMMAZIONE SET dataProgrammazione = ?, tipo = ?, " +
+        String sql = "UPDATE programmazione SET dataProgrammazione = ?, tipo = ?, " +
                 "prezzoBase = ?, stato = ?, idFilm = ?, idSala = ?, " +
                 "idSlotOrario = ?, idTariffa = ? " +
                 "WHERE idProgrammazione = ?";
@@ -194,9 +201,10 @@ public class ProgrammazioneDAO {
         }
     }
 
+    //Aggiorna lo stato di una programmazione
     public boolean doUpdateStato(int idProgrammazione, String nuovoStato)
             throws SQLException {
-        String sql = "UPDATE PROGRAMMAZIONE SET stato = ? WHERE idProgrammazione = ?";
+        String sql = "UPDATE programmazione SET stato = ? WHERE idProgrammazione = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, nuovoStato);
@@ -207,7 +215,7 @@ public class ProgrammazioneDAO {
     }
 
     public boolean doDelete(int id) throws SQLException {
-        String sql = "UPDATE PROGRAMMAZIONE SET stato = 'ANNULLATA' " +
+        String sql = "UPDATE programmazione SET stato = 'ANNULLATA' " +
                 "WHERE idProgrammazione = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -216,17 +224,9 @@ public class ProgrammazioneDAO {
         }
     }
 
-    public boolean doHardDelete(int id) throws SQLException {
-        String sql = "DELETE FROM PROGRAMMAZIONE WHERE idProgrammazione = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        }
-    }
-
+    //Verifica se esistono biglietti venduti per una certa programmazione
     public boolean doCheckBigliettiVenduti(int idProgrammazione) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM BIGLIETTO " +
+        String sql = "SELECT COUNT(*) FROM biglietto " +
                 "WHERE idProgrammazione = ? AND stato != 'RIMBORSATO'";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -240,7 +240,7 @@ public class ProgrammazioneDAO {
 
     //Verifica se esiste una programmazione per uno slot e per una sala --> controllo multisala
     public boolean existsBySlotAndSala(int idSlotOrario, int idSala) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM PROGRAMMAZIONE " +
+        String sql = "SELECT COUNT(*) FROM programmazione " +
                 "WHERE idSlotOrario = ? AND idSala = ? AND stato != 'ANNULLATA'";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -254,8 +254,9 @@ public class ProgrammazioneDAO {
     }
 
 
+    //Verifica se uno slot è occupato (in modo indipendente dalla sala)
     public boolean doCheckBySlot(int idSlotOrario) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM PROGRAMMAZIONE " +
+        String sql = "SELECT COUNT(*) FROM programmazione " +
                 "WHERE idSlotOrario = ? AND stato != 'ANNULLATA'";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -267,11 +268,11 @@ public class ProgrammazioneDAO {
         }
     }
 
-    //Verifica disponibilità slot/sala escludendo una programmazione specifica.
+    //Verifica disponibilità slot/sala escludendo una programmazione specifica. --> da usare in fase di modifica per non contare la programmazione stessa
     public boolean existsBySlotAndSalaExcluding(
             int idSlotOrario, int idSala, int idProgrammazioneEsclusa) throws SQLException {
 
-        String sql = "SELECT COUNT(*) FROM PROGRAMMAZIONE " +
+        String sql = "SELECT COUNT(*) FROM programmazione " +
                 "WHERE idSlotOrario = ? AND idSala = ? " +
                 "AND stato != 'ANNULLATA' AND idProgrammazione != ?";
 

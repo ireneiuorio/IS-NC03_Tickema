@@ -76,6 +76,7 @@ public class SlotOrariDAO {
         return result;
     }
 
+    //Recupera gli slot di una data specifica
     public List<SlotOrari> doRetrieveByData(LocalDate data) throws SQLException {
         String sql = "SELECT * FROM slotorari WHERE data = ? ORDER BY oraInizio";
         List<SlotOrari> result = new ArrayList<>();
