@@ -22,7 +22,7 @@ public class SaldoService {
 
     //RECUPERA SALDO DISPONIBILE
     public double getSaldoDisponibile(int idAccount) throws SQLException {
-        Utente utente = utenteDAO.findUtenteById(idAccount);
+        Utente utente = utenteDAO.doRetrieveById(idAccount);
 
         if (utente == null) {
             throw new IllegalArgumentException("Utente con ID " + idAccount + " non trovato");
@@ -37,7 +37,7 @@ public class SaldoService {
         }
 
         // Gestisce NULL nel database (ritorna 0.0)
-        return utente.getSaldo() != null ? utente.getSaldo() : 0.0;
+        return utente.getSaldo() != 0 ? utente.getSaldo() : 0.0;
     }
 
 

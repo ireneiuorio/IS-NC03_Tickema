@@ -1,6 +1,5 @@
 package entity.sgu;
 
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,24 +11,39 @@ public class Utente {
     private String numeroDiTelefono;
     private String password;
     private String email;
-    private double saldo;
+    private double saldo; // ← double, non BigDecimal
     private String tipoAccount;
 
-    public Utente( int idAccount,String nome, String cognome, String numeroDiTelefono, String password, String email, String tipoAccount) {
-        this.idAccount=idAccount;
+    // COSTRUTTORE VUOTO
+    public Utente() {
+    }
+
+    // COSTRUTTORE SENZA idAccount (per registrazione)
+    public Utente(String nome, String cognome, String numeroDiTelefono,
+                  String password, String email, String tipoAccount) {
         this.nome = nome;
         this.cognome = cognome;
         this.numeroDiTelefono = numeroDiTelefono;
         this.password = password;
         this.email = email;
         this.tipoAccount = tipoAccount;
+        this.saldo = 0.0; // Saldo iniziale a 0
     }
 
-    public Utente() {
-
+    // COSTRUTTORE COMPLETO (per recupero dal database)
+    public Utente(int idAccount, String nome, String cognome, String numeroDiTelefono,
+                  String password, String email, String tipoAccount) {
+        this.idAccount = idAccount;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.numeroDiTelefono = numeroDiTelefono;
+        this.password = password;
+        this.email = email;
+        this.tipoAccount = tipoAccount;
+        this.saldo = 0.0; // Default
     }
 
-
+    // GETTERS E SETTERS
     public int getIdAccount() {
         return idAccount;
     }
@@ -67,14 +81,13 @@ public class Utente {
     }
 
     public void setPassword(String password) throws NoSuchAlgorithmException {
-        MessageDigest digest=MessageDigest.getInstance("SHA-512");
-        byte[] hashedPwd =digest.digest(password.getBytes(StandardCharsets.UTF_8));
-        StringBuilder builder=new StringBuilder();
-        for(byte bit:hashedPwd)
-        {
-            builder.append(String.format("%02x",bit));
+        MessageDigest digest = MessageDigest.getInstance("SHA-512");
+        byte[] hashedPwd = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        StringBuilder builder = new StringBuilder();
+        for (byte bit : hashedPwd) {
+            builder.append(String.format("%02x", bit));
         }
-        this.password=builder.toString();
+        this.password = builder.toString();
     }
 
     public String getEmail() {

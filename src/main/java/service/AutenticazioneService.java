@@ -6,63 +6,86 @@ import exception.PasswordErrataException;
 import repository.sgu.UtenteDAO;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class AutenticazioneService {
-    private UtenteDAO accountDAO = new UtenteDAO();
 
-    public Utente registraUtente(String nome, String cognome, String email, String password, String numeroDiTelefono) throws SQLException, NoSuchAlgorithmException, EmailGiaRegistrataException {
-        if (accountDAO.esisteEmail(email)) {
-            throw new EmailGiaRegistrataException(); //vuol dire che c'è già un account registrato con quella email
+    private Connection connection;
+    private UtenteDAO utenteDAO;
+
+    public AutenticazioneService(Connection connection) {
+        this.connection = connection;
+        this.utenteDAO = new UtenteDAO(connection);
+    }
+
+    //REGISTRA NUOVO UTENTE
+    public Utente registraUtente(String nome, String cognome, String email, String password, String numeroDiTelefono)
+            throws SQLException, NoSuchAlgorithmException, EmailGiaRegistrataException {
+
+        // Verifica email già esistente
+        if (utenteDAO.esisteEmail(email)) {
+            throw new EmailGiaRegistrataException();
         }
 
-       //ora ci creiamo l'utente per poter hashare la password e salvarlo sul db
-        //passiamo la password vuota così poi la hashiamo
-        Utente nuovoUtente = new Utente(0, nome, cognome, numeroDiTelefono, "", email, "CLIENTE");
+        // Crea nuovo utente (usa costruttore SENZA idAccount)
+        Utente nuovoUtente = new Utente(
+                nome,
+                cognome,
+                numeroDiTelefono,
+                "", // Password vuota, la hashiamo dopo
+                email,
+                "Utente Autenticato"
+        );
 
-        //dobbiamo hashare la password che viene passata
+        // Hasha la password
         nuovoUtente.setPassword(password);
 
-        //il saldo di default viene impostato dal db a 0
-
-        if (accountDAO.doSave(nuovoUtente)) {
+        // Salva nel database (il saldo viene impostato a 0 dal DAO)
+        if (utenteDAO.doSave(nuovoUtente)) {
             return nuovoUtente;
         }
 
         return null;
     }
 
-    public Utente login(String email, String passwordInserita) throws SQLException, NoSuchAlgorithmException, PasswordErrataException {
-        //come prima cosa da fare si dovrebbe cercare l'utente nel database in base alla email passata
-        Utente utenteDalDB = accountDAO.findUtenteByEmail(email);
+    //LOGIN UTENTE
+    public Utente login(String email, String passwordInserita)
+            throws SQLException, NoSuchAlgorithmException, PasswordErrataException {
 
-        if (utenteDalDB != null) {
-            //se entriamo qui vuol dire che l'utente esiste nel db, quindi dobbiamo verificare se la password che ha inserito è corretta
-            //di conseguenza dobbiamo creare un utente temporaneo dove gli impostiamo la password hashata inserita, e le confrontiamo
-            Utente temp = new Utente(0, "", "", "", "", "", "");
-            temp.setPassword(passwordInserita);
+        // Cerca utente per email
+        Utente utenteDalDB = utenteDAO.doRetrieveByEmail(email);
 
-            if (!temp.getPassword().equals(utenteDalDB.getPassword())) {
-                throw new PasswordErrataException(); //password errata, chiamiamo l'eccezione
-            }
+        if (utenteDalDB == null) {
+            throw new PasswordErrataException(); // Email non trovata
         }
 
-        return utenteDalDB; //login effettuato con successo
+        // Hasha la password inserita per confrontarla
+        Utente temp = new Utente();
+        temp.setPassword(passwordInserita);
+
+        // Confronta le password hashate
+        if (!temp.getPassword().equals(utenteDalDB.getPassword())) {
+            throw new PasswordErrataException();
+        }
+
+        return utenteDalDB; // Login riuscito
     }
 
+    //LOGOUT UTENTE
     public boolean logout(int idAccount) {
-        //qui seguendo l'ODD dobbiamo solo restituire il valore true perchè è la servlet che invalida la sessione, il service non sa che esiste la sessione
+        // Il service restituisce true se l'id è valido
+        // La servlet invaliderà la sessione
         return idAccount > 0;
     }
 
-    public boolean verificaAutenticaizone(String token) {
-        //se il token è nullo oppure vuoto l'utente non è autenticato
+    //VERIFICA AUTENTICAZIONE
+    public boolean verificaAutenticazione(String token) {
+        // Se il token è nullo o vuoto, utente non autenticato
         if (token == null || token.isEmpty()) {
             return false;
         }
 
-        //se il token esiste restituiamo true. Con token noi possiamo indicare magari l'id della sessione
         return true;
     }
-
 }
