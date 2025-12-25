@@ -52,7 +52,7 @@ public class AcquistoFacade {
 
             // STEP 1: VERIFICA PROGRAMMAZIONE
             Programmazione programmazione = programmazioneService
-                    .getProgrammazioneById(idProgrammazione);
+                    .getProgrammazioneByKey(idProgrammazione);
 
             if (programmazione == null) {
                 throw new IllegalStateException(

@@ -3,6 +3,7 @@ package repository.sga;
 import entity.sga.Acquisto;
 import entity.sga.Biglietto;
 import entity.sgu.Utente;
+import entity.sgp.*;
 
 import java.sql.*;
 import java.time.LocalDateTime;

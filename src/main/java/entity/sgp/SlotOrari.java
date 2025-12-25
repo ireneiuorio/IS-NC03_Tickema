@@ -1,4 +1,4 @@
-package entity.spg;
+package entity.sgp;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

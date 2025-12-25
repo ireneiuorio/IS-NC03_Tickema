@@ -1,4 +1,4 @@
-package entity.spg;
+package entity.sgp;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

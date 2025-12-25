@@ -1,6 +1,6 @@
 package repository.sgp;
 
-import entity.spg.Tariffa;
+import entity.sgp.Tariffa;
 
 import java.sql.*;
 import java.util.ArrayList;

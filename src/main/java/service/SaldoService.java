@@ -1,6 +1,5 @@
 package service;
 
-package service;
 
 import entity.sgu.Utente;
 import repository.sgu.UtenteDAO;
@@ -23,7 +22,7 @@ public class SaldoService {
 
     //RECUPERA SALDO DISPONIBILE
     public double getSaldoDisponibile(int idAccount) throws SQLException {
-        Utente utente = utenteDAO.doRetrieveById(idAccount);
+        Utente utente = utenteDAO.findUtenteById(idAccount);
 
         if (utente == null) {
             throw new IllegalArgumentException("Utente con ID " + idAccount + " non trovato");

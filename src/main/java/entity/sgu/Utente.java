@@ -12,11 +12,11 @@ public class Utente {
     private String numeroDiTelefono;
     private String password;
     private String email;
-    private BigDecimal saldo;
+    private double saldo;
     private String tipoAccount;
 
-    public Utente(int idAccount, String nome, String cognome, String numeroDiTelefono, String password, String email, String tipoAccount) {
-        this.idAccount = idAccount;
+    public Utente( int idAccount,String nome, String cognome, String numeroDiTelefono, String password, String email, String tipoAccount) {
+        this.idAccount=idAccount;
         this.nome = nome;
         this.cognome = cognome;
         this.numeroDiTelefono = numeroDiTelefono;
@@ -24,6 +24,11 @@ public class Utente {
         this.email = email;
         this.tipoAccount = tipoAccount;
     }
+
+    public Utente() {
+
+    }
+
 
     public int getIdAccount() {
         return idAccount;
@@ -80,11 +85,11 @@ public class Utente {
         this.email = email;
     }
 
-    public BigDecimal getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(BigDecimal saldo) {
+    public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
 

@@ -137,7 +137,7 @@ public class UtenteDAO {
                 rs.getString("tipoAccount")
         );
 
-        utente.setSaldo(rs.getBigDecimal("saldo"));
+        utente.setSaldo(rs.getDouble("saldo"));
         return utente;
     }
 

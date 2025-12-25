@@ -1,10 +1,10 @@
 package repository.sgp;
 
 import entity.sgc.Film;
-import entity.spg.Programmazione;
-import entity.spg.Sala;
-import entity.spg.SlotOrari;
-import entity.spg.Tariffa;
+import entity.sgp.Programmazione;
+import entity.sgp.Sala;
+import entity.sgp.SlotOrari;
+import entity.sgp.Tariffa;
 import repository.sgc.FilmDAO;
 
 import java.sql.*;
