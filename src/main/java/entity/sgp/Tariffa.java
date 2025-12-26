@@ -1,7 +1,5 @@
 package entity.sgp;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 
 /**
@@ -9,25 +7,25 @@ import java.util.Objects;
  * Rappresenta una tariffa applicabile ai biglietti con una certa percentuale di sconto sul prezzo di base
  */
 public class Tariffa {
-    private int idTariffa;
+    private Integer idTariffa;
     private String tipo; // "INTERO", "RIDOTTO"
     private String nome;
-    private BigDecimal percentualeSconto;
+    private double percentualeSconto;
 
     public Tariffa() { }
 
-    public Tariffa(int idTariffa, String tipo, String nome, BigDecimal percentualeSconto) {
+    public Tariffa(int idTariffa, String tipo, String nome, double percentualeSconto) {
         this.idTariffa = idTariffa;
         this.setTipo(tipo);
         this.setNome(nome);
         this.setPercentualeSconto(percentualeSconto);
     }
 
-    public int getIdTariffa() {
+    public Integer getIdTariffa() {
         return idTariffa;
     }
 
-    public void setIdTariffa(int idTariffa) {
+    public void setIdTariffa(Integer idTariffa) {
         this.idTariffa = idTariffa;
     }
 
@@ -55,15 +53,13 @@ public class Tariffa {
         this.nome = nome;
     }
 
-    public BigDecimal getPercentualeSconto() {
+    public double getPercentualeSconto() {
         return percentualeSconto;
     }
 
-    public void setPercentualeSconto(BigDecimal percentualeSconto) {
+    public void setPercentualeSconto(double percentualeSconto) {
         //Controllare che la percentuale sia compresa tra 0 e 100
-        if (percentualeSconto == null ||
-                percentualeSconto.compareTo(BigDecimal.ZERO) < 0 ||
-                percentualeSconto.compareTo(new BigDecimal("100")) > 0) {
+        if (percentualeSconto < 0 || percentualeSconto > 100) {
             throw new IllegalArgumentException("Lo sconto deve essere compreso tra 0 e 100.");
         }
         this.percentualeSconto = percentualeSconto;
@@ -71,31 +67,34 @@ public class Tariffa {
 
 
     //Calcola il prezzo scontato applicando la tariffa al prezzo base --> prezzoScontato = prezzoBase * (1 - percentualeSconto/100)
-    public BigDecimal applicaSconto(BigDecimal prezzoBase) {
-        if (prezzoBase == null || prezzoBase.compareTo(BigDecimal.ZERO) < 0) {
+    public double applicaSconto(double prezzoBase) {
+        if (prezzoBase < 0) {
             throw new IllegalArgumentException(
                     "Il prezzo base deve essere maggiore o uguale a zero."
             );
         }
-        //Calcolo dello sconto in valore assoluto
-        BigDecimal fattoreSconto = percentualeSconto.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP);
-        BigDecimal importoSconto = prezzoBase.multiply(fattoreSconto);
+        // Calcola lo sconto (es. 20% diventa 0.20)
+        double fattoreSconto = percentualeSconto / 100.0;
+        double importoSconto = prezzoBase * fattoreSconto;
 
-        // Sottrae lo sconto dal prezzo base
-        BigDecimal prezzoFinale = prezzoBase.subtract(importoSconto);
+// Sottrae lo sconto dal prezzo base
+        double prezzoFinale = prezzoBase - importoSconto;
 
-        // Arrotonda a 2 decimali
-        return prezzoFinale.setScale(2, RoundingMode.HALF_UP);
+// Arrotonda a 2 decimali (es. 9.8765 -> 9.88)
+        return Math.round(prezzoFinale * 100.0) / 100.0;
     }
 
 
-    public BigDecimal calcolaImportoSconto(BigDecimal prezzoBase) {
-        if (prezzoBase == null || prezzoBase.compareTo(BigDecimal.ZERO) < 0) {
-            return BigDecimal.ZERO;
+    public double calcolaImportoSconto(double prezzoBase) {
+        if (prezzoBase < 0) {
+            return 0.0;
         }
 
-        BigDecimal prezzoScontato = applicaSconto(prezzoBase);
-        return prezzoBase.subtract(prezzoScontato).setScale(2, RoundingMode.HALF_UP);
+        double prezzoScontato = applicaSconto(prezzoBase);
+        double importoSconto = prezzoBase - prezzoScontato;
+
+        // Arrotonda a 2 decimali per coerenza con i centesimi
+        return Math.round(importoSconto * 100.0) / 100.0;
     }
 
     @Override
@@ -106,14 +105,14 @@ public class Tariffa {
         return idTariffa == tariffa.idTariffa && Objects.equals(tipo, tariffa.tipo) && Objects.equals(nome, tariffa.nome) && Objects.equals(percentualeSconto, tariffa.percentualeSconto);
     }
 
-    //Verifica se la tariffa prevede uno sconto
+    // Verifica se la tariffa prevede uno sconto
     public boolean haSconto() {
-        return percentualeSconto.compareTo(BigDecimal.ZERO) > 0;
+        return percentualeSconto > 0;
     }
 
-    //Verifica se la tariffa in questione è intera, cioè senza nessuno sconto
+    // Verifica se la tariffa è intera (nessuno sconto)
     public boolean isTariffaIntera() {
-        return percentualeSconto.compareTo(BigDecimal.ZERO) == 0;
+        return percentualeSconto == 0;
     }
 
     //Descrive in formato leggibile la tariffa

@@ -5,6 +5,8 @@ import entity.sgu.Utente;
 import java.sql.*;
 
 public class UtenteDAO {
+    public UtenteDAO(Connection connection) {
+    }
 
     private Connection connection;
 

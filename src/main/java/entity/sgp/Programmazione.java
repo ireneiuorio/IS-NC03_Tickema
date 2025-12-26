@@ -2,7 +2,6 @@ package entity.sgp;
 
 import entity.sgc.Film;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -14,7 +13,7 @@ public class Programmazione {
     private int idProgrammazione;
     private LocalDate dataProgrammazione;
     private String tipo;
-    private BigDecimal prezzoBase;
+    private double prezzoBase;
     private String stato; // DISPONIBILE, ANNULLATA, IN CORSO, CONCLUSA
 
     private int idFilm;
@@ -31,7 +30,7 @@ public class Programmazione {
         this.stato = "DISPONIBILE";
     }
 
-    public Programmazione(int idProgrammazione, LocalDate dataProgrammazione, String tipo, BigDecimal prezzoBase, String stato, int idFilm, int idSala, int idSlotOrario, int idTariffa) {
+    public Programmazione(int idProgrammazione, LocalDate dataProgrammazione, String tipo, double prezzoBase, String stato, int idFilm, int idSala, int idSlotOrario, int idTariffa) {
         this.idProgrammazione = idProgrammazione;
         this.setDataProgrammazione(dataProgrammazione);
         this.setTipo(tipo);
@@ -71,13 +70,13 @@ public class Programmazione {
         this.tipo = tipo.toUpperCase();
     }
 
-    public BigDecimal getPrezzoBase() {
+    public double getPrezzoBase() {
         return prezzoBase;
     }
 
-    public void setPrezzoBase(BigDecimal prezzoBase) {
-        if (prezzoBase == null || prezzoBase.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Il prezzo base non può essere negativo-");
+    public void setPrezzoBase(double prezzoBase) {
+        if (prezzoBase < 0) {
+            throw new IllegalArgumentException("Il prezzo base non può essere negativo.");
         }
         this.prezzoBase = prezzoBase;
     }
@@ -152,7 +151,7 @@ public class Programmazione {
     }
 
     //Calcola il prezzo finale applicando la tariffa
-    public BigDecimal calcolaPrezzoFinale() {
+    public double calcolaPrezzoFinale() {
         if (tariffa != null && tariffa.haSconto()) {
             return tariffa.applicaSconto(prezzoBase);
         }

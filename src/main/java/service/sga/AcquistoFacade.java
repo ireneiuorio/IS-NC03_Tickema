@@ -6,6 +6,9 @@ import entity.sga.Pagamento;
 import entity.sgp.Posto;
 import entity.sgp.Programmazione;
 import entity.sgu.Utente;
+import service.sgp.PostoService;
+import service.sgp.ProgrammazioneService;
+import service.sgp.TariffaService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -282,22 +285,18 @@ public class AcquistoFacade {
             int numeroBiglietti
     ) throws SQLException {
 
-        try {
-            Programmazione prog = programmazioneService
-                    .getProgrammazioneById(idProgrammazione);
+        Programmazione prog = programmazioneService
+                .getProgrammazioneById(idProgrammazione);
 
-            if (prog == null || !"Disponibile".equals(prog.getStato())) {
-                return false;
-            }
-
-            int postiDisponibili = postoService
-                    .contaPostiDisponibili(idProgrammazione);
-
-            return postiDisponibili >= numeroBiglietti;
-
-        } catch (SQLException e) {
-            throw e;
+        if (prog == null || !"Disponibile".equals(prog.getStato())) {
+            return false;
         }
+
+        int postiDisponibili = postoService
+                .contaPostiDisponibili(idProgrammazione);
+
+        return postiDisponibili >= numeroBiglietti;
+
     }
 
     //CALCOLA ANTEPRIMA PREZZO

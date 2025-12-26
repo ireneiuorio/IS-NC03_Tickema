@@ -1,5 +1,6 @@
 package entity.sgp;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -75,6 +76,8 @@ public class SlotOrari {
         this.data = data;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,4 +101,26 @@ public class SlotOrari {
                 ", stato='" + stato + '\'' +
                 '}';
     }
+
+    public boolean puoContenereFilm(int durataMinuti) {
+        if (oraInizio == null || oraFine == null) return false;
+        long minutiDisponibili = Duration.between(oraInizio, oraFine).toMinutes();
+        return minutiDisponibili >= durataMinuti;
+    }
+
+    public boolean isDisponibile() {
+        return "DISPONIBILE".equals(this.stato);
+    }
+
+
+    public void occupa() {
+        this.stato = "OCCUPATO";
+    }
+
+    public void libera() {
+        this.stato = "DISPONIBILE";
+    }
 }
+
+
+

@@ -38,7 +38,7 @@ public class ProgrammazioneDAO {
 
             ps.setDate(1, Date.valueOf(p.getDataProgrammazione()));
             ps.setString(2, p.getTipo());
-            ps.setBigDecimal(3, p.getPrezzoBase());
+            ps.setDouble(3, p.getPrezzoBase());
             ps.setString(4, p.getStato());
             ps.setInt(5, p.getIdFilm());
             ps.setInt(6, p.getIdSala());
@@ -183,7 +183,7 @@ public class ProgrammazioneDAO {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDate(1, Date.valueOf(p.getDataProgrammazione()));
             ps.setString(2, p.getTipo());
-            ps.setBigDecimal(3, p.getPrezzoBase());
+            ps.setDouble(3, p.getPrezzoBase());
             ps.setString(4, p.getStato());
             ps.setInt(5, p.getIdFilm());
             ps.setInt(6, p.getIdSala());
@@ -297,7 +297,7 @@ public class ProgrammazioneDAO {
         }
 
         p.setTipo(rs.getString("tipo"));
-        p.setPrezzoBase(rs.getBigDecimal("prezzoBase"));
+        p.setPrezzoBase(rs.getDouble("prezzoBase"));
         p.setStato(rs.getString("stato"));
         p.setIdFilm(rs.getInt("idFilm"));
         p.setIdSala(rs.getInt("idSala"));
