@@ -6,8 +6,15 @@ import entity.sga.Pagamento;
 import entity.sgp.Posto;
 import entity.sgp.Programmazione;
 import entity.sgu.Utente;
+import exception.pagamento.PagamentoNonValidoException;
+import exception.pagamento.SalvataggioPagamentoException;
+import exception.saldo.AggiornamentoSaldoException;
+import exception.saldo.OperazioneSaldoNonValidaException;
+import exception.saldo.TipoAccountNonValidoException;
+import exception.saldo.UtenteNonTrovatoException;
 import service.sgp.PostoService;
 import service.sgp.ProgrammazioneService;
+import service.sgp.RisultatoAssegnazione;
 import service.sgp.TariffaService;
 
 import java.sql.Connection;
@@ -201,7 +208,7 @@ public class AcquistoFacade {
             int idAccount,
             double importoTotale,
             boolean usaSaldo
-    ) throws SQLException {
+    ) throws SQLException, PagamentoNonValidoException, SalvataggioPagamentoException, TipoAccountNonValidoException, AggiornamentoSaldoException, OperazioneSaldoNonValidaException, UtenteNonTrovatoException {
 
         List<Pagamento> pagamenti = new ArrayList<>();
 
@@ -235,7 +242,7 @@ public class AcquistoFacade {
                     throw new IllegalStateException("Impossibile utilizzare il saldo");
                 }
 
-                Pagamento acconto = pagamentoService.effettuaPagament(
+                Pagamento acconto = pagamentoService.effettuaPagamento(
                         idAcquisto,
                         "Saldo",
                         saldoDisponibile,

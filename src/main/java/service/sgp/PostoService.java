@@ -424,44 +424,4 @@ public class PostoService {
         }
     }
 
-    //NON SO SE VA MESSA O MENO QUI, SICCOME NON MI MOSTRAVA RisultatoAssegnazione IN AcquistoFacade
-    class RisultatoAssegnazione {
-
-        private List<Posto> postiAssegnati;
-        private boolean vicinanzaGarantita;
-        private String messaggio;
-
-        public RisultatoAssegnazione(
-                List<Posto> postiAssegnati,
-                boolean vicinanzaGarantita,
-                String messaggio
-        ) {
-            this.postiAssegnati = postiAssegnati;
-            this.vicinanzaGarantita = vicinanzaGarantita;
-            this.messaggio = messaggio;
-        }
-
-        // Getters
-
-        public List<Posto> getPostiAssegnati() {
-            return postiAssegnati;
-        }
-
-        public boolean isVicinanzaGarantita() {
-            return vicinanzaGarantita;
-        }
-
-        public String getMessaggio() {
-            return messaggio;
-        }
-
-        @Override
-        public String toString() {
-            return "RisultatoAssegnazione{" +
-                    "postiAssegnati=" + postiAssegnati.size() +
-                    ", vicinanzaGarantita=" + vicinanzaGarantita +
-                    ", messaggio='" + messaggio + '\'' +
-                    '}';
-        }
-    }
 }
