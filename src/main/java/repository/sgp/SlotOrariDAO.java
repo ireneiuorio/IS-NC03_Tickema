@@ -1,6 +1,6 @@
 package repository.sgp;
 
-import entity.spg.SlotOrari;
+import entity.sgp.SlotOrari;
 
 import java.sql.*;
 import java.time.LocalDate;

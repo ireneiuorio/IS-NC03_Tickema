@@ -1,6 +1,6 @@
 package service.sgp;
 
-import entity.spg.Tariffa;
+import entity.sgp.Tariffa;
 import exception.sgp.tariffa.*;
 import repository.sgp.TariffaDAO;
 
@@ -35,7 +35,7 @@ public class TariffaService {
             Tariffa tariffa = new Tariffa();
             tariffa.setTipo(tipo);
             tariffa.setNome(nome);
-            tariffa.setPercentualeSconto(new BigDecimal(percentualeSconto));
+            tariffa.setPercentualeSconto(percentualeSconto);
 
             return tariffaDAO.doSave(tariffa);
 
@@ -58,7 +58,7 @@ public class TariffaService {
 
             tariffa.setTipo(tipo);
             tariffa.setNome(nome);
-            tariffa.setPercentualeSconto(new BigDecimal(percentualeSconto));
+            tariffa.setPercentualeSconto(percentualeSconto);
 
             return tariffaDAO.doUpdate(tariffa);
 
@@ -83,7 +83,7 @@ public class TariffaService {
         }
     }
 
-    public BigDecimal applicaSconto(BigDecimal prezzoBase, int idTariffa) {
+    public double applicaSconto(double prezzoBase, int idTariffa) {
         try {
             Tariffa tariffa = tariffaDAO.doRetrieveByKey(idTariffa);
 

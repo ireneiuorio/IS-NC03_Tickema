@@ -1,5 +1,6 @@
-package entity.spg;
+package entity.sgp;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -101,18 +102,23 @@ public class SlotOrari {
                 '}';
     }
 
-    public boolean puoContenereFilm(int durata) {
+    public boolean puoContenereFilm(int durataMinuti) {
+        if (oraInizio == null || oraFine == null) return false;
+        long minutiDisponibili = Duration.between(oraInizio, oraFine).toMinutes();
+        return minutiDisponibili >= durataMinuti;
     }
-    
+
     public boolean isDisponibile() {
-        return true
+        return "DISPONIBILE".equals(this.stato);
     }
 
 
     public void occupa() {
+        this.stato = "OCCUPATO";
     }
 
     public void libera() {
+        this.stato = "DISPONIBILE";
     }
 }
 

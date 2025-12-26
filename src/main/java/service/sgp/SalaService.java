@@ -1,7 +1,7 @@
 package service.sgp;
 
-import entity.spg.Posto;
-import entity.spg.Sala;
+import entity.sgp.Posto;
+import entity.sgp.Sala;
 import exception.sgp.sala.*;
 import repository.sgp.PostoDAO;
 import repository.sgp.ProgrammazioneDAO;
@@ -71,10 +71,6 @@ public class SalaService {
             // Batch insert per performance
             postoDAO.doSaveBatch(posti);
 
-            // ====================================================
-            // COMMIT TRANSAZIONE
-            // ====================================================
-
             connection.commit();
             return result;
 
@@ -91,7 +87,7 @@ public class SalaService {
 
 
     public boolean modificaSala(int idSala, String nome, int numeroDiFile, int capienza, int numeroPostiPerFila
-    ){
+    ) {
 
         try {
             connection.setAutoCommit(false);

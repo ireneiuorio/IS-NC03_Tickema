@@ -1,6 +1,6 @@
 package repository.sgp;
 
-import entity.spg.Tariffa;
+import entity.sgp.Tariffa;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class TariffaDAO {
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, tariffa.getTipo());
             ps.setString(2, tariffa.getNome());
-            ps.setBigDecimal(3, tariffa.getPercentualeSconto());
+            ps.setDouble(3, tariffa.getPercentualeSconto());
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) tariffa.setIdTariffa(rs.getInt(1));
@@ -55,7 +55,7 @@ public class TariffaDAO {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, tariffa.getTipo());
             ps.setString(2, tariffa.getNome());
-            ps.setBigDecimal(3, tariffa.getPercentualeSconto());
+            ps.setDouble(3, tariffa.getPercentualeSconto());
             ps.setInt(4, tariffa.getIdTariffa());
             return ps.executeUpdate() > 0;
         }
@@ -67,7 +67,7 @@ public class TariffaDAO {
         try {
             t.setTipo(rs.getString("tipo"));
             t.setNome(rs.getString("nome"));
-            t.setPercentualeSconto(rs.getBigDecimal("percentualeSconto"));
+            t.setPercentualeSconto(rs.getDouble("percentualeSconto"));
         } catch (IllegalArgumentException e) {
             throw new SQLException("Dati tariffa non validi nel database: " + e.getMessage());
         }

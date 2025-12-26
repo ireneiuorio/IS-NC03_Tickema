@@ -3,10 +3,10 @@ package service.sgp;
 import entity.sga.Acquisto;
 import entity.sga.Biglietto;
 import entity.sgc.Film;
-import entity.spg.Programmazione;
-import entity.spg.Sala;
-import entity.spg.SlotOrari;
-import entity.spg.Tariffa;
+import entity.sgp.Programmazione;
+import entity.sgp.Sala;
+import entity.sgp.SlotOrari;
+import entity.sgp.Tariffa;
 import exception.sgp.programmazione.*;
 import exception.sgp.sala.SalaNonTrovataException;
 import exception.sgp.slot.SlotNonTrovatoException;
@@ -76,26 +76,26 @@ public class ProgrammazioneService {
         }
     }
 
-    public Programmazione creaProgrammazioneSingola(LocalDate date, String tipo, BigDecimal prezzoBase, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, int idTariffa) {
+    public Programmazione creaProgrammazioneSingola(LocalDate date, String tipo, double prezzoBase, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa) {
 
         try {
             // Inizio transazione atomica
             connection.setAutoCommit(false);
 
 
-            // 1. Verifica esistenza Film
+            // 1. Verifica esistenza film
             Film film = filmDAO.doRetrieveByKey(idFilm);
             if (film == null) {
                 throw new FilmNonTrovatoException(idFilm);
             }
 
-            // 2. Verifica esistenza Sala
+            // 2. Verifica esistenza sala
             Sala sala = salaDAO.doRetrieveByKey(idSala);
             if (sala == null) {
                 throw new SalaNonTrovataException(idSala);
             }
 
-            // 3. Verifica esistenza e disponibilità SlotOrario
+            // 3. Verifica esistenza e disponibilità slotOrario
             SlotOrari slot = slotOrariDAO.doRetrieveByKey(idSlotOrario);
             if (slot == null) {
                 throw new SlotNonTrovatoException(idSlotOrario);
@@ -157,13 +157,12 @@ public class ProgrammazioneService {
         } finally {
             try {
                 connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                // Log error
+            } catch (SQLException e) { //
             }
         }
     }
 
-    public List<Programmazione> creaProgrammazioneMultipla(List<LocalDate> date, String tipo, BigDecimal prezzoBase, List<LocalTime> oraInizio, int idFilm, List<Integer> idSala, List<Integer> idSlotOrario, List<Integer> idTariffa) {
+    public List<Programmazione> creaProgrammazioneMultipla(List<LocalDate> date, String tipo, double prezzoBase, List<LocalTime> oraInizio, int idFilm, List<Integer> idSala, List<Integer> idSlotOrario, List<Integer> idTariffa) {
 
         // Validazione input: tutte le liste devono avere la stessa lunghezza
         if (date.size() != idSala.size() ||
@@ -183,16 +182,7 @@ public class ProgrammazioneService {
                         ? idTariffa.get(i)
                         : null;
 
-                Programmazione prog = creaProgrammazioneSingolaInternal(
-                        date.get(i),
-                        tipo,
-                        prezzoBase,
-                        oraInizio.get(i),
-                        idFilm,
-                        idSala.get(i),
-                        idSlotOrario.get(i),
-                        tariffa
-                );
+                Programmazione prog = creaProgrammazioneSingolaInternal(date.get(i), tipo, prezzoBase, oraInizio.get(i), idFilm, idSala.get(i), idSlotOrario.get(i), tariffa);
 
                 programmazioni.add(prog);
             }
@@ -212,7 +202,7 @@ public class ProgrammazioneService {
         }
     }
 
-    private Programmazione creaProgrammazioneSingolaInternal(LocalDate date, String tipo, BigDecimal prezzoBase, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa
+    private Programmazione creaProgrammazioneSingolaInternal(LocalDate date, String tipo, double prezzoBase, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa
     ) throws SQLException{
 
         // Validazioni
@@ -245,7 +235,7 @@ public class ProgrammazioneService {
         return result;
     }
 
-    public boolean modificaProgrammazione(int idProgrammazione, LocalDate date, String tipo, BigDecimal prezzoBase, String stato, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa) {
+    public boolean modificaProgrammazione(int idProgrammazione, LocalDate date, String tipo, double prezzoBase, String stato, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa) {
 
         try {
             connection.setAutoCommit(false);
@@ -326,10 +316,7 @@ public class ProgrammazioneService {
             processaRimborsiAutomatici(idProgrammazione);
 
             // STEP 3: INVALIDAZIONE BIGLIETTI
-            bigliettoDAO.doUpdateStatoByProgrammazione(
-                    idProgrammazione,
-                    "RIMBORSATO"
-            );
+            bigliettoDAO.doUpdateStatoByProgrammazione(idProgrammazione, "RIMBORSATO"); //bisogna avere un metodo per cambiare lo stato dei biglietti
 
             // STEP 4: LIBERAZIONE SLOT ORARIO
             SlotOrari slot = slotOrariDAO.doRetrieveByKey(prog.getIdSlotOrario());
@@ -338,10 +325,7 @@ public class ProgrammazioneService {
                 slotOrariDAO.doUpdate(slot);
             }
 
-            // ====================================================
-            // STEP 5: SOFT DELETE PROGRAMMAZIONE
-            // ====================================================
-
+            // SOFT DELETE PROGRAMMAZIONE
             boolean deleted = programmazioneDAO.doDelete(idProgrammazione);
 
             connection.commit();
@@ -374,16 +358,13 @@ public class ProgrammazioneService {
             }
 
             // Recupera acquisto correlato
-            Acquisto acquisto = acquistoDAO.doRetrieveByKey(
-                    biglietto.getIdAcquisto()
+            Acquisto acquisto = acquistoDAO.doRetrieveById(
+                    biglietto.getIdAcquisto(); //opp non lo so, si può pensare di mettere in Acquisto l'istanza Utente e fare qui acquisto.getUtente().getIdAccount()
             );
 
             if (acquisto != null) {
-                // Incrementa saldo utente
-                utenteDAO.doIncrementSaldo(
-                        acquisto.getIdAccount(),
-                        biglietto.getPrezzoFinale()
-                );
+                // Incrementa saldo utente -- bisogna inserire un metodo che incrementi il saldo di un certo biglietto in base al biglietto considerato
+                utenteDAO.doIncrementSaldo(acquisto.getIdAccount(), biglietto.getPrezzoFinale());
 
                 // Aggiorna stato acquisto
                 acquisto.setStato("RIMBORSATO");
@@ -392,7 +373,7 @@ public class ProgrammazioneService {
         }
     }
 
-    private BigDecimal calcolaPrezzoTariffato(BigDecimal prezzoBase, int idTariffa) {
+    private double calcolaPrezzoTariffato(double prezzoBase, int idTariffa) {
         try {
             Tariffa tariffa = tariffaDAO.doRetrieveByKey(idTariffa);
 
@@ -423,6 +404,4 @@ public class ProgrammazioneService {
             System.err.println("ERRORE CRITICO: Rollback fallito - " + e.getMessage());
         }
     }
-
-
 }

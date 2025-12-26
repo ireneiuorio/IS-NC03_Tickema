@@ -1,6 +1,6 @@
 package repository.sgp;
 
-import entity.spg.Posto;
+import entity.sgp.Posto;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,7 +1,5 @@
 package service;
 
-package service;
-
 import entity.sga.Acquisto;
 import entity.sga.Biglietto;
 import entity.sgp.Posto;

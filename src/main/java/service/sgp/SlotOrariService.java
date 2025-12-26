@@ -1,6 +1,6 @@
 package service.sgp;
 
-import entity.spg.SlotOrari;
+import entity.sgp.SlotOrari;
 import exception.sgp.slot.*;
 import exception.sgp.tariffa.ModificaTariffaException;
 import repository.sgp.ProgrammazioneDAO;
@@ -93,17 +93,6 @@ public class SlotOrariService {
         }
     }
 
-/*
-    public List<SlotOrari> getSlotDisponibili(int idSala, LocalDate data, int durataFilm){
-        try {
-            return slotOrariDAO.doRetrieveDisponibiliPerDurata(
-                    idSala, data, durataFilm
-            );
-        } catch (SQLException e) {
-            throw new RecuperoSlotCompatibiliException(e);
-        }
-    }
-*/
     public SlotOrari getSlotOrarioById(int idSlot) {
         try {
             return slotOrariDAO.doRetrieveByKey(idSlot);

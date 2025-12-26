@@ -1,6 +1,6 @@
 package repository.sgp;
 
-import entity.spg.Sala;
+import entity.sgp.Sala;
 
 import java.sql.*;
 import java.util.ArrayList;

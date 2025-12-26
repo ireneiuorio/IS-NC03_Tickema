@@ -1,6 +1,8 @@
 package entity.sga;
 
 import entity.sgu.Utente;
+import entity.sgp.Posto;
+import entity.sgp.Programmazione;
 
 import java.time.LocalDateTime;
 

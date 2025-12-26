@@ -1,4 +1,4 @@
-package it.unisa.tickerma.controller;
+package it.unisa.tickema.controller;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
