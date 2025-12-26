@@ -232,7 +232,7 @@ public class AcquistoFacade {
                     throw new IllegalStateException("Impossibile utilizzare il saldo");
                 }
 
-                Pagamento acconto = pagamentoService.effettuaPagamento(
+                Pagamento acconto = pagamentoService.effettuaPagament(
                         idAcquisto,
                         "Saldo",
                         saldoDisponibile,
