@@ -5,8 +5,6 @@ import entity.sgu.Utente;
 import java.sql.*;
 
 public class UtenteDAO {
-    public UtenteDAO(Connection connection) {
-    }
 
     private Connection connection;
 
@@ -177,5 +175,19 @@ public class UtenteDAO {
         utente.setSaldo(rs.getDouble("saldo"));
 
         return utente;
+    }
+
+
+
+    //INCREMENTA SALDO (per rimborsi)
+    public boolean doIncrementSaldo(int idAccount, double importo) throws SQLException {
+        String query = "UPDATE utente SET saldo = saldo + ? WHERE idAccount = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setDouble(1, importo);
+            ps.setInt(2, idAccount);
+
+            return ps.executeUpdate() > 0;
+        }
     }
 }

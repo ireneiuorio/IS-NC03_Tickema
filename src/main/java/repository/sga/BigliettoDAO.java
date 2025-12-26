@@ -367,4 +367,20 @@ public class BigliettoDAO {
         return biglietti;
     }
 
+
+
+    //AGGIORNA STATO DI TUTTI I BIGLIETTI DI UNA PROGRAMMAZIONE
+
+    public boolean doUpdateStatoByProgrammazione(int idProgrammazione, String nuovoStato)
+            throws SQLException {
+        String query = "UPDATE BIGLIETTO SET stato = ? WHERE idProgrammazione = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, nuovoStato);
+            ps.setInt(2, idProgrammazione);
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+
 }

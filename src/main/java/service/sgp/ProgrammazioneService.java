@@ -359,12 +359,12 @@ public class ProgrammazioneService {
 
             // Recupera acquisto correlato
             Acquisto acquisto = acquistoDAO.doRetrieveById(
-                    biglietto.getIdAcquisto(); //opp non lo so, si può pensare di mettere in Acquisto l'istanza Utente e fare qui acquisto.getUtente().getIdAccount()
+                    biglietto.getAcquisto().getIdAcquisto()//opp non lo so, si può pensare di mettere in Acquisto l'istanza Utente e fare qui acquisto.getUtente().getIdAccount()
             );
 
             if (acquisto != null) {
                 // Incrementa saldo utente -- bisogna inserire un metodo che incrementi il saldo di un certo biglietto in base al biglietto considerato
-                utenteDAO.doIncrementSaldo(acquisto.getIdAccount(), biglietto.getPrezzoFinale());
+                utenteDAO.doIncrementSaldo(acquisto.getUtente().getIdAccount(), biglietto.getPrezzoFinale());
 
                 // Aggiorna stato acquisto
                 acquisto.setStato("RIMBORSATO");
@@ -402,6 +402,22 @@ public class ProgrammazioneService {
         } catch (SQLException e) {
             // Log dell'errore di rollback
             System.err.println("ERRORE CRITICO: Rollback fallito - " + e.getMessage());
+        }
+    }
+
+    //RECUPERA PROGRAMMAZIONE PER ID (chiave primaria)
+    public Programmazione getProgrammazioneByKey(int id) {
+        try {
+            Programmazione programmazione = programmazioneDAO.doRetrieveByKey(id);
+
+            if (programmazione == null) {
+                throw new ProgrammazioneNonTrovataException(id);
+            }
+
+            return programmazione;
+
+        } catch (SQLException e) {
+            throw new RecuperoProgrammazioniException(e);
         }
     }
 }
