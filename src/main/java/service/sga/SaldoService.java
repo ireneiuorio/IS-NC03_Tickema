@@ -1,6 +1,5 @@
-package service;
+package service.sga;
 
-package service;
 
 import entity.sgu.Utente;
 import repository.sgu.UtenteDAO;
@@ -38,7 +37,7 @@ public class SaldoService {
         }
 
         // Gestisce NULL nel database (ritorna 0.0)
-        return utente.getSaldo() != null ? utente.getSaldo() : 0.0;
+        return utente.getSaldo() != 0 ? utente.getSaldo() : 0.0;
     }
 
 

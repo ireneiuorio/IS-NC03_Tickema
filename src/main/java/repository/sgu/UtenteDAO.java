@@ -1,7 +1,6 @@
 package repository.sgu;
 
 import entity.sgu.Utente;
-import it.unisa.tickema.model.DBManager;
 
 import java.sql.*;
 
@@ -9,72 +8,88 @@ public class UtenteDAO {
     public UtenteDAO(Connection connection) {
     }
 
-    //metodo utilizzato per andare a creare un account nuovo nel database, quindi aggiungerlo con tutti i suoi attributi
-    public boolean doSave(Utente utente) throws SQLException{
-        String sql = "INSERT INTO utente (nome, cognome, numeroDiTelefono, password, email, tipoAccount)" +
-                "VALUES (?,?,?,?,?,?)";
+    private Connection connection;
 
-        try (Connection conn = DBManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    public UtenteDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    /**
+     * SALVA NUOVO UTENTE
+     */
+    public boolean doSave(Utente utente) throws SQLException {
+        String sql = "INSERT INTO utente (nome, cognome, numeroDiTelefono, password, email, saldo, tipoAccount) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, utente.getNome());
             stmt.setString(2, utente.getCognome());
             stmt.setString(3, utente.getNumeroDiTelefono());
             stmt.setString(4, utente.getPassword());
             stmt.setString(5, utente.getEmail());
-            stmt.setString(6, utente.getTipoAccount());
+            stmt.setDouble(6, 0.0); // Saldo iniziale a 0
+            stmt.setString(7, utente.getTipoAccount());
 
             int rowsAffected = stmt.executeUpdate();
-
 
             if (rowsAffected > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     if (rs.next()) {
-                        utente.setIdAccount(rs.getInt(1)); //dato che il db assegna un id automatico ai nuovi account trovati, lo ricaviamo e lo andiamo a settare effettivamente come id dell'utente
+                        utente.setIdAccount(rs.getInt(1));
                     }
                 }
             }
-            return rowsAffected > 0;
 
+            return rowsAffected > 0;
         }
     }
 
-    //metodo per trovare un utente tramite il suo id
-    public Utente findUtenteById(int id) throws SQLException{
-        String sql = "SELECT * FROM utente WHERE idAccount=?";
-        try (Connection conn = DBManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+    /**
+     * TROVA UTENTE PER ID
+     */
+    public Utente doRetrieveById(int id) throws SQLException {
+        String sql = "SELECT * FROM utente WHERE idAccount = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return extractUtenteFromResultSet(rs); //con questo metodo noi possiamo andarci a prendere un utente con tutti i suoi attributi
-                }
-            }
-
-        }
-        return null;
-    }
-
-    //metodo per trovare un utente tramite la sua email
-    public Utente findUtenteByEmail(String email) throws SQLException{
-        String sql = "SELECT * FROM utente WHERE email=?";
-        try (Connection conn = DBManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return extractUtenteFromResultSet(rs);
                 }
             }
         }
+
         return null;
     }
 
+    /**
+     * TROVA UTENTE PER EMAIL
+     */
+    public Utente doRetrieveByEmail(String email) throws SQLException {
+        String sql = "SELECT * FROM utente WHERE email = ?";
 
-    public boolean modificaProfilo(int idAccount, String nome, String cognome, String numeroTelefono) throws SQLException{
-        String sql = "UPDATE utente SET nome = ?, cognome = ?, numeroDiTelefono = ? WHERE idAccount=?";
-        try (Connection conn = DBManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return extractUtenteFromResultSet(rs);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * MODIFICA PROFILO UTENTE
+     */
+    public boolean doUpdateProfilo(int idAccount, String nome, String cognome, String numeroTelefono)
+            throws SQLException {
+        String sql = "UPDATE utente SET nome = ?, cognome = ?, numeroDiTelefono = ? WHERE idAccount = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, nome);
             stmt.setString(2, cognome);
             stmt.setString(3, numeroTelefono);
@@ -84,13 +99,14 @@ public class UtenteDAO {
         }
     }
 
-    //questo metodo modifica solo le credenziali, quindi email e password
-    //gestisce solo la logica del db, tutti i controlli sulla vecchia password ed email già esistente vengono fatti nel service
-    public boolean modificaCredenzialiProfilo(int idAccount, String email, String passwordHashata) throws SQLException{
-        String sql = "UPDATE utente SET email = ?, password = ? WHERE idAccount=?";
+    /**
+     * MODIFICA CREDENZIALI (email e password)
+     */
+    public boolean doUpdateCredenziali(int idAccount, String email, String passwordHashata)
+            throws SQLException {
+        String sql = "UPDATE utente SET email = ?, password = ? WHERE idAccount = ?";
 
-        try (Connection conn = DBManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, email);
             stmt.setString(2, passwordHashata);
             stmt.setInt(3, idAccount);
@@ -99,35 +115,54 @@ public class UtenteDAO {
         }
     }
 
-    //questo metodo è generale, poi nei service verranno differenziati i metodi eliminaAccount per l'utente e cancellaUtente per l'admin
-    //ma sempre chiamando questo metodo qui, perchè fanno la stessa cosa, hanno solo un flusso di eventi diverso prima di eliminare
-    public boolean deleteAccount(int idAccount) throws SQLException{
-        String sql = "DELETE FROM utente WHERE idAccount=?";
-        try (Connection conn = DBManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+    /**
+     * AGGIORNA SALDO UTENTE
+     */
+    public boolean doUpdateSaldo(int idAccount, double nuovoSaldo) throws SQLException {
+        String sql = "UPDATE utente SET saldo = ? WHERE idAccount = ?";
 
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setDouble(1, nuovoSaldo);
+            stmt.setInt(2, idAccount);
+
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    /**
+     * ELIMINA ACCOUNT
+     */
+    public boolean doDelete(int idAccount) throws SQLException {
+        String sql = "DELETE FROM utente WHERE idAccount = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, idAccount);
             return stmt.executeUpdate() > 0;
         }
     }
 
-    //questo metodo ci aiuta per vedere se un'email è già registrata nel sistema, in modo tale che in caso di esito positivo
-    //blocca la registrazione di quell'utente per email già esistente
-    public boolean esisteEmail(String email) throws SQLException{
-        String sql = "SELECT COUNT(*) FROM utente WHERE email=?";
-        try (Connection conn = DBManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+    /**
+     * VERIFICA SE EMAIL ESISTE GIÀ
+     */
+    public boolean esisteEmail(String email) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM utente WHERE email = ?";
 
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, email);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1) > 0; //se ritorna true allora l'email esiste già nel db, e quindi non si può registrare l'utente
+                    return rs.getInt(1) > 0;
                 }
             }
         }
-        return false; //vuol dire che non c'è l'email nel db, e quindi non risulta ad un'email già registrata. Di conseguenza l'utente può registrarsi
+
+        return false;
     }
 
+    /**
+     * ESTRAE UTENTE DA RESULTSET
+     */
     private Utente extractUtenteFromResultSet(ResultSet rs) throws SQLException {
         Utente utente = new Utente(
                 rs.getInt("idAccount"),
@@ -139,8 +174,8 @@ public class UtenteDAO {
                 rs.getString("tipoAccount")
         );
 
-        utente.setSaldo(rs.getBigDecimal("saldo"));
+        utente.setSaldo(rs.getDouble("saldo"));
+
         return utente;
     }
-
 }
