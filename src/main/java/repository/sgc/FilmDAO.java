@@ -10,5 +10,7 @@ public class FilmDAO {
     }
 
     public Film doRetrieveByKey(int idFilm) {
+       Film film = null;
+        return film;
     }
 }
