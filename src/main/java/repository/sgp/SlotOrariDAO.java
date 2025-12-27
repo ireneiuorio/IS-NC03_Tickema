@@ -11,6 +11,7 @@ public class SlotOrariDAO {
     private Connection connection;
 
     public SlotOrariDAO(Connection connection) {
+        this.connection = connection;
     }
 
     public SlotOrari doSave(SlotOrari slot) throws SQLException {
@@ -28,7 +29,7 @@ public class SlotOrariDAO {
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    slot.setIdSlot(rs.getInt(1));
+                    slot.setIdSlotOrario(rs.getInt(1));
                 }
             }
         }
@@ -103,7 +104,7 @@ public class SlotOrariDAO {
             ps.setTime(2, Time.valueOf(slot.getOraFine()));
             ps.setString(3, slot.getStato());
             ps.setDate(4, Date.valueOf(slot.getData()));
-            ps.setInt(5, slot.getIdSlot());
+            ps.setInt(5, slot.getIdSlotOrario());
 
             return ps.executeUpdate() > 0;
         }
@@ -132,7 +133,7 @@ public class SlotOrariDAO {
     //Permette di trasformare una tupla in un oggetto
     private SlotOrari popolaOggetto(ResultSet rs) throws SQLException {
         SlotOrari s = new SlotOrari();
-        s.setIdSlot(rs.getInt("idSlot"));
+        s.setIdSlotOrario(rs.getInt("idSlot"));
 
         Time inizio = rs.getTime("oraInizio");
         if (inizio != null) s.setOraInizio(inizio.toLocalTime());

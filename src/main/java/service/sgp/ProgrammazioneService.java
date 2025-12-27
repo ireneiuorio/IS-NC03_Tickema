@@ -20,7 +20,6 @@ import repository.sgp.SlotOrariDAO;
 import repository.sgp.TariffaDAO;
 import repository.sgu.UtenteDAO;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -136,7 +135,7 @@ public class ProgrammazioneService {
             programmazione.setStato("DISPONIBILE");
             programmazione.setIdFilm(idFilm);
             programmazione.setIdSala(idSala);
-            programmazione.setIdSlotOrario(idSlotOrario);
+            programmazione.setIdSlotOrari(idSlotOrario);
             programmazione.setIdTariffa(idTariffa);
 
             Programmazione result = programmazioneDAO.doSave(programmazione);
@@ -223,7 +222,7 @@ public class ProgrammazioneService {
         p.setStato("DISPONIBILE");
         p.setIdFilm(idFilm);
         p.setIdSala(idSala);
-        p.setIdSlotOrario(idSlotOrario);
+        p.setIdSlotOrari(idSlotOrario);
         p.setIdTariffa(idTariffa);
 
         Programmazione result = programmazioneDAO.doSave(p);
@@ -247,7 +246,7 @@ public class ProgrammazioneService {
             }
 
             // Verifica se sta cambiando slot/sala
-            boolean cambioSlot = (prog.getIdSlotOrario() != idSlotOrario);
+            boolean cambioSlot = (prog.getIdSlotOrari() != idSlotOrario);
             boolean cambioSala = (prog.getIdSala() != idSala);
 
             if (cambioSlot || cambioSala) {
@@ -259,7 +258,7 @@ public class ProgrammazioneService {
 
                 // Libera vecchio slot
                 SlotOrari vecchioSlot = slotOrariDAO.doRetrieveByKey(
-                        prog.getIdSlotOrario()
+                        prog.getIdSlotOrari()
                 );
                 if (vecchioSlot != null) {
                     vecchioSlot.libera();
@@ -281,7 +280,7 @@ public class ProgrammazioneService {
             prog.setStato(stato);
             prog.setIdFilm(idFilm);
             prog.setIdSala(idSala);
-            prog.setIdSlotOrario(idSlotOrario);
+            prog.setIdSlotOrari(idSlotOrario);
             prog.setIdTariffa(idTariffa);
 
             boolean result = programmazioneDAO.doUpdate(prog);
@@ -319,7 +318,7 @@ public class ProgrammazioneService {
             bigliettoDAO.doUpdateStatoByProgrammazione(idProgrammazione, "RIMBORSATO"); //bisogna avere un metodo per cambiare lo stato dei biglietti
 
             // STEP 4: LIBERAZIONE SLOT ORARIO
-            SlotOrari slot = slotOrariDAO.doRetrieveByKey(prog.getIdSlotOrario());
+            SlotOrari slot = slotOrariDAO.doRetrieveByKey(prog.getIdSlotOrari());
             if (slot != null) {
                 slot.libera(); // Cambia stato a DISPONIBILE
                 slotOrariDAO.doUpdate(slot);

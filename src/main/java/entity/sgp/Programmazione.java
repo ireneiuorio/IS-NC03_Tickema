@@ -18,11 +18,11 @@ public class Programmazione {
 
     private int idFilm;
     private int idSala;
-    private int idSlotOrario;
+    private int idSlotOrari;
     private int idTariffa;
 
     private Tariffa tariffa;
-    private SlotOrari slotOrario;
+    private SlotOrari slotOrari;
     private Sala sala;
     private Film film;
 
@@ -30,7 +30,7 @@ public class Programmazione {
         this.stato = "DISPONIBILE";
     }
 
-    public Programmazione(int idProgrammazione, LocalDate dataProgrammazione, String tipo, double prezzoBase, String stato, int idFilm, int idSala, int idSlotOrario, int idTariffa) {
+    public Programmazione(int idProgrammazione, LocalDate dataProgrammazione, String tipo, double prezzoBase, String stato, int idFilm, int idSala, int idSlotOrari, int idTariffa) {
         this.idProgrammazione = idProgrammazione;
         this.setDataProgrammazione(dataProgrammazione);
         this.setTipo(tipo);
@@ -39,7 +39,7 @@ public class Programmazione {
 
         this.idFilm = idFilm;
         this.idSala = idSala;
-        this.idSlotOrario = idSlotOrario;
+        this.idSlotOrari = idSlotOrari;
         this.idTariffa = idTariffa;
     }
 
@@ -108,12 +108,12 @@ public class Programmazione {
         this.idSala = idSala;
     }
 
-    public int getIdSlotOrario() {
-        return idSlotOrario;
+    public int getIdSlotOrari() {
+        return idSlotOrari;
     }
 
-    public void setIdSlotOrario(int idSlotOrario) {
-        this.idSlotOrario = idSlotOrario;
+    public void setIdSlotOrari(int idSlotOrari) {
+        this.idSlotOrari = idSlotOrari;
     }
 
     public Integer getIdTariffa() {
@@ -175,8 +175,8 @@ public class Programmazione {
 
         sb.append(" - ").append(dataProgrammazione);
 
-        if (slotOrario != null) {
-            sb.append(" ore ").append(slotOrario.getOraInizio());
+        if (slotOrari != null) {
+            sb.append(" ore ").append(slotOrari.getOraInizio());
         }
 
         if (sala != null) {
@@ -198,12 +198,12 @@ public class Programmazione {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Programmazione that = (Programmazione) o;
-        return idProgrammazione == that.idProgrammazione && idFilm == that.idFilm && idSala == that.idSala && idSlotOrario == that.idSlotOrario && Objects.equals(dataProgrammazione, that.dataProgrammazione) && Objects.equals(tipo, that.tipo) && Objects.equals(prezzoBase, that.prezzoBase) && Objects.equals(stato, that.stato) && Objects.equals(idTariffa, that.idTariffa);
+        return idProgrammazione == that.idProgrammazione && idFilm == that.idFilm && idSala == that.idSala && idSlotOrari == that.idSlotOrari && Objects.equals(dataProgrammazione, that.dataProgrammazione) && Objects.equals(tipo, that.tipo) && Objects.equals(prezzoBase, that.prezzoBase) && Objects.equals(stato, that.stato) && Objects.equals(idTariffa, that.idTariffa);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idProgrammazione, dataProgrammazione, tipo, prezzoBase, stato, idFilm, idSala, idSlotOrario, idTariffa);
+        return Objects.hash(idProgrammazione, dataProgrammazione, tipo, prezzoBase, stato, idFilm, idSala, idSlotOrari, idTariffa);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class Programmazione {
                 ", stato='" + stato + '\'' +
                 ", idFilm=" + idFilm +
                 ", idSala=" + idSala +
-                ", idSlotOrario=" + idSlotOrario +
+                ", idSlotOrari=" + idSlotOrari +
                 ", idTariffa=" + idTariffa +
                 '}';
     }
@@ -243,14 +243,14 @@ public class Programmazione {
         }
     }
 
-    public SlotOrari getSlotOrario() {
-        return slotOrario;
+    public SlotOrari getSlotOrari() {
+        return slotOrari;
     }
 
-    public void setSlotOrario(SlotOrari slotOrario) {
-        this.slotOrario = slotOrario;
-        if (slotOrario != null) {
-            this.idSlotOrario = slotOrario.getIdSlot();
+    public void setSlotOrari(SlotOrari slotOrari) {
+        this.slotOrari = slotOrari;
+        if (slotOrari != null) {
+            this.idSlotOrari = slotOrari.getIdSlotOrario();
         }
     }
 
