@@ -100,7 +100,7 @@ public class AcquistoServlet extends HttpServlet {
 
             List<Posto> postiAssegnati = assegnazione.getPostiAssegnati();
 
-            // ⏱️ OCCUPA TEMPORANEAMENTE I POSTI (5 minuti)
+            // OCCUPA TEMPORANEAMENTE I POSTI (5 minuti)
             boolean occupati = postoService.occupaTemporaneamente(postiAssegnati);
 
             if (!occupati) {
@@ -199,7 +199,7 @@ public class AcquistoServlet extends HttpServlet {
                 return;
             }
 
-            // ✅ ELABORA ACQUISTO (i posti sono già OCCUPATO)
+            // ELABORA ACQUISTO (i posti sono già OCCUPATO)
             RisultatoAcquisto risultato = acquistoFacade.elaboraAcquisto(
                     utente,
                     idProgrammazione,
@@ -209,7 +209,7 @@ public class AcquistoServlet extends HttpServlet {
             );
 
             if (risultato.isSuccesso()) {
-                // ✅ ACQUISTO COMPLETATO
+                // ACQUISTO COMPLETATO
                 // I posti restano OCCUPATO (definitivo)
 
                 // Pulisci sessione
@@ -238,7 +238,7 @@ public class AcquistoServlet extends HttpServlet {
                         .forward(request, response);
 
             } else {
-                // ❌ ACQUISTO FALLITO → Libera i posti
+                // ACQUISTO FALLITO → Libera i posti
                 postoService.liberaPostiDaCheckout(postiPrenotati);
 
                 // Pulisci sessione
