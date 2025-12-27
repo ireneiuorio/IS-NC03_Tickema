@@ -4,4 +4,8 @@ public class EliminazioneProgrammazioneException extends RuntimeException {
   public EliminazioneProgrammazioneException(Throwable cause) {
     super("Fallimento procedura di annullamento e rimborso", cause);
   }
+
+  public EliminazioneProgrammazioneException() {
+    super("Fallimento procedura di annullamento e rimborso");
+  }
 }
