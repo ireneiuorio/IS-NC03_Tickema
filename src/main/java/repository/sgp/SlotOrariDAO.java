@@ -11,6 +11,7 @@ public class SlotOrariDAO {
     private Connection connection;
 
     public SlotOrariDAO(Connection connection) {
+        this.connection=connection;
     }
 
     public SlotOrari doSave(SlotOrari slot) throws SQLException {
