@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class SlotOrari {
-    private int idSlot;
+    private int idSlotOrario;
     private LocalTime oraInizio;
     private LocalTime oraFine;
     private String stato; // DISPONIBILE, OCCUPATO
@@ -15,19 +15,19 @@ public class SlotOrari {
     public SlotOrari() { }
 
     public SlotOrari(int idSlot, LocalTime oraInizio, LocalTime oraFine, String stato, LocalDate data) {
-        this.idSlot = idSlot;
+        this.idSlotOrario = idSlot;
         this.setOraInizio(oraInizio);
         this.setOraFine(oraFine);
         this.setStato(stato);
         this.setData(data);
     }
 
-    public int getIdSlot() {
-        return idSlot;
+    public int getIdSlotOrario() {
+        return idSlotOrario;
     }
 
-    public void setIdSlot(int idSlot) {
-        this.idSlot = idSlot;
+    public void setIdSlotOrario(int idSlotOrario) {
+        this.idSlotOrario = idSlotOrario;
     }
 
     public LocalTime getOraInizio() {
@@ -83,18 +83,18 @@ public class SlotOrari {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SlotOrari slotOrari = (SlotOrari) o;
-        return idSlot == slotOrari.idSlot && Objects.equals(oraInizio, slotOrari.oraInizio) && Objects.equals(oraFine, slotOrari.oraFine) && Objects.equals(stato, slotOrari.stato) && Objects.equals(data, slotOrari.data);
+        return idSlotOrario == slotOrari.idSlotOrario && Objects.equals(oraInizio, slotOrari.oraInizio) && Objects.equals(oraFine, slotOrari.oraFine) && Objects.equals(stato, slotOrari.stato) && Objects.equals(data, slotOrari.data);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idSlot, oraInizio, oraFine, stato, data);
+        return Objects.hash(idSlotOrario, oraInizio, oraFine, stato, data);
     }
 
     @Override
     public String toString() {
         return "SlotOrario{" +
-                "idSlot=" + idSlot +
+                "idSlot=" + idSlotOrario +
                 ", data=" + data +
                 ", dalle=" + oraInizio +
                 ", alle=" + oraFine +

@@ -42,7 +42,7 @@ public class ProgrammazioneDAO {
             ps.setString(4, p.getStato());
             ps.setInt(5, p.getIdFilm());
             ps.setInt(6, p.getIdSala());
-            ps.setInt(7, p.getIdSlotOrario());
+            ps.setInt(7, p.getIdSlotOrari());
 
             if (p.getIdTariffa() != null) {
                 ps.setInt(8, p.getIdTariffa());
@@ -187,7 +187,7 @@ public class ProgrammazioneDAO {
             ps.setString(4, p.getStato());
             ps.setInt(5, p.getIdFilm());
             ps.setInt(6, p.getIdSala());
-            ps.setInt(7, p.getIdSlotOrario());
+            ps.setInt(7, p.getIdSlotOrari());
 
             if (p.getIdTariffa() != null) {
                 ps.setInt(8, p.getIdTariffa());
@@ -301,7 +301,7 @@ public class ProgrammazioneDAO {
         p.setStato(rs.getString("stato"));
         p.setIdFilm(rs.getInt("idFilm"));
         p.setIdSala(rs.getInt("idSala"));
-        p.setIdSlotOrario(rs.getInt("idSlotOrario"));
+        p.setIdSlotOrari(rs.getInt("idSlotOrario"));
 
         int idTariffa = rs.getInt("idTariffa");
         if (!rs.wasNull()) {
@@ -323,8 +323,8 @@ public class ProgrammazioneDAO {
         programmazione.setSala(sala);
 
         // Carica SlotOrari
-        SlotOrari slot = slotOrariDAO.doRetrieveByKey(programmazione.getIdSlotOrario());
-        programmazione.setSlotOrario(slot);
+        SlotOrari slot = slotOrariDAO.doRetrieveByKey(programmazione.getIdSlotOrari());
+        programmazione.setSlotOrari(slot);
 
         // Carica Tariffa (se presente)
         if (programmazione.getIdTariffa() != null) {
