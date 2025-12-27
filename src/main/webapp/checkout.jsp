@@ -57,6 +57,62 @@
             padding: 40px 30px;
         }
 
+        /* Timer Box */
+        .timer-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+
+        .timer-icon {
+            font-size: 2.5em;
+        }
+
+        .timer-text {
+            flex: 1;
+        }
+
+        .timer-text span:first-child {
+            display: block;
+            font-size: 1em;
+            color: #e65100;
+            margin-bottom: 5px;
+        }
+
+        .timer-countdown {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #e65100;
+            display: block;
+        }
+
+        .timer-expired {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left-color: #f44336;
+            animation: none;
+        }
+
+        .timer-warning {
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
         /* Film Info Section */
         .film-section {
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
@@ -397,6 +453,18 @@
 <!-- Main Content -->
 <main>
     <div class="checkout-container">
+
+        <!-- Timer Prenotazione -->
+        <c:if test="${not empty scadenzaCheckout}">
+            <div class="timer-box" id="timerBox">
+                <div class="timer-icon">⏱️</div>
+                <div class="timer-text">
+                    <span>Tempo rimanente per completare l'acquisto:</span>
+                    <span class="timer-countdown" id="countdown">5:00</span>
+                </div>
+            </div>
+        </c:if>
+
         <div class="checkout-card">
             <!-- Header -->
             <div class="checkout-header">
@@ -433,7 +501,7 @@
                             </div>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-icon"></span>
+                            <span class="detail-icon">⏱️</span>
                             <div class="detail-content">
                                 <div class="detail-label">Durata</div>
                                 <div class="detail-value">${programmazione.film.durata} min</div>
@@ -445,24 +513,7 @@
                 <!-- Form -->
                 <form id="checkoutForm" method="POST" action="${pageContext.request.contextPath}/acquisto">
                     <input type="hidden" name="idProgrammazione" value="${programmazione.idProgrammazione}">
-
-                    <!-- Numero Biglietti -->
-                    <div class="form-section">
-                        <h3>Numero Biglietti</h3>
-                        <div class="input-group">
-                            <label for="numeroBiglietti">Quanti biglietti vuoi acquistare?</label>
-                            <input type="number"
-                                   id="numeroBiglietti"
-                                   name="numeroBiglietti"
-                                   value="${numeroBiglietti}"
-                                   min="1"
-                                   max="10"
-                                   required>
-                            <button type="button" class="update-button" onclick="aggiornaPrezzo()">
-                                Aggiorna Prezzo
-                            </button>
-                        </div>
-                    </div>
+                    <input type="hidden" name="numeroBiglietti" value="${numeroBiglietti}">
 
                     <!-- Riepilogo Prezzi -->
                     <div class="price-summary">
@@ -472,21 +523,21 @@
                         </div>
                         <div class="price-row">
                             <span>Numero biglietti</span>
-                            <span id="displayNumBiglietti">${numeroBiglietti}</span>
+                            <span>${numeroBiglietti}</span>
                         </div>
                         <div class="price-divider"></div>
                         <div class="price-row price-total">
                             <span>TOTALE</span>
-                            <span id="displayTotale">€<fmt:formatNumber value="${prezzoTotale}" pattern="#,##0.00"/></span>
+                            <span>€<fmt:formatNumber value="${prezzoTotale}" pattern="#,##0.00"/></span>
                         </div>
                     </div>
 
                     <!-- Metodo Pagamento -->
                     <div class="form-section">
-                        <h3>💳 Metodo di Pagamento</h3>
+                        <h3>Metodo di Pagamento</h3>
 
                         <div class="saldo-badge">
-                            💰 Saldo disponibile: €<fmt:formatNumber value="${saldoDisponibile}" pattern="#,##0.00"/>
+                            Saldo disponibile: €<fmt:formatNumber value="${saldoDisponibile}" pattern="#,##0.00"/>
                         </div>
 
                         <div class="checkbox-wrapper" onclick="toggleSaldo()">
@@ -540,8 +591,7 @@
 <script>
     // Dati passati dal server
     const saldoDisponibile = ${saldoDisponibile};
-    const prezzoUnitario = ${prezzoTotale / numeroBiglietti};
-    const idProgrammazione = ${programmazione.idProgrammazione};
+    const prezzoTotale = ${prezzoTotale};
 
     // Toggle checkbox saldo
     function toggleSaldo() {
@@ -554,72 +604,153 @@
     function calcolaAnteprima() {
         const usaSaldo = document.getElementById('usaSaldo').checked;
         const preview = document.getElementById('paymentPreview');
-        const numBiglietti = parseInt(document.getElementById('numeroBiglietti').value);
-        const totale = prezzoUnitario * numBiglietti;
 
         if (usaSaldo) {
             preview.style.display = 'block';
 
-            if (saldoDisponibile >= totale) {
+            if (saldoDisponibile >= prezzoTotale) {
                 // Saldo sufficiente
                 preview.className = 'payment-preview preview-success';
                 preview.innerHTML = `
-                        <h4> Pagamento con Saldo</h4>
-                        <p><strong>Saldo utilizzato:</strong> €${totale.toFixed(2)}</p>
-                        <p><strong>Carta:</strong> €0.00</p>
-                        <p style="color: #2e7d32; font-weight: 600; margin-top: 10px;">
-                            Il pagamento verrà effettuato interamente con il saldo
-                        </p>
-                    `;
+                    <h4>Pagamento con Saldo</h4>
+                    <p><strong>Saldo utilizzato:</strong> €${prezzoTotale.toFixed(2)}</p>
+                    <p><strong>Carta:</strong> €0.00</p>
+                    <p style="color: #2e7d32; font-weight: 600; margin-top: 10px;">
+                        Il pagamento verrà effettuato interamente con il saldo
+                    </p>
+                `;
             } else if (saldoDisponibile > 0) {
                 // Saldo insufficiente - pagamento misto
                 preview.className = 'payment-preview preview-warning';
-                const differenza = totale - saldoDisponibile;
+                const differenza = prezzoTotale - saldoDisponibile;
                 preview.innerHTML = `
-                        <h4>⚠Pagamento Misto</h4>
-                        <p><strong>Saldo utilizzato:</strong> €${saldoDisponibile.toFixed(2)}</p>
-                        <p><strong>Carta (differenza):</strong> €${differenza.toFixed(2)}</p>
-                        <p style="color: #e65100; font-weight: 600; margin-top: 10px;">
-                            Utilizzerai tutto il tuo saldo + integrazione con carta
-                        </p>
-                    `;
+                    <h4>Pagamento Misto</h4>
+                    <p><strong>Saldo utilizzato:</strong> €${saldoDisponibile.toFixed(2)}</p>
+                    <p><strong>Carta (differenza):</strong> €${differenza.toFixed(2)}</p>
+                    <p style="color: #e65100; font-weight: 600; margin-top: 10px;">
+                        Utilizzerai tutto il tuo saldo + integrazione con carta
+                    </p>
+                `;
             } else {
                 // Saldo zero
                 preview.className = 'payment-preview';
                 preview.innerHTML = `
-                        <h4>💳 Pagamento con Carta</h4>
-                        <p><strong>Saldo:</strong> €0.00</p>
-                        <p><strong>Carta:</strong> €${totale.toFixed(2)}</p>
-                    `;
+                    <h4>Pagamento con Carta</h4>
+                    <p><strong>Saldo:</strong> €0.00</p>
+                    <p><strong>Carta:</strong> €${prezzoTotale.toFixed(2)}</p>
+                `;
             }
         } else {
             preview.style.display = 'none';
         }
     }
 
-    // Aggiorna prezzo quando cambia numero biglietti
-    function aggiornaPrezzo() {
-        const numBiglietti = document.getElementById('numeroBiglietti').value;
-
-        // Redirect alla stessa pagina con nuovo numero
-        window.location.href = `${pageContext.request.contextPath}/acquisto?idProgrammazione=${idProgrammazione}&numeroBiglietti=` + numBiglietti;
-    }
-
-    // Aggiorna display in tempo reale (senza refresh)
-    document.getElementById('numeroBiglietti').addEventListener('input', function() {
-        const numBiglietti = parseInt(this.value) || 1;
-        const totale = prezzoUnitario * numBiglietti;
-
-        document.getElementById('displayNumBiglietti').textContent = numBiglietti;
-        document.getElementById('displayTotale').textContent = '€' + totale.toFixed(2);
-
-        calcolaAnteprima();
-    });
-
     // Calcola anteprima al caricamento
     window.onload = function() {
         calcolaAnteprima();
     };
 </script>
+
+<!-- Timer JavaScript per gestire scadenza prenotazione -->
+<c:if test="${not empty scadenzaCheckout}">
+    <script>
+        // Scadenza prenotazione dal server (formato ISO)
+        const scadenzaStr = "${scadenzaCheckout}";
+        let timerScaduto = false;
+        let timerId = null;
+
+        if (scadenzaStr) {
+            // Converti la data (LocalDateTime → JavaScript Date)
+            const scadenza = new Date(scadenzaStr);
+
+            // Funzione per aggiornare il countdown
+            function aggiornaTimer() {
+                const ora = new Date();
+                const diff = scadenza - ora;
+
+                if (diff <= 0 && !timerScaduto) {
+                    timerScaduto = true;
+                    clearInterval(timerId);
+
+                    // TEMPO SCADUTO
+                    const countdownElement = document.getElementById('countdown');
+                    if (countdownElement) {
+                        countdownElement.textContent = "TEMPO SCADUTO";
+                        countdownElement.style.color = '#d32f2f';
+                    }
+
+                    const timerBox = document.getElementById('timerBox');
+                    if (timerBox) {
+                        timerBox.classList.add('timer-expired');
+                    }
+
+                    // CHIAMA SERVLET PER LIBERARE I POSTI
+                    fetch('${pageContext.request.contextPath}/annulla-checkout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Posti liberati:', data);
+
+                            // Mostra alert dopo 1 secondo
+                            setTimeout(() => {
+                                alert("Il tempo per completare l'acquisto è scaduto. I posti sono stati liberati.");
+
+                                // Redirect alla programmazione
+                                window.location.href = "${pageContext.request.contextPath}/programmazioni";
+                            }, 1000);
+                        })
+                        .catch(error => {
+                            console.error('Errore liberazione posti:', error);
+                            alert("Il tempo è scaduto. Torna alla programmazione.");
+                            window.location.href = "${pageContext.request.contextPath}/programmazioni";
+                        });
+
+                    return;
+                }
+
+                // Calcola minuti e secondi rimanenti
+                const minuti = Math.floor(diff / 1000 / 60);
+                const secondi = Math.floor((diff / 1000) % 60);
+
+                // Aggiorna il display
+                const countdownElement = document.getElementById('countdown');
+                if (countdownElement) {
+                    countdownElement.textContent =
+                        minuti + ':' + secondi.toString().padStart(2, '0');
+
+                    // Colore rosso se < 1 minuto
+                    if (minuti < 1) {
+                        countdownElement.style.color = '#d32f2f';
+
+                        const timerBox = document.getElementById('timerBox');
+                        if (timerBox) {
+                            timerBox.classList.add('timer-warning');
+                        }
+                    }
+                }
+            }
+
+            // Avvia il timer (aggiorna ogni secondo)
+            timerId = setInterval(aggiornaTimer, 1000);
+            aggiornaTimer(); // Prima chiamata immediata
+
+            // LIBERA POSTI SE UTENTE CHIUDE LA PAGINA
+            window.addEventListener('beforeunload', function(e) {
+                if (!timerScaduto) {
+                    // Chiamata sincrona per liberare i posti
+                    navigator.sendBeacon(
+                        '${pageContext.request.contextPath}/annulla-checkout',
+                        ''
+                    );
+                }
+            });
+        }
+    </script>
+</c:if>
+
 </body>
 </html>
