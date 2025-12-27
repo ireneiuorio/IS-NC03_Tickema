@@ -44,16 +44,40 @@ body {
 .header-container {
     max-width: 1400px;
     margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 15px 30px;
+    gap: 20px;
 }
 
-/* Logo */
+/* Hamburger Menu - SEMPRE VISIBILE A SINISTRA */
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 10px;
+    width: fit-content;
+}
+
+.hamburger span {
+    width: 30px;
+    height: 3px;
+    background: var(--white);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger:hover span {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Logo - AL CENTRO */
 .logo {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 15px;
     text-decoration: none;
     transition: transform 0.3s ease;
@@ -76,12 +100,57 @@ body {
     letter-spacing: 2px;
 }
 
-/* Navigation */
+/* Navigation - MENU LATERALE */
+nav {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 320px;
+    height: 100vh;
+    background: var(--dark);
+    transition: left 0.3s ease;
+    box-shadow: 5px 0 20px rgba(0,0,0,0.3);
+    z-index: 1001;
+    overflow-y: auto;
+}
+
 .nav-menu {
     display: flex;
+    flex-direction: column;
     list-style: none;
-    gap: 30px;
-    align-items: center;
+    padding: 80px 0 20px 0;
+    gap: 0;
+}
+
+.nav-menu.active {
+    left: 0;
+}
+
+nav.active {
+    left: 0;
+}
+
+/* Overlay per chiudere il menu */
+.nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.nav-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.nav-menu li {
+    margin: 0;
 }
 
 .nav-menu li a {
@@ -89,35 +158,65 @@ body {
     text-decoration: none;
     font-weight: 500;
     font-size: 1.05em;
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 18px 30px;
+    display: block;
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    border-left: 4px solid transparent;
 }
 
 .nav-menu li a:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: var(--white);
+    padding-left: 35px;
 }
 
 .nav-menu li a.active {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+    border-left-color: var(--white);
     font-weight: 600;
+}
+
+/* Header User Section - A DESTRA */
+.header-user {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.user-saldo {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.saldo-label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.saldo-value {
+    font-weight: 700;
+    font-size: 1.1em;
+    color: var(--white);
 }
 
 /* User Profile Icon */
 .user-icon {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     background: var(--white);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1em;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -126,23 +225,6 @@ body {
 .user-icon:hover {
     transform: scale(1.1);
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-/* Hamburger Menu (mobile) */
-.hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    padding: 10px;
-}
-
-.hamburger span {
-    width: 30px;
-    height: 3px;
-    background: var(--white);
-    border-radius: 3px;
-    transition: all 0.3s ease;
 }
 
 /* ============================================
@@ -213,6 +295,7 @@ body {
     color: var(--white);
     font-size: 1.2em;
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .social-links a:hover {
@@ -226,6 +309,10 @@ body {
     padding-top: 25px;
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-bottom p {
+    margin: 5px 0;
 }
 
 /* ============================================
@@ -303,37 +390,71 @@ body {
    RESPONSIVE
    ============================================ */
 
+@media (max-width: 968px) {
+    .user-saldo {
+        padding: 6px 12px;
+    }
+
+    .saldo-label {
+        font-size: 0.85em;
+    }
+
+    .saldo-value {
+        font-size: 1em;
+    }
+}
+
 @media (max-width: 768px) {
     .header-container {
         padding: 15px 20px;
     }
 
-    .nav-menu {
-        position: fixed;
-        top: 70px;
-        left: -100%;
-        width: 100%;
-        background: var(--dark);
-        flex-direction: column;
-        padding: 20px;
-        transition: left 0.3s ease;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    .user-saldo {
+        display: none;
     }
 
-    .nav-menu.active {
-        left: 0;
+    .user-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9em;
     }
 
-    .hamburger {
-        display: flex;
+    .logo-img {
+        height: 40px;
     }
 
-    .logo-text {
-        font-size: 1.5em;
+    nav {
+        width: 280px;
+        left: -280px;
     }
 
     .footer-container {
         grid-template-columns: 1fr;
         gap: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-container {
+        padding: 12px 15px;
+        gap: 10px;
+    }
+
+    .logo-img {
+        height: 35px;
+    }
+
+    nav {
+        width: 250px;
+        left: -250px;
+    }
+
+    .nav-menu {
+        padding: 70px 0 20px 0;
+    }
+
+    .nav-menu li a {
+        font-size: 1em;
+        padding: 15px 25px;
     }
 }

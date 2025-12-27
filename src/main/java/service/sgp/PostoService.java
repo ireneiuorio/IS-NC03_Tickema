@@ -424,4 +424,74 @@ public class PostoService {
         }
     }
 
+    //OCCUPA TEMPORANEAMENTE I POSTI per il checkout
+    //Setta i posti OCCUPATO ma li salva in sessione per poterli liberare dopo
+
+    public boolean occupaTemporaneamente(List<Posto> posti) {
+        try {
+            connection.setAutoCommit(false);
+
+            for (Posto posto : posti) {
+                // Verifica che sia ancora disponibile
+                Posto postoAttuale = postoDAO.doRetrieveByKey(posto.getIdPosto());
+
+                if (postoAttuale == null || !postoAttuale.isDisponibile()) {
+                    connection.rollback();
+                    return false; // Posto non più disponibile
+                }
+
+                // Occupa il posto
+                postoAttuale.occupa();
+                postoDAO.doUpdate(postoAttuale);
+            }
+
+            connection.commit();
+            return true;
+
+        } catch (SQLException e) {
+            rollback();
+            return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                // Log error
+            }
+        }
+    }
+
+    //LIBERA I POSTI se l'utente non completa l'acquisto
+    public void liberaPostiDaCheckout(List<Posto> posti) {
+        try {
+            connection.setAutoCommit(false);
+
+            List<Integer> idPosti = posti.stream()
+                    .map(Posto::getIdPosto)
+                    .collect(Collectors.toList());
+
+            // Riporta a DISPONIBILE usando il metodo esistente
+            int aggiornati = postoDAO.doUpdateStatoBatch(idPosti, "DISPONIBILE");
+
+            if (aggiornati != idPosti.size()) {
+                throw new LiberazionePostiException();
+            }
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            rollback();
+            throw new LiberazionePostiException();
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                // Log error
+            }
+        }
+    }
+
+
+
+
+
 }
