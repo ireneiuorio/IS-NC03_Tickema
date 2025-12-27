@@ -2,8 +2,8 @@ package service.sga;
 
 import entity.sga.Acquisto;
 import entity.sga.Pagamento;
-import exception.pagamento.PagamentoNonValidoException;
-import exception.pagamento.SalvataggioPagamentoException;
+import exception.sga.pagamento.PagamentoNonValidoException;
+import exception.sga.pagamento.SalvataggioPagamentoException;
 import repository.sga.PagamentoDAO;
 
 import java.sql.Connection;

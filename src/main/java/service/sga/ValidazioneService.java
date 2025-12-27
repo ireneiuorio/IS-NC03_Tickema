@@ -2,11 +2,11 @@ package service.sga;
 
 import entity.sga.Biglietto;
 import entity.sgu.Utente;
-import exception.biglietto.BigliettoNonTrovatoException;
-import exception.biglietto.BigliettoNonValidoException;
-import exception.validazione.AggiornamentoBigliettoException;
-import exception.validazione.DataValidazioneNonValidaException;
-import exception.validazione.StatoBigliettoNonValidoException;
+import exception.sga.acquisto.biglietto.BigliettoNonTrovatoException;
+import exception.sga.acquisto.biglietto.BigliettoNonValidoException;
+import exception.sga.validazione.AggiornamentoBigliettoException;
+import exception.sga.validazione.DataValidazioneNonValidaException;
+import exception.sga.validazione.StatoBigliettoNonValidoException;
 import repository.sga.BigliettoDAO;
 
 import java.sql.Connection;

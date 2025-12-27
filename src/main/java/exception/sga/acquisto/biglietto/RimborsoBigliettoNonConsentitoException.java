@@ -1,4 +1,4 @@
-package exception.biglietto;
+package exception.sga.acquisto.biglietto;
 
 
 //Eccezione lanciata quando si tenta di rimborsare un biglietto non rimborsabile

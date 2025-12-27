@@ -1,4 +1,4 @@
-package exception.biglietto;
+package exception.sga.acquisto.biglietto;
 
 
 

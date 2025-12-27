@@ -1,4 +1,4 @@
-package exception.acquisto;
+package exception.sga.acquisto;
 
 // Eccezione lanciata quando il salvataggio di un acquisto fallisce
 

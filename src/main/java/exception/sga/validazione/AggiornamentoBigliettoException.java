@@ -1,4 +1,4 @@
-package exception.validazione;
+package exception.sga.validazione;
 
 //Eccezione lanciata quando l'aggiornamento del biglietto durante la validazione fallisce
 public class AggiornamentoBigliettoException extends Exception {

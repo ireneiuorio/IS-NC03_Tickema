@@ -1,4 +1,4 @@
-package exception.acquisto;
+package exception.sga.acquisto;
 //Eccezione lanciata quando si tenta di rimborsare un acquisto non rimborsabile
 
 public class RimborsoNonConsentitoException extends Exception {

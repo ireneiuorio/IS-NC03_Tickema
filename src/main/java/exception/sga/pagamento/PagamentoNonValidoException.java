@@ -1,4 +1,4 @@
-package exception.pagamento;
+package exception.sga.pagamento;
 
 //Eccezione lanciata quando i dati di un pagamento non sono validi
 

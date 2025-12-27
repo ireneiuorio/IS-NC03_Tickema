@@ -2,11 +2,10 @@ package service.sga;
 
 import entity.sga.Acquisto;
 import entity.sgu.Utente;
-import exception.*;
-import exception.acquisto.AcquistoNonTrovatoException;
-import exception.acquisto.AcquistoNonValidoException;
-import exception.acquisto.RimborsoNonConsentitoException;
-import exception.acquisto.SalvataggioAcquistoException;
+import exception.sga.acquisto.AcquistoNonTrovatoException;
+import exception.sga.acquisto.AcquistoNonValidoException;
+import exception.sga.acquisto.RimborsoNonConsentitoException;
+import exception.sga.acquisto.SalvataggioAcquistoException;
 import repository.sga.AcquistoDAO;
 
 import java.sql.Connection;

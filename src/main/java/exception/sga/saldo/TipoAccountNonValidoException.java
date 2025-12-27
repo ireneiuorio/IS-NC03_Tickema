@@ -1,4 +1,4 @@
-package exception.saldo;
+package exception.sga.saldo;
 
 //Eccezione lanciata quando si tenta di operare sul saldo di un account non autorizzato
 

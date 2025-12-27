@@ -1,4 +1,4 @@
-package exception.pagamento;
+package exception.sga.pagamento;
 
 //Eccezione lanciata quando il salvataggio di un pagamento fallisce
 

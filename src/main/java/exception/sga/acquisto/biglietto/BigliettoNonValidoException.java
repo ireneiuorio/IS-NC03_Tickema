@@ -1,4 +1,4 @@
-package exception.biglietto;
+package exception.sga.acquisto.biglietto;
 
 //Eccezione lanciata quando i dati di un biglietto non sono validi
 public class BigliettoNonValidoException extends Exception {

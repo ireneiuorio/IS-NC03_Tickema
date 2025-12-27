@@ -1,4 +1,4 @@
-package exception.acquisto;
+package exception.sga.acquisto;
 
 //Eccezione lanciata quando i dati di un acquisto non sono validi
 

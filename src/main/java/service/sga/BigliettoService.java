@@ -4,7 +4,7 @@ import entity.sga.Acquisto;
 import entity.sga.Biglietto;
 import entity.sgp.Posto;
 import entity.sgp.Programmazione;
-import exception.biglietto.*;
+import exception.sga.acquisto.biglietto.*;
 import repository.sga.BigliettoDAO;
 
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package control;
+package control.sga;
 
 import entity.sgp.Programmazione;
 import entity.sgu.Utente;

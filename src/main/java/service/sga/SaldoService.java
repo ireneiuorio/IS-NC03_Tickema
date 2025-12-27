@@ -1,10 +1,10 @@
 package service.sga;
 
 import entity.sgu.Utente;
-import exception.saldo.AggiornamentoSaldoException;
-import exception.saldo.OperazioneSaldoNonValidaException;
-import exception.saldo.TipoAccountNonValidoException;
-import exception.saldo.UtenteNonTrovatoException;
+import exception.sga.saldo.AggiornamentoSaldoException;
+import exception.sga.saldo.OperazioneSaldoNonValidaException;
+import exception.sga.saldo.TipoAccountNonValidoException;
+import exception.sga.saldo.UtenteNonTrovatoException;
 import repository.sgu.UtenteDAO;
 
 import java.sql.Connection;

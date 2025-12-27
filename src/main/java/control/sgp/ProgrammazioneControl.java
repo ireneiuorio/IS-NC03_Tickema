@@ -1,4 +1,4 @@
-package control;
+package control.sgp;
 
 import entity.sgc.Film;
 import entity.sgp.Programmazione;

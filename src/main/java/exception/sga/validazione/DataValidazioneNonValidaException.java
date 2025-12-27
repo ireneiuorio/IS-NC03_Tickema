@@ -1,4 +1,4 @@
-package exception.validazione;
+package exception.sga.validazione;
 
 import java.time.LocalDate;
 

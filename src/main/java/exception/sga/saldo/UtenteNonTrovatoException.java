@@ -1,4 +1,4 @@
-package exception.saldo;
+package exception.sga.saldo;
 
 //Eccezione lanciata quando un utente non viene trovato
 

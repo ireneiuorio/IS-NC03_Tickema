@@ -1,4 +1,4 @@
-package exception.validazione;
+package exception.sga.validazione;
 
 //Eccezione lanciata quando un biglietto non è nello stato corretto per essere validato
 

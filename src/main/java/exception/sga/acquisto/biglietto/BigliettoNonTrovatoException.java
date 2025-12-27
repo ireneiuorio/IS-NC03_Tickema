@@ -1,4 +1,4 @@
-package exception.biglietto;
+package exception.sga.acquisto.biglietto;
 
 
 //Eccezione lanciata quando un biglietto non viene trovato
