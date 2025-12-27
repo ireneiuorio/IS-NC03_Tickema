@@ -410,7 +410,7 @@
                     <h2>${programmazione.film.titolo}</h2>
                     <div class="film-details">
                         <div class="detail-item">
-                            <span class="detail-icon">📅</span>
+                            <span class="detail-icon"></span>
                             <div class="detail-content">
                                 <div class="detail-label">Data</div>
                                 <div class="detail-value">
@@ -419,21 +419,21 @@
                             </div>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-icon">🕐</span>
+                            <span class="detail-icon"></span>
                             <div class="detail-content">
                                 <div class="detail-label">Orario</div>
                                 <div class="detail-value">${programmazione.orarioInizio}</div>
                             </div>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-icon">🎭</span>
+                            <span class="detail-icon"></span>
                             <div class="detail-content">
                                 <div class="detail-label">Sala</div>
                                 <div class="detail-value">${programmazione.sala.nome}</div>
                             </div>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-icon">⏱️</span>
+                            <span class="detail-icon"></span>
                             <div class="detail-content">
                                 <div class="detail-label">Durata</div>
                                 <div class="detail-value">${programmazione.film.durata} min</div>
@@ -448,7 +448,7 @@
 
                     <!-- Numero Biglietti -->
                     <div class="form-section">
-                        <h3>🎟️ Numero Biglietti</h3>
+                        <h3>Numero Biglietti</h3>
                         <div class="input-group">
                             <label for="numeroBiglietti">Quanti biglietti vuoi acquistare?</label>
                             <input type="number"
@@ -459,7 +459,7 @@
                                    max="10"
                                    required>
                             <button type="button" class="update-button" onclick="aggiornaPrezzo()">
-                                🔄 Aggiorna Prezzo
+                                Aggiorna Prezzo
                             </button>
                         </div>
                     </div>
@@ -510,7 +510,7 @@
 
                         <c:if test="${saldoDisponibile < prezzoTotale}">
                             <div class="alert alert-warning">
-                                <span class="alert-icon">⚠️</span>
+                                <span class="alert-icon"></span>
                                 <div>
                                     <strong>Attenzione:</strong> Il tuo saldo non è sufficiente per coprire l'intero importo.
                                     Se scegli di usare il saldo, la differenza verrà pagata con carta.
@@ -525,7 +525,7 @@
                             ← Annulla
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            ✅ Conferma Acquisto
+                            Conferma Acquisto
                         </button>
                     </div>
                 </form>
@@ -564,9 +564,9 @@
                 // Saldo sufficiente
                 preview.className = 'payment-preview preview-success';
                 preview.innerHTML = `
-                        <h4>✅ Pagamento con Saldo</h4>
-                        <p><strong>💰 Saldo utilizzato:</strong> €${totale.toFixed(2)}</p>
-                        <p><strong>💳 Carta:</strong> €0.00</p>
+                        <h4> Pagamento con Saldo</h4>
+                        <p><strong>Saldo utilizzato:</strong> €${totale.toFixed(2)}</p>
+                        <p><strong>Carta:</strong> €0.00</p>
                         <p style="color: #2e7d32; font-weight: 600; margin-top: 10px;">
                             Il pagamento verrà effettuato interamente con il saldo
                         </p>
@@ -576,9 +576,9 @@
                 preview.className = 'payment-preview preview-warning';
                 const differenza = totale - saldoDisponibile;
                 preview.innerHTML = `
-                        <h4>⚠️ Pagamento Misto</h4>
-                        <p><strong>💰 Saldo utilizzato:</strong> €${saldoDisponibile.toFixed(2)}</p>
-                        <p><strong>💳 Carta (differenza):</strong> €${differenza.toFixed(2)}</p>
+                        <h4>⚠Pagamento Misto</h4>
+                        <p><strong>Saldo utilizzato:</strong> €${saldoDisponibile.toFixed(2)}</p>
+                        <p><strong>Carta (differenza):</strong> €${differenza.toFixed(2)}</p>
                         <p style="color: #e65100; font-weight: 600; margin-top: 10px;">
                             Utilizzerai tutto il tuo saldo + integrazione con carta
                         </p>
@@ -588,8 +588,8 @@
                 preview.className = 'payment-preview';
                 preview.innerHTML = `
                         <h4>💳 Pagamento con Carta</h4>
-                        <p><strong>💰 Saldo:</strong> €0.00</p>
-                        <p><strong>💳 Carta:</strong> €${totale.toFixed(2)}</p>
+                        <p><strong>Saldo:</strong> €0.00</p>
+                        <p><strong>Carta:</strong> €${totale.toFixed(2)}</p>
                     `;
             }
         } else {
