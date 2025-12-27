@@ -22,8 +22,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-//FACADE PATTERN per il processo di ACQUISTO BIGLIETTI
-
+/**
+ * FACADE PATTERN per il processo di ACQUISTO BIGLIETTI
+ *
+ * IMPORTANTE: Questa facade viene chiamata DOPO che i posti sono già stati
+ * occupati temporaneamente dal checkout (via PostoService.occupaTemporaneamente).
+ * Quindi i posti sono GIÀ OCCUPATO quando arriviamo qui.
+ */
 public class AcquistoFacade {
 
     private Connection connection;
@@ -46,13 +51,18 @@ public class AcquistoFacade {
         this.saldoService = new SaldoService(connection);
     }
 
-    //ELABORA ACQUISTO COMPLETO
-
+    /**
+     * ELABORA ACQUISTO COMPLETO
+     *
+     * NOTA: I posti passati in input (tramite session) sono GIÀ OCCUPATO.
+     * Questo metodo NON deve occuparli di nuovo, ma solo confermare l'acquisto.
+     */
     public RisultatoAcquisto elaboraAcquisto(
             Utente utente,
             int idProgrammazione,
             int numeroBiglietti,
-            boolean usaSaldo
+            boolean usaSaldo,
+            List<Posto> postiPrenotati  // ← NUOVO PARAMETRO
     ) throws SQLException, IllegalStateException {
 
         RisultatoAcquisto risultato = new RisultatoAcquisto();
@@ -79,27 +89,15 @@ public class AcquistoFacade {
 
             risultato.setProgrammazione(programmazione);
 
-            // STEP 2: VERIFICA DISPONIBILITÀ POSTI
-            List<Posto> postiDisponibili = postoService
-                    .verificaDisponibilitaPosti(idProgrammazione, numeroBiglietti);
+            // STEP 2: USA I POSTI GIÀ PRENOTATI dalla sessione
+            // (Non serve più verificare disponibilità - erano già occupati al checkout)
+            List<Posto> postiAssegnati = postiPrenotati;
 
-            if (postiDisponibili.isEmpty() || postiDisponibili.size() < numeroBiglietti) {
-                throw new IllegalStateException(
-                        "Posti insufficienti. Richiesti: " + numeroBiglietti +
-                                ", Disponibili: " + postiDisponibili.size()
-                );
-            }
-
-            // STEP 3: ASSEGNA POSTI AUTOMATICAMENTE
-            RisultatoAssegnazione assegnazione = postoService
-                    .assegnaPostiAutomatico(postiDisponibili, numeroBiglietti);
-
-            List<Posto> postiAssegnati = assegnazione.getPostiAssegnati();
             risultato.setPostiAssegnati(postiAssegnati);
-            risultato.setVicinanzaGarantita(assegnazione.isVicinanzaGarantita());
-            risultato.setMessaggioPosti(assegnazione.getMessaggio());
+            risultato.setVicinanzaGarantita(true); // Già calcolato al checkout
+            risultato.setMessaggioPosti("Posti confermati dal checkout");
 
-            // STEP 4: CALCOLA IMPORTO TOTALE
+            // STEP 3: CALCOLA IMPORTO TOTALE
             double prezzoBase = programmazione.getPrezzoBase();
             double importoTotale = calcolaImportoConTariffa(
                     prezzoBase,
@@ -110,7 +108,7 @@ public class AcquistoFacade {
 
             risultato.setImportoTotale(importoTotale);
 
-            // STEP 5: CREA ACQUISTO
+            // STEP 4: CREA ACQUISTO
             Acquisto acquisto = acquistoService.creaAcquisto(
                     utente,
                     numeroBiglietti,
@@ -119,7 +117,7 @@ public class AcquistoFacade {
 
             risultato.setAcquisto(acquisto);
 
-            // STEP 6: ELABORA PAGAMENTO (automaticamente misto se necessario)
+            // STEP 5: ELABORA PAGAMENTO (automaticamente misto se necessario)
             List<Pagamento> pagamenti = elaboraPagamento(
                     acquisto.getIdAcquisto(),
                     utente.getIdAccount(),
@@ -129,7 +127,7 @@ public class AcquistoFacade {
 
             risultato.setPagamenti(pagamenti);
 
-            // STEP 7: GENERA BIGLIETTI DIGITALI
+            // STEP 6: GENERA BIGLIETTI DIGITALI
             List<Biglietto> biglietti = new ArrayList<>();
 
             for (Posto posto : postiAssegnati) {
@@ -144,8 +142,9 @@ public class AcquistoFacade {
 
             risultato.setBiglietti(biglietti);
 
-            // STEP 8: AGGIORNA STATO POSTI
-            postoService.assegnaPosti(postiAssegnati, acquisto.getIdAcquisto());
+            // STEP 7: I POSTI SONO GIÀ OCCUPATO dal checkout
+            // Non serve fare nulla - restano OCCUPATO definitivamente
+            // (Rimosso: postoService.assegnaPosti(...))
 
             // COMMIT TRANSAZIONE
             connection.commit();
@@ -179,7 +178,9 @@ public class AcquistoFacade {
         return risultato;
     }
 
-    //Calcola importo con tariffa applicata
+    /**
+     * Calcola importo con tariffa applicata
+     */
     private double calcolaImportoConTariffa(
             double prezzoBase,
             int numeroBiglietti,
@@ -195,20 +196,25 @@ public class AcquistoFacade {
         return prezzoUnitario * numeroBiglietti;
     }
 
-    //ELABORA PAGAMENTO - LOGICA AUTOMATICA
-
-     //Se usaSaldo = true:
-     //Verifica saldo disponibile
-     //Se saldo >= importo → paga tutto con saldo
-    //Se saldo < importo → usa tutto il saldo + integra con carta (AUTOMATICO)
-    //Se usaSaldo = false:
-    // Paga tutto con carta
+    /**
+     * ELABORA PAGAMENTO - LOGICA AUTOMATICA
+     *
+     * Se usaSaldo = true:
+     *   - Verifica saldo disponibile
+     *   - Se saldo >= importo → paga tutto con saldo
+     *   - Se saldo < importo → usa tutto il saldo + integra con carta (AUTOMATICO)
+     *
+     * Se usaSaldo = false:
+     *   - Paga tutto con carta
+     */
     private List<Pagamento> elaboraPagamento(
             int idAcquisto,
             int idAccount,
             double importoTotale,
             boolean usaSaldo
-    ) throws SQLException, PagamentoNonValidoException, SalvataggioPagamentoException, TipoAccountNonValidoException, AggiornamentoSaldoException, OperazioneSaldoNonValidaException, UtenteNonTrovatoException {
+    ) throws SQLException, PagamentoNonValidoException, SalvataggioPagamentoException,
+            TipoAccountNonValidoException, AggiornamentoSaldoException,
+            OperazioneSaldoNonValidaException, UtenteNonTrovatoException {
 
         List<Pagamento> pagamenti = new ArrayList<>();
 
@@ -286,7 +292,9 @@ public class AcquistoFacade {
         return pagamenti;
     }
 
-    //VERIFICA SE UN ACQUISTO È POSSIBILE
+    /**
+     * VERIFICA SE UN ACQUISTO È POSSIBILE
+     */
     public boolean verificaAcquistoPossibile(
             int idProgrammazione,
             int numeroBiglietti
@@ -303,10 +311,11 @@ public class AcquistoFacade {
                 .contaPostiDisponibili(idProgrammazione);
 
         return postiDisponibili >= numeroBiglietti;
-
     }
 
-    //CALCOLA ANTEPRIMA PREZZO
+    /**
+     * CALCOLA ANTEPRIMA PREZZO
+     */
     public double calcolaAnteprimaPrezzo(
             int idProgrammazione,
             int numeroBiglietti
@@ -326,4 +335,3 @@ public class AcquistoFacade {
         );
     }
 }
-
