@@ -104,6 +104,71 @@
             nav.classList.remove('active');
         }
     });
+    // Script per gestire il menu hamburger laterale
+    function toggleMenu() {
+        const nav = document.querySelector('nav');
+        const navMenu = document.getElementById('navMenu');
+        const body = document.body;
+
+        // Toggle delle classi active
+        nav.classList.toggle('active');
+        navMenu.classList.toggle('active');
+
+        // Gestione overlay
+        let overlay = document.querySelector('.nav-overlay');
+
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'nav-overlay';
+            document.body.appendChild(overlay);
+
+            // Click sull'overlay chiude il menu
+            overlay.addEventListener('click', closeMenu);
+        }
+
+        overlay.classList.toggle('active');
+
+        // Previeni scroll quando il menu è aperto
+        if (nav.classList.contains('active')) {
+            body.style.overflow = 'hidden';
+        } else {
+            body.style.overflow = '';
+        }
+    }
+
+    function closeMenu() {
+        const nav = document.querySelector('nav');
+        const navMenu = document.getElementById('navMenu');
+        const overlay = document.querySelector('.nav-overlay');
+        const body = document.body;
+
+        nav.classList.remove('active');
+        navMenu.classList.remove('active');
+
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+
+        body.style.overflow = '';
+    }
+
+    // Chiudi menu con tasto ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const nav = document.querySelector('nav');
+            if (nav.classList.contains('active')) {
+                closeMenu();
+            }
+        }
+    });
+
+    // Chiudi menu quando si clicca su un link (opzionale)
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', function() {
+            // Chiudi il menu dopo aver cliccato un link
+            setTimeout(closeMenu, 200);
+        });
+    });
 
 
 </script>

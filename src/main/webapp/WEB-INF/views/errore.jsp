@@ -208,7 +208,7 @@
         <div class="error-card">
             <!-- Header -->
             <div class="error-header">
-                <div class="error-icon">❌</div>
+                <div class="error-icon"></div>
                 <h1>Ops! Qualcosa è andato storto</h1>
                 <p>Si è verificato un errore durante l'operazione</p>
             </div>
@@ -217,7 +217,6 @@
                 <!-- Messaggio di errore -->
                 <div class="error-message">
                     <div class="error-message-title">
-                        <span>⚠️</span>
                         <span>Dettagli errore:</span>
                     </div>
                     <div class="error-message-text">
