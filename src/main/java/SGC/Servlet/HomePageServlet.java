@@ -15,9 +15,12 @@ import java.util.List;
 
 /**
  * Servlet per la gestione della Home Page.
- * Mostra i film in evidenza o consigliati.
+ * Pattern URL: /home/*
+ *
+ * Rotte:
+ * - /home/ o /home -> Home page principale
  */
-@WebServlet("/home")
+@WebServlet("/home/*")
 public class HomePageServlet extends HttpServlet {
 
     private FilmService filmService;
@@ -44,28 +47,46 @@ public class HomePageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Ottiene il path dopo /home/
+        String path = request.getPathInfo() != null ? request.getPathInfo() : "/";
+
         try {
-            // Recupera tutti i film tramite il Service Layer
-            List<Film> films = filmService.visualizzaCatalogoFilm();
+            switch (path) {
+                case "/":
+                    handleHome(request, response);
+                    break;
 
-            // Limita a 8 film per la home (4 per riga su 2 righe)
-            if (films.size() > 8) {
-                films = films.subList(0, 8);
+                default:
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
-
-            // Passa i film alla JSP
-            request.setAttribute("films", films);
-
-            // Forward alla home page
-            request.getRequestDispatcher("/WEB-INF/views/home.jsp")
-                    .forward(request, response);
-
         } catch (Exception e) {
             System.err.println("Errore in HomeServlet: " + e.getMessage());
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Errore nel caricamento della home page");
         }
+    }
+
+    /**
+     * Gestisce la home page con film in evidenza/consigliati.
+     */
+    private void handleHome(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Recupera tutti i film tramite il Service Layer
+        List<Film> films = filmService.visualizzaCatalogoFilm();
+
+        // Limita a 8 film per la home (4 per riga su 2 righe)
+        if (films != null && films.size() > 8) {
+            films = films.subList(0, 8);
+        }
+
+        // Passa i film alla JSP
+        request.setAttribute("films", films);
+
+        // Forward alla home page
+        request.getRequestDispatcher("/WEB-INF/views/home.jsp")
+                .forward(request, response);
     }
 
     @Override
