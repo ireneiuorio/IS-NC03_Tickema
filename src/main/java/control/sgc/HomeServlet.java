@@ -20,7 +20,7 @@ import java.util.List;
  * HOME SERVLET
  * Mostra la homepage con film consigliati e programmazioni
  */
-@WebServlet(urlPatterns = {"", "/", "/home"})
+@WebServlet(urlPatterns = {""})
 public class HomeServlet extends HttpServlet {
 
     private FilmService filmService;

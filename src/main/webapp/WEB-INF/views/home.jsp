@@ -73,11 +73,11 @@
       overflow-x: auto;
       scroll-behavior: smooth;
       padding: 10px;
-      scrollbar-width: none; /* Firefox */
+      scrollbar-width: none;
     }
 
     .carousel-wrapper::-webkit-scrollbar {
-      display: none; /* Chrome, Safari */
+      display: none;
     }
 
     /* Film Card */
@@ -99,20 +99,31 @@
     .film-poster {
       width: 100%;
       height: 400px;
+      position: relative;
+      overflow: hidden;
       background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    }
+
+    .film-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .film-card:hover .film-poster img {
+      transform: scale(1.05);
+    }
+
+    .film-poster-placeholder {
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 4em;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .film-poster::before {
-      content: '🎬';
-      position: absolute;
-      font-size: 8em;
-      opacity: 0.1;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+      color: white;
     }
 
     .film-info {
@@ -125,6 +136,10 @@
       color: var(--dark);
       margin-bottom: 10px;
       min-height: 60px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .film-meta {
@@ -133,6 +148,7 @@
       margin-bottom: 15px;
       font-size: 0.9em;
       color: #666;
+      flex-wrap: wrap;
     }
 
     .film-meta span {
@@ -218,6 +234,10 @@
       .film-card {
         min-width: 250px;
       }
+
+      .film-poster {
+        height: 350px;
+      }
     }
   </style>
 </head>
@@ -227,7 +247,7 @@
 
 <!-- Hero Section -->
 <section class="hero">
-  <h1>🎬 Benvenuto su Tickema</h1>
+  <h1 style="font-weight:bold; font-style:italic">Benvenuto su Tickema</h1>
   <p>Il tuo cinema preferito, sempre a portata di click</p>
 </section>
 
@@ -236,7 +256,7 @@
 
   <!-- Film Consigliati -->
   <section class="section">
-    <h2 class="section-title">🌟 Film Consigliati</h2>
+    <h2 class="section-title">Film Consigliati</h2>
 
     <div class="carousel-container">
       <!-- Navigation Buttons -->
@@ -252,20 +272,33 @@
         <c:forEach var="film" items="${filmConsigliati}">
           <div class="film-card">
             <div class="film-poster">
-              🎬
+              <c:choose>
+                <c:when test="${not empty film.locandina}">
+                  <img src="${pageContext.request.contextPath}${film.locandina}"
+                       alt="${film.titolo}"
+                       onerror="this.parentElement.innerHTML='<div class=\'film-poster-placeholder\'></div>'">
+                </c:when>
+                <c:otherwise>
+                  <div class="film-poster-placeholder">🎬</div>
+                </c:otherwise>
+              </c:choose>
             </div>
+
             <div class="film-info">
               <h3 class="film-title">${film.titolo}</h3>
 
               <div class="film-meta">
-                <span>⏱️ ${film.durata} min</span>
-                <span>🎭 ${film.genere}</span>
+                <span>${film.durata} min</span>
+                <span> ${film.genere}</span>
+                <c:if test="${not empty film.anno}">
+                  <span> ${film.anno}</span>
+                </c:if>
               </div>
 
               <div class="film-actions">
                 <a href="${pageContext.request.contextPath}/programmazioni?idFilm=${film.idFilm}"
                    class="btn-film btn-primary-film">
-                  📅 Vedi Programmazione
+                  Vedi Programmazione
                 </a>
               </div>
             </div>
@@ -284,7 +317,7 @@
   // Carousel Scroll Function
   function scrollCarousel(direction) {
     const carousel = document.getElementById('filmCarousel');
-    const scrollAmount = 310; // larghezza card + gap
+    const scrollAmount = 310;
 
     carousel.scrollBy({
       left: direction * scrollAmount,
@@ -299,24 +332,21 @@
     autoScrollInterval = setInterval(() => {
       const carousel = document.getElementById('filmCarousel');
 
-      // Se arrivi alla fine, torna all'inizio
       if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 10) {
         carousel.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
         scrollCarousel(1);
       }
-    }, 5000); // Ogni 5 secondi
+    }, 5000);
   }
 
   function stopAutoScroll() {
     clearInterval(autoScrollInterval);
   }
 
-  // Avvia auto-scroll al caricamento
   window.addEventListener('load', () => {
     startAutoScroll();
 
-    // Ferma auto-scroll quando l'utente interagisce
     const carousel = document.getElementById('filmCarousel');
     carousel.addEventListener('mouseenter', stopAutoScroll);
     carousel.addEventListener('mouseleave', startAutoScroll);
