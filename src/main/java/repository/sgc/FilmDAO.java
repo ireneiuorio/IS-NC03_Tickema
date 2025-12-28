@@ -204,7 +204,7 @@ public class FilmDAO {
     }
 
     /**
-     * Verifica se esiste un film con stesso titolo, anno e regista (constraint UNIQUE)
+     * Verifica se esiste un film con stesso titolo, anno e regista
      */
     public boolean doExistsByUniqueConstraint(String titolo, int anno, String regista) throws SQLException {
         String query = "SELECT COUNT(*) as count FROM FILM WHERE titolo = ? AND anno = ? AND regista = ?";
