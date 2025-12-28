@@ -37,10 +37,10 @@
     <!-- Contatti -->
     <div class="footer-section">
       <h3>Contattaci</h3>
-      <p>📍 Via Cinema 123, Fisciano (SA)</p>
-      <p>📞 +39 089 1234567</p>
-      <p>✉️ info@tickema.it</p>
-      <p>🕒 Lun-Dom: 10:00 - 23:00</p>
+      <p>Via Cinema 123, Fisciano (SA)</p>
+      <p>+39 089 1234567</p>
+      <p>info@tickema.it</p>
+      <p>Lun-Dom: 10:00 - 23:00</p>
     </div>
   </div>
 

@@ -5,74 +5,19 @@
 
 <header class="header">
     <div class="header-container">
-        <!-- Hamburger Menu (Mobile) - A SINISTRA -->
+        <!-- Hamburger Menu - A SINISTRA -->
         <div class="hamburger" onclick="toggleMenu()">
             <span></span>
             <span></span>
             <span></span>
         </div>
 
-        <!-- Logo - AL CENTRO -->
+        <!-- Logo - AL CENTRO (la tua immagine) -->
         <a href="${pageContext.request.contextPath}/" class="logo">
             <img src="${pageContext.request.contextPath}/assets/images/logo.png"
                  alt="Tickema Logo"
-                 class="logo-img"
-                 onerror="this.style.display='none'">
+                 class="logo-img">
         </a>
-
-        <!-- Navigation Menu -->
-        <nav>
-            <ul class="nav-menu" id="navMenu">
-                <li>
-                    <a href="${pageContext.request.contextPath}/"
-                       class="${pageContext.request.requestURI.endsWith('/') || pageContext.request.requestURI.endsWith('/index.jsp') ? 'active' : ''}">
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/programmazioni"
-                       class="${fn:contains(pageContext.request.requestURI, '/programmazioni') ? 'active' : ''}">
-                        Catalogo
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/programmazioni"
-                       class="${fn:contains(pageContext.request.requestURI, '/programmazioni') ? 'active' : ''}">
-                        Programmazioni
-                    </a>
-                </li>
-
-                <c:choose>
-                    <c:when test="${not empty sessionScope.utente}">
-                        <!-- User logged in -->
-                        <li>
-                            <a href="${pageContext.request.contextPath}/profilo"
-                               class="${fn:contains(pageContext.request.requestURI, '/profilo') ? 'active' : ''}">
-                                Profilo ${sessionScope.utente.nome}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="${pageContext.request.contextPath}/logout">
-                                Logout
-                            </a>
-                        </li>
-                    </c:when>
-                    <c:otherwise>
-                        <!-- User not logged in -->
-                        <li>
-                            <a href="${pageContext.request.contextPath}/login.jsp">
-                                Login
-                            </a>
-                        </li>
-                        <li>
-                            <a href="${pageContext.request.contextPath}/registrazione.jsp">
-                                Registrati
-                            </a>
-                        </li>
-                    </c:otherwise>
-                </c:choose>
-            </ul>
-        </nav>
 
         <!-- User Info & Icon - A DESTRA -->
         <div class="header-user">
@@ -81,94 +26,192 @@
                     <span class="saldo-label">Saldo:</span>
                     <span class="saldo-value">€<fmt:formatNumber value="${sessionScope.utente.saldo}" pattern="#,##0.00"/></span>
                 </div>
-                <div class="user-icon" onclick="window.location.href='${pageContext.request.contextPath}/profilo'" title="${sessionScope.utente.nome} ${sessionScope.utente.cognome}">
-                        ${fn:substring(sessionScope.utente.nome, 0, 1)}${fn:substring(sessionScope.utente.cognome, 0, 1)}
+                <div class="user-profile" onclick="window.location.href='${pageContext.request.contextPath}/profilo'" title="${sessionScope.utente.nome} ${sessionScope.utente.cognome}">
+                    <div class="user-avatar">
+                            ${fn:substring(sessionScope.utente.nome, 0, 1)}${fn:substring(sessionScope.utente.cognome, 0, 1)}
+                    </div>
+                    <span class="user-name">${sessionScope.utente.nome}</span>
+                </div>
+            </c:if>
+
+            <c:if test="${empty sessionScope.utente}">
+                <div class="user-profile login-btn" onclick="window.location.href='${pageContext.request.contextPath}/fake-login.jsp'" title="Accedi">
+                    <div class="user-avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <span class="user-name">Accedi</span>
                 </div>
             </c:if>
         </div>
     </div>
 </header>
 
-<script>
-    function toggleMenu() {
-        const navMenu = document.getElementById('navMenu');
-        navMenu.classList.toggle('active');
+<!-- Navigation Menu LATERALE (FUORI dall'header!) -->
+<nav id="navMenu">
+    <ul class="nav-menu">
+        <li>
+            <a href="${pageContext.request.contextPath}/">
+                Home
+            </a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/programmazioni">
+                Catalogo
+            </a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/programmazioni">
+                Programmazioni
+            </a>
+        </li>
+
+        <c:choose>
+            <c:when test="${not empty sessionScope.utente}">
+                <!-- User logged in -->
+                <li>
+                    <a href="${pageContext.request.contextPath}/profilo">
+                        Profilo ${sessionScope.utente.nome}
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/i-miei-biglietti">
+                        I Miei Biglietti
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/logout">
+                        Logout
+                    </a>
+                </li>
+            </c:when>
+            <c:otherwise>
+                <!-- User not logged in -->
+                <li>
+                    <a href="${pageContext.request.contextPath}/fake-login.jsp">
+                        Login
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/registrazione.jsp">
+                        Registrati
+                    </a>
+                </li>
+            </c:otherwise>
+        </c:choose>
+    </ul>
+</nav>
+
+<!-- Overlay per chiudere il menu -->
+<div class="nav-overlay" id="navOverlay"></div>
+
+<style>
+    /* User Profile Styling */
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 15px;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.15);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
     }
 
-    // Chiudi menu quando clicchi fuori
-    document.addEventListener('click', function(event) {
-        const nav = document.getElementById('navMenu');
-        const hamburger = document.querySelector('.hamburger');
+    .user-profile:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+    }
 
-        if (!nav.contains(event.target) && !hamburger.contains(event.target)) {
-            nav.classList.remove('active');
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        background: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 0.95em;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .user-avatar svg {
+        color: var(--primary);
+    }
+
+    .user-name {
+        color: var(--white);
+        font-weight: 600;
+        font-size: 0.95em;
+    }
+
+    .login-btn .user-name {
+        opacity: 0.95;
+    }
+
+    @media (max-width: 768px) {
+        .user-name {
+            display: none;
         }
-    });
-    // Script per gestire il menu hamburger laterale
+
+        .user-profile {
+            padding: 8px;
+        }
+    }
+</style>
+
+<script>
     function toggleMenu() {
-        const nav = document.querySelector('nav');
-        const navMenu = document.getElementById('navMenu');
-        const body = document.body;
+        const nav = document.getElementById('navMenu');
+        const overlay = document.getElementById('navOverlay');
 
-        // Toggle delle classi active
         nav.classList.toggle('active');
-        navMenu.classList.toggle('active');
-
-        // Gestione overlay
-        let overlay = document.querySelector('.nav-overlay');
-
-        if (!overlay) {
-            overlay = document.createElement('div');
-            overlay.className = 'nav-overlay';
-            document.body.appendChild(overlay);
-
-            // Click sull'overlay chiude il menu
-            overlay.addEventListener('click', closeMenu);
-        }
-
         overlay.classList.toggle('active');
 
         // Previeni scroll quando il menu è aperto
         if (nav.classList.contains('active')) {
-            body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
         } else {
-            body.style.overflow = '';
+            document.body.style.overflow = '';
         }
     }
 
     function closeMenu() {
-        const nav = document.querySelector('nav');
-        const navMenu = document.getElementById('navMenu');
-        const overlay = document.querySelector('.nav-overlay');
-        const body = document.body;
+        const nav = document.getElementById('navMenu');
+        const overlay = document.getElementById('navOverlay');
 
         nav.classList.remove('active');
-        navMenu.classList.remove('active');
-
-        if (overlay) {
-            overlay.classList.remove('active');
-        }
-
-        body.style.overflow = '';
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
     }
+
+    // Chiudi menu cliccando sull'overlay
+    document.addEventListener('click', function(event) {
+        const overlay = document.getElementById('navOverlay');
+        if (event.target === overlay) {
+            closeMenu();
+        }
+    });
 
     // Chiudi menu con tasto ESC
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
-            const nav = document.querySelector('nav');
-            if (nav.classList.contains('active')) {
+            const nav = document.getElementById('navMenu');
+            if (nav && nav.classList.contains('active')) {
                 closeMenu();
             }
         }
     });
 
-    // Chiudi menu quando si clicca su un link (opzionale)
+    // Chiudi menu quando si clicca su un link
     document.querySelectorAll('.nav-menu a').forEach(link => {
         link.addEventListener('click', function() {
-            // Chiudi il menu dopo aver cliccato un link
             setTimeout(closeMenu, 200);
         });
     });
-
-
 </script>
