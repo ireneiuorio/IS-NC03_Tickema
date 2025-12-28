@@ -66,18 +66,19 @@ public class AcquistoServlet extends HttpServlet {
 
             Programmazione programmazione = programmazioneService.getProgrammazioneById(idProgrammazione);
 
+
             if (programmazione == null) {
                 request.setAttribute("errore", "Programmazione non trovata");
                 request.getRequestDispatcher("/WEB-INF/views/errore.jsp").forward(request, response);
                 return;
             }
 
-            if (!"Disponibile".equals(programmazione.getStato())) {
+
+            if (!"Disponibile".equalsIgnoreCase(programmazione.getStato())) {  // ← .equalsIgnoreCase()
                 request.setAttribute("errore", "Programmazione non disponibile");
                 request.getRequestDispatcher("/WEB-INF/views/errore.jsp").forward(request, response);
                 return;
             }
-
             // Verifica disponibilità posti
             List<Posto> postiDisponibili = postoService.verificaDisponibilitaPosti(
                     idProgrammazione,
@@ -123,16 +124,23 @@ public class AcquistoServlet extends HttpServlet {
                     numeroBiglietti
             );
 
-            // Passa dati alla JSP
+//  CALCOLA SCADENZA UNA VOLTA SOLA
+            LocalDateTime scadenza = LocalDateTime.now().plusMinutes(DURATA_PRENOTAZIONE_MINUTI);
+
+// SALVA IN SESSIONE (LocalDateTime object)
+            session.setAttribute("postiOccupati", postiAssegnati);
+            session.setAttribute("scadenzaCheckout", scadenza);
+            session.setAttribute("idProgrammazioneCheckout", idProgrammazione);
+            session.setAttribute("vicinanzaGarantita", assegnazione.isVicinanzaGarantita());
+
+
             request.setAttribute("programmazione", programmazione);
             request.setAttribute("numeroBiglietti", numeroBiglietti);
             request.setAttribute("prezzoTotale", prezzoTotale);
             request.setAttribute("saldoDisponibile", utente.getSaldo());
-            request.setAttribute("scadenzaCheckout",
-                    LocalDateTime.now().plusMinutes(DURATA_PRENOTAZIONE_MINUTI));
+            request.setAttribute("scadenzaCheckout", scadenza.toString()); // ← STRING ISO per JavaScript
             request.setAttribute("postiAssegnati", postiAssegnati);
-
-            request.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/acquisto/checkout.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             request.setAttribute("errore", "Parametri non validi");
@@ -234,7 +242,7 @@ public class AcquistoServlet extends HttpServlet {
 
                 // Passa risultato alla pagina riepilogo
                 request.setAttribute("risultato", risultato);
-                request.getRequestDispatcher("/WEB-INF/views/riepilogo-acquisto.jsp")
+                request.getRequestDispatcher("/WEB-INF/views/acquisto/riepilogo-acquisto.jsp")
                         .forward(request, response);
 
             } else {
