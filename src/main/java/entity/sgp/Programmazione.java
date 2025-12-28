@@ -89,7 +89,7 @@ public class Programmazione {
         if (stato == null || stato.trim().isEmpty()) {
             throw new IllegalArgumentException("Lo stato della programmazione è un campo obbligatorio.");
         }
-        this.stato = stato.toUpperCase();
+        this.stato = stato;
     }
 
     public int getIdFilm() {

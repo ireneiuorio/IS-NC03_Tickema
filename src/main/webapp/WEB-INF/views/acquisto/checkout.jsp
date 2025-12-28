@@ -59,8 +59,8 @@
 
         /* Timer Box */
         .timer-box {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            border-left: 5px solid #ff9800;
+            background: var(--white);
+            border-left: 5px solid var(--primary);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 30px;
@@ -86,14 +86,14 @@
         .timer-text span:first-child {
             display: block;
             font-size: 1em;
-            color: #e65100;
+            color: var(--primary);
             margin-bottom: 5px;
         }
 
         .timer-countdown {
             font-size: 1.8em;
             font-weight: 700;
-            color: #e65100;
+            color: var(--primary);
             display: block;
         }
 
@@ -189,53 +189,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .input-group {
-            margin-bottom: 25px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 10px;
-            color: var(--dark);
-            font-weight: 600;
-            font-size: 1.05em;
-        }
-
-        .input-group input[type="number"] {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .input-group input[type="number"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(109, 93, 110, 0.1);
-        }
-
-        .update-button {
-            background: var(--primary);
-            color: var(--white);
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .update-button:hover {
-            background: var(--dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 69, 87, 0.3);
         }
 
         /* Price Summary */
@@ -355,7 +308,7 @@
 
         .preview-warning {
             background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            border-left-color: #ff9800;
+            border-left-color:var(--white);
         }
 
         .preview-warning h4 {
@@ -457,7 +410,7 @@
         <!-- Timer Prenotazione -->
         <c:if test="${not empty scadenzaCheckout}">
             <div class="timer-box" id="timerBox">
-                <div class="timer-icon">⏱️</div>
+                <div class="timer-icon"></div>
                 <div class="timer-text">
                     <span>Tempo rimanente per completare l'acquisto:</span>
                     <span class="timer-countdown" id="countdown">5:00</span>
@@ -468,7 +421,7 @@
         <div class="checkout-card">
             <!-- Header -->
             <div class="checkout-header">
-                <h1>🎬 Checkout</h1>
+                <h1> Checkout</h1>
                 <p>Completa il tuo acquisto in pochi semplici passi</p>
             </div>
 
@@ -482,7 +435,7 @@
                             <div class="detail-content">
                                 <div class="detail-label">Data</div>
                                 <div class="detail-value">
-                                    <fmt:formatDate value="${programmazione.dataProgrammazione}" pattern="dd/MM/yyyy" />
+                                    ${programmazione.dataProgrammazione}
                                 </div>
                             </div>
                         </div>
@@ -490,7 +443,7 @@
                             <span class="detail-icon"></span>
                             <div class="detail-content">
                                 <div class="detail-label">Orario</div>
-                                <div class="detail-value">${programmazione.orarioInizio}</div>
+                                <div class="detail-value">${programmazione.slotOrari.oraInizio}</div>
                             </div>
                         </div>
                         <div class="detail-item">
@@ -501,7 +454,7 @@
                             </div>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-icon">⏱️</span>
+                            <span class="detail-icon"></span>
                             <div class="detail-content">
                                 <div class="detail-label">Durata</div>
                                 <div class="detail-value">${programmazione.film.durata} min</div>
@@ -537,7 +490,7 @@
                         <h3>Metodo di Pagamento</h3>
 
                         <div class="saldo-badge">
-                            Saldo disponibile: €<fmt:formatNumber value="${saldoDisponibile}" pattern="#,##0.00"/>
+                             Saldo disponibile: €<fmt:formatNumber value="${saldoDisponibile}" pattern="#,##0.00"/>
                         </div>
 
                         <div class="checkbox-wrapper" onclick="toggleSaldo()">
@@ -588,89 +541,47 @@
 <!-- Footer -->
 <jsp:include page="/WEB-INF/includes/footer.jsp" />
 
-<script>
-    // Dati passati dal server
-    const saldoDisponibile = ${saldoDisponibile};
-    const prezzoTotale = ${prezzoTotale};
-
-    // Toggle checkbox saldo
-    function toggleSaldo() {
-        const checkbox = document.getElementById('usaSaldo');
-        checkbox.checked = !checkbox.checked;
-        calcolaAnteprima();
-    }
-
-    // Calcola anteprima pagamento
-    function calcolaAnteprima() {
-        const usaSaldo = document.getElementById('usaSaldo').checked;
-        const preview = document.getElementById('paymentPreview');
-
-        if (usaSaldo) {
-            preview.style.display = 'block';
-
-            if (saldoDisponibile >= prezzoTotale) {
-                // Saldo sufficiente
-                preview.className = 'payment-preview preview-success';
-                preview.innerHTML = `
-                    <h4>Pagamento con Saldo</h4>
-                    <p><strong>Saldo utilizzato:</strong> €${prezzoTotale.toFixed(2)}</p>
-                    <p><strong>Carta:</strong> €0.00</p>
-                    <p style="color: #2e7d32; font-weight: 600; margin-top: 10px;">
-                        Il pagamento verrà effettuato interamente con il saldo
-                    </p>
-                `;
-            } else if (saldoDisponibile > 0) {
-                // Saldo insufficiente - pagamento misto
-                preview.className = 'payment-preview preview-warning';
-                const differenza = prezzoTotale - saldoDisponibile;
-                preview.innerHTML = `
-                    <h4>Pagamento Misto</h4>
-                    <p><strong>Saldo utilizzato:</strong> €${saldoDisponibile.toFixed(2)}</p>
-                    <p><strong>Carta (differenza):</strong> €${differenza.toFixed(2)}</p>
-                    <p style="color: #e65100; font-weight: 600; margin-top: 10px;">
-                        Utilizzerai tutto il tuo saldo + integrazione con carta
-                    </p>
-                `;
-            } else {
-                // Saldo zero
-                preview.className = 'payment-preview';
-                preview.innerHTML = `
-                    <h4>Pagamento con Carta</h4>
-                    <p><strong>Saldo:</strong> €0.00</p>
-                    <p><strong>Carta:</strong> €${prezzoTotale.toFixed(2)}</p>
-                `;
-            }
-        } else {
-            preview.style.display = 'none';
-        }
-    }
-
-    // Calcola anteprima al caricamento
-    window.onload = function() {
-        calcolaAnteprima();
-    };
-</script>
-
 <!-- Timer JavaScript per gestire scadenza prenotazione -->
 <c:if test="${not empty scadenzaCheckout}">
     <script>
+        console.log("=== TIMER DEBUG START ===");
+
         // Scadenza prenotazione dal server (formato ISO)
         const scadenzaStr = "${scadenzaCheckout}";
+        console.log("1. Scadenza ricevuta (string):", scadenzaStr);
+        console.log("2. Tipo:", typeof scadenzaStr);
+        console.log("3. Lunghezza:", scadenzaStr.length);
+
         let timerScaduto = false;
         let timerId = null;
 
-        if (scadenzaStr) {
+        if (scadenzaStr && scadenzaStr.trim() !== "") {
             // Converti la data (LocalDateTime → JavaScript Date)
             const scadenza = new Date(scadenzaStr);
+
+            console.log("4. Scadenza convertita (Date):", scadenza);
+            console.log("5. Is valid date?", !isNaN(scadenza.getTime()));
+            console.log("6. Ora corrente:", new Date());
+
+            const diff = scadenza - new Date();
+            console.log("7. Differenza iniziale (ms):", diff);
+            console.log("8. Differenza iniziale (minuti):", Math.floor(diff / 60000));
 
             // Funzione per aggiornare il countdown
             function aggiornaTimer() {
                 const ora = new Date();
                 const diff = scadenza - ora;
 
+                // LOG ogni 10 secondi invece di ogni secondo
+                if (Math.floor(ora.getTime() / 1000) % 10 === 0) {
+                    console.log("Timer check - Diff:", diff, "ms");
+                }
+
                 if (diff <= 0 && !timerScaduto) {
                     timerScaduto = true;
                     clearInterval(timerId);
+
+                    console.log("TEMPO SCADUTO!");
 
                     // TEMPO SCADUTO
                     const countdownElement = document.getElementById('countdown');
@@ -731,12 +642,17 @@
                             timerBox.classList.add('timer-warning');
                         }
                     }
+                } else {
+                    console.error("❌ Elemento 'countdown' non trovato!");
                 }
             }
 
             // Avvia il timer (aggiorna ogni secondo)
+            console.log("9. Avvio setInterval...");
             timerId = setInterval(aggiornaTimer, 1000);
             aggiornaTimer(); // Prima chiamata immediata
+
+            console.log("10. Timer ID:", timerId);
 
             // LIBERA POSTI SE UTENTE CHIUDE LA PAGINA
             window.addEventListener('beforeunload', function(e) {
@@ -748,9 +664,12 @@
                     );
                 }
             });
+
+            console.log("=== TIMER DEBUG END ===");
+        } else {
+            console.error("scadenzaStr è vuoto o null!");
         }
     </script>
 </c:if>
-
 </body>
 </html>
