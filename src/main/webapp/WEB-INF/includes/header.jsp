@@ -25,7 +25,7 @@
             <ul class="nav-menu" id="navMenu">
                 <li>
                     <a href="${pageContext.request.contextPath}/"
-                       class="${pageContext.request.requestURI.endsWith('/') || pageContext.request.requestURI.endsWith('/index.jsp') ? 'active' : ''}">
+                       class="${pageContext.request.requestURI.endsWith('/') || pageContext.request.requestURI.endsWith('/home.jsp') ? 'active' : ''}">
                         Home
                     </a>
                 </li>

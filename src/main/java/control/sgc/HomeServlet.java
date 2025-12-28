@@ -66,9 +66,9 @@ public class HomeServlet extends HttpServlet {
             request.setAttribute("programmazioniOggi", programmazioniOggi);
             request.setAttribute("dataOggi", oggi);
 
-            System.out.println("8. Forward a index.jsp...");
+            System.out.println("8. Forward a home.jsp...");
             // Forward alla home
-            request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
 
             System.out.println("=== HOME SERVLET END ===");
 
