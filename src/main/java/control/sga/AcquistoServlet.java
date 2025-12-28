@@ -72,12 +72,12 @@ public class AcquistoServlet extends HttpServlet {
                 return;
             }
 
-            if (!"Disponibile".equals(programmazione.getStato())) {
+
+            if (!"Disponibile".equalsIgnoreCase(programmazione.getStato())) {  // ← .equalsIgnoreCase()
                 request.setAttribute("errore", "Programmazione non disponibile");
                 request.getRequestDispatcher("/WEB-INF/views/errore.jsp").forward(request, response);
                 return;
             }
-
             // Verifica disponibilità posti
             List<Posto> postiDisponibili = postoService.verificaDisponibilitaPosti(
                     idProgrammazione,
@@ -132,7 +132,7 @@ public class AcquistoServlet extends HttpServlet {
                     LocalDateTime.now().plusMinutes(DURATA_PRENOTAZIONE_MINUTI));
             request.setAttribute("postiAssegnati", postiAssegnati);
 
-            request.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/acquisto/checkout.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             request.setAttribute("errore", "Parametri non validi");
