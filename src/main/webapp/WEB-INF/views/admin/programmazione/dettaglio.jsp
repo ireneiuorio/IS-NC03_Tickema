@@ -250,3 +250,5 @@
 
 </body>
 </html>
+
+<jsp:include page="/WEB-INF/includes/footer.jsp" />

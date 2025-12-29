@@ -66,7 +66,6 @@ public class AcquistoServlet extends HttpServlet {
 
             Programmazione programmazione = programmazioneService.getProgrammazioneById(idProgrammazione);
 
-
             if (programmazione == null) {
                 request.setAttribute("errore", "Programmazione non trovata");
                 request.getRequestDispatcher("/WEB-INF/views/errore.jsp").forward(request, response);
@@ -124,22 +123,15 @@ public class AcquistoServlet extends HttpServlet {
                     numeroBiglietti
             );
 
-//  CALCOLA SCADENZA UNA VOLTA SOLA
-            LocalDateTime scadenza = LocalDateTime.now().plusMinutes(DURATA_PRENOTAZIONE_MINUTI);
-
-// SALVA IN SESSIONE (LocalDateTime object)
-            session.setAttribute("postiOccupati", postiAssegnati);
-            session.setAttribute("scadenzaCheckout", scadenza);
-            session.setAttribute("idProgrammazioneCheckout", idProgrammazione);
-            session.setAttribute("vicinanzaGarantita", assegnazione.isVicinanzaGarantita());
-
-
+            // Passa dati alla JSP
             request.setAttribute("programmazione", programmazione);
             request.setAttribute("numeroBiglietti", numeroBiglietti);
             request.setAttribute("prezzoTotale", prezzoTotale);
             request.setAttribute("saldoDisponibile", utente.getSaldo());
-            request.setAttribute("scadenzaCheckout", scadenza.toString()); // ← STRING ISO per JavaScript
+            request.setAttribute("scadenzaCheckout",
+                    LocalDateTime.now().plusMinutes(DURATA_PRENOTAZIONE_MINUTI));
             request.setAttribute("postiAssegnati", postiAssegnati);
+
             request.getRequestDispatcher("/WEB-INF/views/acquisto/checkout.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
@@ -242,7 +234,7 @@ public class AcquistoServlet extends HttpServlet {
 
                 // Passa risultato alla pagina riepilogo
                 request.setAttribute("risultato", risultato);
-                request.getRequestDispatcher("/WEB-INF/views/acquisto/riepilogo-acquisto.jsp")
+                request.getRequestDispatcher("/WEB-INF/views/riepilogo-acquisto.jsp")
                         .forward(request, response);
 
             } else {

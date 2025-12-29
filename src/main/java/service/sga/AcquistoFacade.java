@@ -53,7 +53,6 @@ public class AcquistoFacade {
 
     /**
      * ELABORA ACQUISTO COMPLETO
-     *
      * NOTA: I posti passati in input (tramite session) sono GIÀ OCCUPATO.
      * Questo metodo NON deve occuparli di nuovo, ma solo confermare l'acquisto.
      */
