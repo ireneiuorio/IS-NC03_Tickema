@@ -373,11 +373,6 @@
     <div class="footer-section">
       <h3>Tickema</h3>
       <p>La tua esperienza cinematografica digitale. Prenota i tuoi biglietti online in pochi click.</p>
-      <div class="social-links">
-        <a href="#">📘</a>
-        <a href="#">📷</a>
-        <a href="#">🐦</a>
-      </div>
     </div>
     <div class="footer-section">
       <h3>Link Utili</h3>
@@ -388,17 +383,9 @@
         <li><a href="${pageContext.request.contextPath}/contatti/">Contatti</a></li>
       </ul>
     </div>
-    <div class="footer-section">
-      <h3>Contatti</h3>
-      <ul>
-        <li>📧 info@tickema.it</li>
-        <li>📞 +39 123 456 7890</li>
-        <li>📍 Via Cinema 1, Milano</li>
-      </ul>
-    </div>
   </div>
   <div class="footer-bottom">
-    <p>&copy; 2024 Tickema - Tutti i diritti riservati</p>
+    <p>&copy; 2025 Tickema - Tutti i diritti riservati</p>
     <p>Progetto Ingegneria del Software</p>
   </div>
 </footer>
