@@ -373,6 +373,11 @@
     <div class="footer-section">
       <h3>Tickema</h3>
       <p>La tua esperienza cinematografica digitale. Prenota i tuoi biglietti online in pochi click.</p>
+      <div class="social-links">
+        <a href="#">📘</a>
+        <a href="#">📷</a>
+        <a href="#">🐦</a>
+      </div>
     </div>
     <div class="footer-section">
       <h3>Link Utili</h3>
