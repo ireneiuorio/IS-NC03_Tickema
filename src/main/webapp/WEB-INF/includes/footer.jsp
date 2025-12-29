@@ -17,7 +17,7 @@
       <h3>Link Rapidi</h3>
       <ul>
         <li><a href="${pageContext.request.contextPath}/">Home</a></li>
-        <li><a href="${pageContext.request.contextPath}/programmazioni">Programmazione</a></li>
+        <li><a href="${pageContext.request.contextPath}/programmazioniutente">Programmazione</a></li>
         <li><a href="${pageContext.request.contextPath}/i-miei-biglietti">I Miei Biglietti</a></li>
       </ul>
     </div>

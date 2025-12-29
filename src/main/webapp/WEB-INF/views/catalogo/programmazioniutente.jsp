@@ -322,7 +322,7 @@
                          onerror="this.parentElement.innerHTML='<div class=\'prog-poster-placeholder\'>🎬</div>'">
                   </c:when>
                   <c:otherwise>
-                    <div class="prog-poster-placeholder">🎬</div>
+                    <div class="prog-poster-placeholder"></div>
                   </c:otherwise>
                 </c:choose>
               </div>

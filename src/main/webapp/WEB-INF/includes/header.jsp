@@ -63,7 +63,7 @@
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/programmazioni">
+            <a href="${pageContext.request.contextPath}/programmazioniutente">
                 Programmazioni
             </a>
         </li>

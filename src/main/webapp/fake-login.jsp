@@ -13,7 +13,7 @@
 
   // Mette l'utente in sessione
   session.setAttribute("utente", utenteTest);
-
+//session
   // Redirect al checkout
   response.sendRedirect(request.getContextPath() + "/acquisto?idProgrammazione=1&numeroBiglietti=2");
 %>
