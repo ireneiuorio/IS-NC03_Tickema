@@ -6,156 +6,121 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tickema - Home</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Georgia', serif;
-      background-color: #3d3d4d;
-      color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Header */
-    .header {
-      background-color: #2c2d3a;
-      padding: 1.2rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    }
-
-    .menu-icon {
-      width: 40px;
-      height: 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-    }
-
-    .menu-icon span {
-      width: 100%;
-      height: 4px;
-      background-color: #ffffff;
-      border-radius: 2px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      color: #ffffff;
-    }
-
-    .logo-icon {
-      width: 40px;
-      height: 40px;
-    }
-
-    .logo-text {
-      font-size: 2rem;
-      font-style: italic;
-    }
-
-    .user-icon {
-      width: 50px;
-      height: 50px;
-      background-color: #b8b8c8;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    /* Carousel */
-    .carousel-section {
-      background: linear-gradient(135deg, #7d7b8f 0%, #5a5869 100%);
-      padding: 4rem 2rem;
+    /* ============================================
+       SEZIONE HERO / CAROUSEL
+       ============================================ */
+    .hero-section {
+      background: linear-gradient(135deg, #6D5D6E 0%, #4F4557 100%);
+      padding: 80px 30px;
       text-align: center;
       position: relative;
+      overflow: hidden;
     }
 
-    .carousel-title {
-      font-size: 2.5rem;
-      font-weight: normal;
-      margin-bottom: 2rem;
-      color: #ffffff;
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="2"/></svg>');
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: 3em;
+      color: #FFFFFF;
+      margin-bottom: 20px;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.3em;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 30px;
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
     }
 
     .carousel-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 4rem;
-      color: #4a4858;
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      user-select: none;
-      transition: color 0.3s;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
 
     .carousel-arrow:hover {
-      color: #6a6878;
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
     }
 
-    .carousel-arrow.left {
-      left: 2rem;
+    /* ============================================
+       SEZIONE CONSIGLIATI
+       ============================================ */
+    .section-header {
+      margin: 60px 0 40px;
+      padding-left: 20px;
+      border-left: 6px solid #6D5D6E;
     }
 
-    .carousel-arrow.right {
-      right: 2rem;
-    }
-
-    /* Main Content */
-    .content {
-      flex: 1;
-      padding: 3rem 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    /* Consigliati Section */
     .section-title {
-      font-size: 2.5rem;
-      font-weight: normal;
-      margin-bottom: 2rem;
-      padding-left: 1.5rem;
-      border-left: 6px solid #d4a574;
-      color: #ffffff;
+      font-size: 2.5em;
+      color: #4F4557;
+      font-weight: 300;
+      letter-spacing: 1px;
     }
 
-    /* Film Grid */
+    /* ============================================
+       GRIGLIA FILM (4 colonne)
+       ============================================ */
     .film-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-      margin-bottom: 3rem;
+      gap: 30px;
+      margin-bottom: 50px;
     }
 
     .film-card {
-      background-color: #4a4858;
-      border-radius: 8px;
+      background: #FFFFFF;
+      border-radius: 15px;
       overflow: hidden;
+      box-shadow: 0 5px 20px rgba(77, 69, 87, 0.15);
+      transition: all 0.3s ease;
       cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .film-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(77, 69, 87, 0.25);
     }
 
     .film-poster {
       width: 100%;
-      height: 200px;
-      background-color: #5a5869;
+      height: 350px;
+      background: linear-gradient(135deg, #6D5D6E 0%, #4F4557 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -167,85 +132,109 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .film-card:hover .film-poster img {
+      transform: scale(1.05);
     }
 
     .placeholder-icon {
-      width: 80px;
-      height: 80px;
-      background-color: #b8b8c8;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 50%;
-      position: relative;
-    }
-
-    .placeholder-icon::before {
-      content: '';
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 35px;
-      height: 35px;
-      background-color: #5a5869;
-      border-radius: 50%;
-    }
-
-    .placeholder-icon::after {
-      content: '';
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 35px;
-      background-color: #5a5869;
-      border-radius: 50% 50% 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3em;
+      color: rgba(255, 255, 255, 0.5);
     }
 
     .film-info {
-      padding: 1rem;
-      text-align: center;
+      padding: 25px;
     }
 
     .film-title {
-      font-size: 1.5rem;
-      font-weight: normal;
-      margin-bottom: 0.3rem;
-      color: #ffffff;
+      font-size: 1.4em;
+      color: #4F4557;
+      margin-bottom: 10px;
+      font-weight: 600;
     }
 
     .film-description {
-      font-size: 0.9rem;
-      color: #b8b8c8;
-      line-height: 1.4;
+      font-size: 0.95em;
+      color: #666;
+      line-height: 1.6;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
 
-    /* Footer */
-    .footer {
-      background-color: #2c2d3a;
+    .film-meta {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #999;
+    }
+
+    .film-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* CTA Button */
+    .cta-section {
       text-align: center;
-      padding: 1.5rem;
-      color: #b8b8c8;
-      font-size: 0.95rem;
+      margin-top: 50px;
     }
 
-    /* Responsive */
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: 80px 20px;
+      color: #999;
+    }
+
+    .no-results-icon {
+      font-size: 5em;
+      margin-bottom: 20px;
+      opacity: 0.3;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
     @media (max-width: 1200px) {
       .film-grid {
         grid-template-columns: repeat(3, 1fr);
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 968px) {
       .film-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .carousel-title {
-        font-size: 1.8rem;
+      .hero-title {
+        font-size: 2.2em;
       }
 
+      .hero-subtitle {
+        font-size: 1.1em;
+      }
+    }
+
+    @media (max-width: 768px) {
       .section-title {
-        font-size: 1.8rem;
+        font-size: 2em;
+      }
+
+      .film-poster {
+        height: 300px;
       }
     }
 
@@ -253,93 +242,126 @@
       .film-grid {
         grid-template-columns: 1fr;
       }
+
+      .hero-title {
+        font-size: 1.8em;
+      }
+
+      .hero-subtitle {
+        font-size: 1em;
+      }
+
+      .section-header {
+        margin: 40px 0 30px;
+      }
     }
   </style>
 </head>
 <body>
 <!-- Header -->
 <header class="header">
-  <div class="menu-icon">
-    <span></span>
-    <span></span>
-    <span></span>
+  <div class="header-container">
+    <!-- Hamburger Menu -->
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Logo -->
+    <a href="${pageContext.request.contextPath}/home/" class="logo">
+      <span class="logo-text">tickema</span>
+    </a>
+
+    <!-- User Section -->
+    <div class="header-user">
+      <div class="user-icon">U</div>
+    </div>
   </div>
-
-  <a href="${pageContext.request.contextPath}/home" class="logo">
-    <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="45" fill="none" stroke="#ffffff" stroke-width="3"/>
-      <circle cx="50" cy="20" r="8" fill="#ffffff"/>
-      <circle cx="77" cy="32" r="8" fill="#ffffff"/>
-      <circle cx="77" cy="68" r="8" fill="#ffffff"/>
-      <circle cx="50" cy="80" r="8" fill="#ffffff"/>
-      <circle cx="23" cy="68" r="8" fill="#ffffff"/>
-      <circle cx="23" cy="32" r="8" fill="#ffffff"/>
-    </svg>
-    <span class="logo-text">tickema</span>
-  </a>
-
-  <div class="user-icon"></div>
 </header>
 
-<!-- Carousel Section -->
-<section class="carousel-section">
-  <div class="carousel-arrow left">&lt;</div>
-  <h2 class="carousel-title">Programmazioni a prezzo ridotto</h2>
-  <div class="carousel-arrow right">&gt;</div>
+<!-- Navigation Overlay -->
+<div class="nav-overlay" id="navOverlay"></div>
+
+<!-- Navigation Menu -->
+<nav id="navMenu">
+  <ul class="nav-menu">
+    <li><a href="${pageContext.request.contextPath}/home/" class="active">Home</a></li>
+    <li><a href="${pageContext.request.contextPath}/catalogo/">Catalogo Film</a></li>
+    <li><a href="${pageContext.request.contextPath}/programmazione/">Programmazione</a></li>
+    <li><a href="${pageContext.request.contextPath}/biglietti/">I Miei Biglietti</a></li>
+    <li><a href="${pageContext.request.contextPath}/profilo/">Profilo</a></li>
+  </ul>
+</nav>
+
+<!-- Hero Section (Carousel) -->
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">Programmazioni a prezzo ridotto</h1>
+    <p class="hero-subtitle">Scopri le migliori offerte della settimana</p>
+    <div class="carousel-controls">
+      <div class="carousel-arrow">&lt;</div>
+      <div class="carousel-arrow">&gt;</div>
+    </div>
+  </div>
 </section>
 
 <!-- Main Content -->
-<main class="content">
-  <!-- Consigliati Section -->
-  <h3 class="section-title">Consigliati</h3>
+<main class="container">
+  <!-- Sezione Consigliati -->
+  <div class="section-header">
+    <h2 class="section-title">Consigliati</h2>
+  </div>
 
   <c:choose>
     <c:when test="${not empty films}">
       <div class="film-grid">
         <c:forEach var="film" items="${films}">
-          <div class="film-card" onclick="location.href='${pageContext.request.contextPath}/film?id=${film.idFilm}'">
+          <div class="film-card" onclick="location.href='${pageContext.request.contextPath}/catalogo/film?id=${film.idFilm}'">
             <div class="film-poster">
               <c:choose>
                 <c:when test="${not empty film.locandina}">
                   <img src="${pageContext.request.contextPath}${film.locandina}"
                        alt="${film.titolo}"
-                       onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'placeholder-icon\'></div>';">
+                       onerror="this.parentElement.innerHTML='<div class=\'placeholder-icon\'>🎬</div>';">
                 </c:when>
                 <c:otherwise>
-                  <div class="placeholder-icon"></div>
+                  <div class="placeholder-icon">🎬</div>
                 </c:otherwise>
               </c:choose>
             </div>
             <div class="film-info">
-              <div class="film-title">${film.titolo}</div>
-              <div class="film-description">
+              <h3 class="film-title">${film.titolo}</h3>
+              <p class="film-description">
                 <c:choose>
-                  <c:when test="${film.trama.length() > 80}">
-                    ${film.trama.substring(0, 80)}...
+                  <c:when test="${film.trama.length() > 120}">
+                    ${film.trama.substring(0, 120)}...
                   </c:when>
                   <c:otherwise>
                     ${film.trama}
                   </c:otherwise>
                 </c:choose>
+              </p>
+              <div class="film-meta">
+                <span>📅 ${film.anno}</span>
+                <span>⏱️ ${film.durata} min</span>
               </div>
             </div>
           </div>
         </c:forEach>
       </div>
+
+      <!-- CTA per vedere tutti i film -->
+      <div class="cta-section">
+        <a href="${pageContext.request.contextPath}/catalogo/" class="btn btn-primary">
+          Vedi Tutti i Film
+        </a>
+      </div>
     </c:when>
     <c:otherwise>
-      <div class="film-grid">
-        <c:forEach begin="1" end="4">
-          <div class="film-card">
-            <div class="film-poster">
-              <div class="placeholder-icon"></div>
-            </div>
-            <div class="film-info">
-              <div class="film-title">Titolo</div>
-              <div class="film-description">breve descrizione del film</div>
-            </div>
-          </div>
-        </c:forEach>
+      <div class="no-results">
+        <div class="no-results-icon">🎬</div>
+        <p>Nessun film disponibile al momento.</p>
       </div>
     </c:otherwise>
   </c:choose>
@@ -347,7 +369,53 @@
 
 <!-- Footer -->
 <footer class="footer">
-  Tickema - Tutti diritti riservati © 2025
+  <div class="footer-container">
+    <div class="footer-section">
+      <h3>Tickema</h3>
+      <p>La tua esperienza cinematografica digitale. Prenota i tuoi biglietti online in pochi click.</p>
+      <div class="social-links">
+        <a href="#">📘</a>
+        <a href="#">📷</a>
+        <a href="#">🐦</a>
+      </div>
+    </div>
+    <div class="footer-section">
+      <h3>Link Utili</h3>
+      <ul>
+        <li><a href="${pageContext.request.contextPath}/home/">Home</a></li>
+        <li><a href="${pageContext.request.contextPath}/catalogo/">Catalogo</a></li>
+        <li><a href="${pageContext.request.contextPath}/programmazione/">Programmazione</a></li>
+        <li><a href="${pageContext.request.contextPath}/contatti/">Contatti</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Contatti</h3>
+      <ul>
+        <li>📧 info@tickema.it</li>
+        <li>📞 +39 123 456 7890</li>
+        <li>📍 Via Cinema 1, Milano</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2024 Tickema - Tutti i diritti riservati</p>
+    <p>Progetto Ingegneria del Software</p>
+  </div>
 </footer>
+
+<!-- JavaScript per Menu -->
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('navMenu');
+  const navOverlay = document.getElementById('navOverlay');
+
+  function toggleMenu() {
+    navMenu.classList.toggle('active');
+    navOverlay.classList.toggle('active');
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  navOverlay.addEventListener('click', toggleMenu);
+</script>
 </body>
 </html>
