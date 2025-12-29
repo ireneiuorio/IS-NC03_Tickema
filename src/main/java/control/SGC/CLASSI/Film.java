@@ -1,4 +1,4 @@
-package SGC.CLASSI;
+package control.SGC.CLASSI;
 
     public class Film {
         private int idFilm;

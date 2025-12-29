@@ -1,4 +1,4 @@
-package SGC.CLASSI;
+package exception.sgc;
 /**
      * Eccezione sollevata quando un film richiesto non viene trovato nel sistema.
      * Questa è un'eccezione checked che deve essere gestita esplicitamente.

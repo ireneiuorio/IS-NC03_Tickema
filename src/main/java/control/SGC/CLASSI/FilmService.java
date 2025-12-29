@@ -1,11 +1,9 @@
-package SGC.CLASSI;
+package control.SGC.CLASSI;
 
-import SGC.CLASSI.Film;
-import SGC.CLASSI.FilmNonTrovatoException;
-import SGC.DAO.FilmDAO;
+import control.SGC.DAO.FilmDAO;
+import exception.sgc.FilmNonTrovatoException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

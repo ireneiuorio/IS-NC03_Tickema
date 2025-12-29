@@ -1,8 +1,8 @@
-package SGC.Servlet;
+package control.SGC.Servlet;
 
-import SGC.CLASSI.FilmService;
-import SGC.DAO.FilmDAO;
-import SGC.CLASSI.Film;
+import control.SGC.CLASSI.FilmService;
+import control.SGC.DAO.FilmDAO;
+import control.SGC.CLASSI.Film;
 import it.unisa.tickema.model.DBManager;
 
 import jakarta.servlet.ServletException;

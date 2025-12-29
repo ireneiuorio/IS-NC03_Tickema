@@ -1,6 +1,6 @@
-package SGC.DAO;
+package control.SGC.DAO;
 
-import SGC.CLASSI.Film;
+import control.SGC.CLASSI.Film;
 import it.unisa.tickema.model.DBManager;
 import java.sql.*;
 import java.util.ArrayList;
