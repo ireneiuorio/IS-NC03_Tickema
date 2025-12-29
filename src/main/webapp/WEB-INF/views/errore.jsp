@@ -11,6 +11,11 @@
     <!-- CSS Base -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         .error-container {
             max-width: 700px;
@@ -200,7 +205,7 @@
                 <!-- Messaggio di errore -->
                 <div class="error-message">
                     <div class="error-message-title">
-                        Dettagli errore
+                        <span>Dettagli errore:</span>
                     </div>
                     <div class="error-message-text">
                         <c:choose>
@@ -216,19 +221,19 @@
 
                 <!-- Suggerimenti -->
                 <div class="error-suggestions">
-                    <h3>Cosa puoi fare</h3>
+                    <h3>💡 Cosa puoi fare:</h3>
                     <ul>
-                        <li>• Verifica di essere connesso al tuo account</li>
-                        <li>• Torna alla homepage e riprova</li>
-                        <li>• Controlla la tua connessione internet</li>
-                        <li>• Se il problema persiste, contatta l'assistenza</li>
+                        <li>Verifica di essere connesso al tuo account</li>
+                        <li>Torna alla homepage e riprova</li>
+                        <li>Controlla la tua connessione internet</li>
+                        <li>Se il problema persiste, contatta l'assistenza</li>
                     </ul>
                 </div>
 
                 <!-- Bottoni -->
                 <div class="button-group">
                     <a href="javascript:history.back()" class="btn btn-secondary">
-                        Torna Indietro
+                        ← Torna Indietro
                     </a>
                     <a href="${pageContext.request.contextPath}/" class="btn btn-primary">
                         Vai alla Home
