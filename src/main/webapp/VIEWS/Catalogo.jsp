@@ -486,7 +486,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2024 Tickema - Tutti i diritti riservati</p>
+        <p>&copy; 2025 Tickema - Tutti i diritti riservati</p>
         <p>Progetto Ingegneria del Software</p>
     </div>
 </footer>
