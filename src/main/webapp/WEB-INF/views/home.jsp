@@ -274,12 +274,12 @@
             <div class="film-poster">
               <c:choose>
                 <c:when test="${not empty film.locandina}">
-                  <img src="${pageContext.request.contextPath}${film.locandina}"
+                  <img src="${film.locandina}"
                        alt="${film.titolo}"
                        onerror="this.parentElement.innerHTML='<div class=\'film-poster-placeholder\'></div>'">
                 </c:when>
                 <c:otherwise>
-                  <div class="film-poster-placeholder">🎬</div>
+                  <div class="film-poster-placeholder"></div>
                 </c:otherwise>
               </c:choose>
             </div>
@@ -296,7 +296,7 @@
               </div>
 
               <div class="film-actions">
-                <a href="${pageContext.request.contextPath}/programmazioni?idFilm=${film.idFilm}"
+                <a href="${pageContext.request.contextPath}/dettaglio-film?idFilm=${film.idFilm}"
                    class="btn-film btn-primary-film">
                   Vedi Programmazione
                 </a>

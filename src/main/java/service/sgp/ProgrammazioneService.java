@@ -53,7 +53,14 @@ public class ProgrammazioneService {
 
     public List<Programmazione> visualizzaProgrammazioniFilm(int idFilm)  {
         try {
-            return programmazioneDAO.doRetrieveAllByFilm(idFilm);
+            List<Programmazione> programmazioni = programmazioneDAO.doRetrieveAllByFilm(idFilm);
+
+            // Carica le relazioni per ogni programmazione
+            for (Programmazione prog : programmazioni) {
+                caricaRelazioniProgrammazione(prog);
+            }
+
+            return programmazioni;
         } catch (SQLException e) {
             throw new RecuperoProgrammazioniException(e);
         }
@@ -417,6 +424,28 @@ public class ProgrammazioneService {
 
         } catch (SQLException e) {
             throw new RecuperoProgrammazioniException(e);
+        }
+    }
+
+    private void caricaRelazioniProgrammazione(Programmazione prog) throws SQLException {
+        // Carica Film
+        if (prog.getFilm() == null && prog.getIdFilm() > 0) {
+            prog.setFilm(filmDAO.doRetrieveByKey(prog.getIdFilm()));
+        }
+
+        // Carica Sala
+        if (prog.getSala() == null && prog.getIdSala() > 0) {
+            prog.setSala(salaDAO.doRetrieveByKey(prog.getIdSala()));
+        }
+
+        // Carica SlotOrari
+        if (prog.getSlotOrari() == null && prog.getIdSlotOrari() > 0) {
+            prog.setSlotOrari(slotOrariDAO.doRetrieveByKey(prog.getIdSlotOrari()));
+        }
+
+        // Carica Tariffa (opzionale)
+        if (prog.getTariffa() == null && prog.getIdTariffa() != null && prog.getIdTariffa() > 0) {
+            prog.setTariffa(tariffaDAO.doRetrieveByKey(prog.getIdTariffa()));
         }
     }
 }

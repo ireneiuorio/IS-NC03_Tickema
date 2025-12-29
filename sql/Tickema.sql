@@ -225,18 +225,18 @@ INSERT INTO PROGRAMMAZIONE (dataProgrammazione, tipo, prezzoBase, stato, idFilm,
                                                                                                                       ('2025-10-16', 'IMAX', 15.00, 'Disponibile', 2, 4, 1, 5),
                                                                                                                       ('2025-10-16', '2D', 8.00, 'Disponibile', 11, 2, 1, 6),
                                                                                                                       ('2025-10-16', '2D', 10.00, 'Disponibile', 12, 3, 1, 7),
-                                                                                                                      ('2025-10-16', '2D', 9.50, 'Annullata', 5, 2, 1, 8),
+                                                                                                                      ('2025-10-23', '2D', 9.50, 'Annullata', 5, 1, 1, 7),
                                                                                                                       ('2025-10-16', '2D', 10.00, 'Conclusa', 8, 1, 1, 5),
                                                                                                                       ('2025-10-17', '3D', 13.00, 'Disponibile', 10, 1, 1, 10),
                                                                                                                       ('2025-10-17', '2D', 9.00, 'Disponibile', 13, 2, 1, 9),
                                                                                                                       ('2025-10-17', 'IMAX', 16.00, 'Disponibile', 14, 4, 1, 11),
                                                                                                                       ('2025-10-17', '2D', 8.50, 'Disponibile', 18, 5, 1, 9),
                                                                                                                       ('2025-10-18', '2D', 12.00, 'Disponibile', 9, 3, 1, 14),
-                                                                                                                      ('2025-10-18', '3D', 14.00, 'Disponibile', 16, 1, 1, 15),
+                                                                                                                      ('2025-10-22', '3D', 14.00, 'Disponibile', 16, 2, 1, 14),
                                                                                                                       ('2025-10-18', '2D', 10.50, 'Disponibile', 15, 2, 1, 13),
                                                                                                                       ('2025-10-19', '2D', 11.00, 'Disponibile', 17, 4, 1, 18),
                                                                                                                       ('2025-10-19', '2D', 9.00, 'Disponibile', 19, 5, 1, 17),
-                                                                                                                      ('2025-10-19', 'IMAX', 17.00, 'Disponibile', 20, 1, 1, 19);
+                                                                                                                      ('2025-10-20', 'IMAX', 17.00, 'Disponibile', 20, 1, 1, 17);
 
 -- 2.7 POSTI (Generazione parziale per prime 3 programmazioni come esempio)
 -- PROGRAMMAZIONE 1 (Dune - Sala A, 100 posti)
