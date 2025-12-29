@@ -18,7 +18,7 @@ import java.util.List;
  * PROGRAMMAZIONI SERVLET
  * Mostra tutte le programmazioni disponibili
  */
-@WebServlet("/programmazioni")
+@WebServlet("/programmazioniutente")
 public class ProgrammazioniServlet extends HttpServlet {
 
     private ProgrammazioneService programmazioneService;
@@ -56,10 +56,10 @@ public class ProgrammazioniServlet extends HttpServlet {
             // ===== PASSA DATI ALLA JSP =====
             request.setAttribute("programmazioni", programmazioni);
 
-            System.out.println("Forward a programmazioni.jsp");
+            System.out.println("Forward a programmazioniutente.jsp");
 
             // Forward alla JSP
-            request.getRequestDispatcher("/WEB-INF/views/catalogo/programmazioni.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/catalogo/programmazioniutente.jsp").forward(request, response);
 
         } catch (Exception e) {
             System.err.println("Errore imprevisto: " + e.getMessage());
