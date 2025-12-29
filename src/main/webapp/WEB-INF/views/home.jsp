@@ -276,13 +276,15 @@
                 <c:when test="${not empty film.locandina}">
                   <img src="${film.locandina}"
                        alt="${film.titolo}"
-                       onerror="this.parentElement.innerHTML='<div class=\'film-poster-placeholder\'></div>'">
+                       onerror="this.parentElement.innerHTML='<div class=\'film-poster-placeholder\'>🎬</div>'">
                 </c:when>
                 <c:otherwise>
                   <div class="film-poster-placeholder"></div>
                 </c:otherwise>
               </c:choose>
             </div>
+
+
 
             <div class="film-info">
               <h3 class="film-title">${film.titolo}</h3>

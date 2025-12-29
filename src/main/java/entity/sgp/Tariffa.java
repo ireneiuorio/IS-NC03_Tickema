@@ -85,18 +85,6 @@ public class Tariffa {
     }
 
 
-    public double calcolaImportoSconto(double prezzoBase) {
-        if (prezzoBase < 0) {
-            return 0.0;
-        }
-
-        double prezzoScontato = applicaSconto(prezzoBase);
-        double importoSconto = prezzoBase - prezzoScontato;
-
-        // Arrotonda a 2 decimali per coerenza con i centesimi
-        return Math.round(importoSconto * 100.0) / 100.0;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creazione Multipla - ${film.titolo}</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin-style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <style>
         .programmazione-row {
             background: var(--white);

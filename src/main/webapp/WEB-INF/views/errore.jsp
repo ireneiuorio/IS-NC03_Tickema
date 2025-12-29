@@ -221,7 +221,7 @@
 
                 <!-- Suggerimenti -->
                 <div class="error-suggestions">
-                    <h3>💡 Cosa puoi fare:</h3>
+                    <h3>Cosa puoi fare:</h3>
                     <ul>
                         <li>Verifica di essere connesso al tuo account</li>
                         <li>Torna alla homepage e riprova</li>
