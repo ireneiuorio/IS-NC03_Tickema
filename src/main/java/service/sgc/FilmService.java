@@ -5,6 +5,7 @@ import repository.sgc.FilmDAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class FilmService {
@@ -241,5 +242,73 @@ public class FilmService {
         } catch (SQLException e) {
             throw new RuntimeException("Errore nel recupero dei generi: " + e.getMessage(), e);
         }
+    }
+
+    // ===== NUOVI METODI PER CATALOGO CON FILTRI =====
+
+    /**
+     * Ricerca film con filtri multipli
+     */
+    public List<Film> ricercaFilmConFiltri(
+            String titolo,
+            String genere,
+            Integer anno,
+            Integer durataMin,
+            Integer durataMax,
+            LocalDate dataProiezione,
+            boolean soloInProgrammazione
+    ) {
+        try {
+            return filmDAO.ricercaConFiltri(
+                    titolo,
+                    genere,
+                    anno,
+                    durataMin,
+                    durataMax,
+                    dataProiezione,
+                    soloInProgrammazione
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException("Errore nella ricerca dei film: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Recupera tutti i generi disponibili (alias)
+     */
+    public List<String> getAllGeneri() {
+        return getGeneriDisponibili();
+    }
+
+    /**
+     * Recupera tutti gli anni disponibili
+     */
+    public List<Integer> getAllAnni() {
+        try {
+            return filmDAO.getAllAnni();
+        } catch (SQLException e) {
+            throw new RuntimeException("Errore nel recupero degli anni: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Ricerca film per titolo (ricerca parziale)
+     */
+    public List<Film> searchFilmsByTitolo(String query) {
+        try {
+            if (query == null || query.trim().isEmpty()) {
+                return visualizzaTuttiFilm();
+            }
+            return filmDAO.searchByTitolo(query.trim());
+        } catch (SQLException e) {
+            throw new RuntimeException("Errore nella ricerca per titolo: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Recupera film per genere (alias)
+     */
+    public List<Film> getFilmsByGenere(String genere) {
+        return getFilmPerGenere(genere);
     }
 }

@@ -421,7 +421,7 @@
         <div class="checkout-card">
             <!-- Header -->
             <div class="checkout-header">
-                <h1> Checkout</h1>
+                <h1 style="font-weight: bold">Checkout</h1>
                 <p>Completa il tuo acquisto in pochi semplici passi</p>
             </div>
 

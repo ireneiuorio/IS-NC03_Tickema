@@ -3,6 +3,7 @@ package repository.sgc;
 import entity.sgc.Film;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -293,5 +294,128 @@ public class FilmDAO {
         film.setLocandina(rs.getString("locandina"));
 
         return film;
+    }
+
+    /**
+     * Ricerca film con filtri dinamici multipli
+     */
+    public List<Film> ricercaConFiltri(
+            String titolo,
+            String genere,
+            Integer anno,
+            Integer durataMin,
+            Integer durataMax,
+            LocalDate dataProiezione,
+            boolean soloInProgrammazione
+    ) throws SQLException {
+
+        StringBuilder sql = new StringBuilder("SELECT DISTINCT f.* FROM FILM f ");
+
+        // Join con PROGRAMMAZIONE se necessario
+        if (dataProiezione != null || soloInProgrammazione) {
+            sql.append("INNER JOIN PROGRAMMAZIONE p ON f.idFilm = p.idFilm ");
+        }
+
+        sql.append("WHERE 1=1 ");
+
+        List<Object> parameters = new ArrayList<>();
+
+        // Filtro TITOLO (ricerca parziale case-insensitive)
+        if (titolo != null && !titolo.trim().isEmpty()) {
+            sql.append("AND LOWER(f.titolo) LIKE LOWER(?) ");
+            parameters.add("%" + titolo.trim() + "%");
+        }
+
+        // Filtro GENERE
+        if (genere != null && !genere.trim().isEmpty() && !"tutti".equalsIgnoreCase(genere)) {
+            sql.append("AND f.genere = ? ");
+            parameters.add(genere);
+        }
+
+        // Filtro ANNO
+        if (anno != null) {
+            sql.append("AND f.anno = ? ");
+            parameters.add(anno);
+        }
+
+        // Filtro DURATA MIN
+        if (durataMin != null) {
+            sql.append("AND f.durata >= ? ");
+            parameters.add(durataMin);
+        }
+
+        // Filtro DURATA MAX
+        if (durataMax != null) {
+            sql.append("AND f.durata <= ? ");
+            parameters.add(durataMax);
+        }
+
+        // Filtro DATA PROIEZIONE
+        if (dataProiezione != null) {
+            sql.append("AND p.dataProgrammazione = ? ");
+            parameters.add(Date.valueOf(dataProiezione));
+        }
+
+        // Filtro SOLO IN PROGRAMMAZIONE
+        if (soloInProgrammazione) {
+            sql.append("AND p.stato = 'DISPONIBILE' ");
+        }
+
+        sql.append("ORDER BY f.titolo");
+
+        List<Film> films = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            // Imposta i parametri dinamicamente
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    films.add(extractFilmFromResultSet(rs));
+                }
+            }
+        }
+
+        return films;
+    }
+
+    /**
+     * Recupera tutti gli anni distinti presenti nel database
+     */
+    public List<Integer> getAllAnni() throws SQLException {
+        String sql = "SELECT DISTINCT anno FROM FILM WHERE anno IS NOT NULL ORDER BY anno DESC";
+        List<Integer> anni = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                anni.add(rs.getInt("anno"));
+            }
+        }
+
+        return anni;
+    }
+
+    /**
+     * Ricerca film per titolo (ricerca parziale case-insensitive)
+     */
+    public List<Film> searchByTitolo(String query) throws SQLException {
+        String sql = "SELECT * FROM FILM WHERE LOWER(titolo) LIKE LOWER(?) ORDER BY titolo";
+        List<Film> films = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + query + "%");
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    films.add(extractFilmFromResultSet(rs));
+                }
+            }
+        }
+
+        return films;
     }
 }

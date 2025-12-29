@@ -19,111 +19,91 @@
     <style>
         .error-container {
             max-width: 700px;
-            margin: 60px auto;
-            padding: 0 20px;
+            margin: 60px auto 80px;
+            padding: 0 30px;
         }
 
         .error-card {
-            background: var(--white);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px var(--shadow);
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
             overflow: hidden;
         }
 
         .error-header {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: var(--white);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
             padding: 50px 30px;
             text-align: center;
         }
 
         .error-icon {
-            font-size: 5em;
+            font-size: 4em;
             margin-bottom: 20px;
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-            20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
 
         .error-header h1 {
-            font-size: 2.5em;
-            font-weight: 300;
+            font-size: 2.2em;
+            font-weight: 600;
             margin-bottom: 10px;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         .error-header p {
             font-size: 1.1em;
-            opacity: 0.9;
+            opacity: 0.95;
         }
 
         .error-content {
-            padding: 40px 30px;
+            padding: 40px 35px;
         }
 
         .error-message {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
-            border-left: 5px solid #ffc107;
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin-bottom: 30px;
         }
 
         .error-message-title {
-            color: #856404;
-            font-size: 1.3em;
+            color: #e65100;
+            font-size: 1.2em;
             font-weight: 600;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 12px;
         }
 
         .error-message-text {
-            color: #856404;
-            font-size: 1.1em;
-            line-height: 1.6;
+            color: #e65100;
+            font-size: 1.05em;
+            line-height: 1.7;
         }
 
         .error-suggestions {
-            background: #f8f9fa;
+            background: var(--light-gray);
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin-bottom: 30px;
         }
 
         .error-suggestions h3 {
             color: var(--dark);
-            font-size: 1.3em;
+            font-size: 1.2em;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-weight: 600;
         }
 
         .error-suggestions ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .error-suggestions li {
-            padding: 12px 0;
+            padding: 10px 0;
             color: #555;
-            font-size: 1.05em;
-            display: flex;
-            align-items: start;
-            gap: 10px;
-        }
-
-        .error-suggestions li:before {
-            content: "→";
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1em;
+            line-height: 1.6;
         }
 
         .button-group {
@@ -134,10 +114,10 @@
 
         .btn {
             flex: 1;
-            padding: 15px 30px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1em;
+            border-radius: 8px;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -145,34 +125,34 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
-            color: var(--white);
-            box-shadow: 0 5px 20px var(--shadow);
+            color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px var(--shadow);
+            box-shadow: 0 6px 20px rgba(109, 93, 110, 0.25);
         }
 
         .btn-secondary {
-            background: var(--white);
+            background: white;
             color: var(--dark);
-            border: 2px solid var(--primary);
+            border: 1px solid var(--border);
         }
 
         .btn-secondary:hover {
+            border-color: var(--primary);
             background: var(--light-gray);
             transform: translateY(-2px);
         }
 
         .error-code {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
             padding-top: 20px;
             border-top: 1px solid var(--border);
             color: #999;
@@ -180,8 +160,12 @@
         }
 
         @media (max-width: 768px) {
+            .error-container {
+                margin: 40px auto 60px;
+            }
+
             .error-header {
-                padding: 40px 20px;
+                padding: 40px 25px;
             }
 
             .error-header h1 {
@@ -189,7 +173,11 @@
             }
 
             .error-icon {
-                font-size: 3.5em;
+                font-size: 3em;
+            }
+
+            .error-content {
+                padding: 30px 25px;
             }
 
             .button-group {
@@ -248,7 +236,7 @@
                         ← Torna Indietro
                     </a>
                     <a href="${pageContext.request.contextPath}/" class="btn btn-primary">
-                         Vai alla Home
+                        Vai alla Home
                     </a>
                 </div>
 

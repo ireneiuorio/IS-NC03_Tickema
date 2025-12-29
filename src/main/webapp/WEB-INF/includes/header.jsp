@@ -58,7 +58,7 @@
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/programmazioni">
+            <a href="${pageContext.request.contextPath}/catalogo">
                 Catalogo
             </a>
         </li>
