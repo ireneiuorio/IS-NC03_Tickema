@@ -1,4 +1,4 @@
-package exception.sgu.autenticazione;
+package exception.sgu;
 
 public class EmailGiaRegistrataException extends Exception {
     public EmailGiaRegistrataException() {

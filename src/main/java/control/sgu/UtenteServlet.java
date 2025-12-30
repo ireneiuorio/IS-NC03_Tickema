@@ -1,9 +1,7 @@
 package control.sgu;
 
 import entity.sgu.Utente;
-import exception.sgu.autenticazione.CredenzialiNonValideException;
-import exception.sgu.autenticazione.EmailGiaRegistrataException;
-import exception.sgu.autenticazione.PasswordDiverseException;
+import exception.sgu.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
