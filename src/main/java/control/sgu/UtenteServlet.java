@@ -2,6 +2,8 @@ package control.sgu;
 
 import entity.sgu.Utente;
 import exception.sgu.*;
+import exception.sgu.autenticazione.*;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +21,7 @@ import java.sql.SQLException;
 public class UtenteServlet extends HttpServlet {
 
     private AutenticazioneService autenticazioneService;
-//ciao ciao
+
     @Override
     public void init() throws ServletException {
         Connection connection = (Connection) getServletContext().getAttribute("dbConnection");
