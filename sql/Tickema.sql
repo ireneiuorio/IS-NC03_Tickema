@@ -121,33 +121,30 @@ CREATE TABLE BIGLIETTO (
 
 
 -- ============================================================
--- 2. POPOLAMENTO MASSIVO (20 record per tabella)
+-- 2. POPOLAMENTO MASSIVO (20 record per tabella) PASSWORD DI TUTTI: Tickema12%
 -- ============================================================
 
--- 2.1 UTENTI (20 utenti diversificati)
 INSERT INTO UTENTE (nome, cognome, numeroDiTelefono, password, email, saldo, tipoAccount) VALUES
-                                                                                              ('Sara', 'Di Tella', '3330001111', 'admin123', 'admin@tickema.it', 0.00, 'Admin'),
-                                                                                              ('Mario', 'Rossi', '3330002222', 'staff123', 'staff@tickema.it', 0.00, 'Personale'),
-                                                                                              ('Giuseppe', 'Verdi', '3330003333', 'staff456', 'giuseppe.v@tickema.it', 0.00, 'Personale'),
-                                                                                              ('Laura', 'Pascarella', '3331112233', 'user123', 'laura@studenti.unisa.it', 50.00, 'Utente'),
-                                                                                              ('Irene', 'Iuorio', '3334445566', 'user123', 'irene@studenti.unisa.it', 12.50, 'Utente'),
-                                                                                              ('Raffaella', 'Maurelli', '3337778899', 'user123', 'raffaella@studenti.unisa.it', 100.00, 'Utente'),
-                                                                                              ('Alessandro', 'Magno', '3335556677', 'user123', 'alex@email.com', 5.00, 'Utente'),
-                                                                                              ('Sofia', 'Loren', '3338889900', 'user123', 'sofia@email.com', 25.50, 'Utente'),
-                                                                                              ('Francesco', 'Totti', '3331010101', 'user123', 'francesco@email.com', 20.00, 'Utente'),
-                                                                                              ('Giulia', 'De Lellis', '3332020202', 'user123', 'giulia@email.com', 10.00, 'Utente'),
-                                                                                              ('Marco', 'Bianchi', '3333030303', 'user123', 'marco.b@gmail.com', 0.00, 'Utente'),
-                                                                                              ('Chiara', 'Ferragni', '3334040404', 'user123', 'chiara.f@gmail.com', 75.00, 'Utente'),
-                                                                                              ('Luca', 'Argentero', '3335050505', 'user123', 'luca.a@outlook.it', 30.00, 'Utente'),
-                                                                                              ('Valentina', 'Nappi', '3336060606', 'user123', 'valentina.n@libero.it', 15.00, 'Utente'),
-                                                                                              ('Antonio', 'Banderas', '3337070707', 'user123', 'antonio.b@yahoo.it', 40.00, 'Utente'),
-                                                                                              ('Francesca', 'Michielin', '3338080808', 'user123', 'francesca.m@gmail.com', 8.50, 'Utente'),
-                                                                                              ('Davide', 'Oldani', '3339090909', 'user123', 'davide.o@hotmail.com', 60.00, 'Utente'),
-                                                                                              ('Elisa', 'Toffoli', '3330101010', 'user123', 'elisa.t@studenti.unisa.it', 22.00, 'Utente'),
-                                                                                              ('Roberto', 'Saviano', '3331111111', 'user123', 'roberto.s@email.it', 5.50, 'Utente'),
-                                                                                              ('Paola', 'Cortellesi', '3332222222', 'user123', 'paola.c@gmail.com', 45.00, 'Utente');
-
--- 2.2 SALE (5 sale con caratteristiche diverse)
+                                                                                              ('Sara', 'Di Tella', '3330001111', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'admin@tickema.it', 0.00, 'Admin'),
+                                                                                              ('Mario', 'Rossi', '3330002222', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'staff@tickema.it', 0.00, 'Personale'),
+                                                                                              ('Giuseppe', 'Verdi', '3330003333', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'giuseppe.v@tickema.it', 0.00, 'Personale'),
+                                                                                              ('Laura', 'Pascarella', '3331112233', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'laura@studenti.unisa.it', 50.00, 'Utente'),
+                                                                                              ('Irene', 'Iuorio', '3334445566', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'irene@studenti.unisa.it', 12.50, 'Utente'),
+                                                                                              ('Raffaella', 'Maurelli', '3337778899', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'raffaella@studenti.unisa.it', 100.00, 'Utente'),
+                                                                                              ('Alessandro', 'Magno', '3335556677', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'alex@email.com', 5.00, 'Utente'),
+                                                                                              ('Sofia', 'Loren', '3338889900', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'sofia@email.com', 25.50, 'Utente'),
+                                                                                              ('Francesco', 'Totti', '3331010101', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'francesco@email.com', 20.00, 'Utente'),
+                                                                                              ('Giulia', 'De Lellis', '3332020202', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'giulia@email.com', 10.00, 'Utente'),
+                                                                                              ('Marco', 'Bianchi', '3333030303', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'marco.b@gmail.com', 0.00, 'Utente'),
+                                                                                              ('Chiara', 'Ferragni', '3334040404', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'chiara.f@gmail.com', 75.00, 'Utente'),
+                                                                                              ('Luca', 'Argentero', '3335050505', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'luca.a@outlook.it', 30.00, 'Utente'),
+                                                                                              ('Valentina', 'Nappi', '3336060606', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'valentina.n@libero.it', 15.00, 'Utente'),
+                                                                                              ('Antonio', 'Banderas', '3337070707', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'antonio.b@yahoo.it', 40.00, 'Utente'),
+                                                                                              ('Francesca', 'Michielin', '3338080808', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'francesca.m@gmail.com', 8.50, 'Utente'),
+                                                                                              ('Davide', 'Oldani', '3339090909', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'davide.o@hotmail.com', 60.00, 'Utente'),
+                                                                                              ('Elisa', 'Toffoli', '3330101010', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'elisa.t@studenti.unisa.it', 22.00, 'Utente'),
+                                                                                              ('Roberto', 'Saviano', '3331111111', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'roberto.s@email.it', 5.50, 'Utente'),
+                                                                                              ('Paola', 'Cortellesi', '3332222222', '7e0bde6073589c2ecfe14afd73624edf2f8fe07e2bc66173fa18a50d13df3dafb5026f27f6424ae12c1988b9adc0a18ff3d5e6bfcec7dee91c94b770169c6a60', 'paola.c@gmail.com', 45.00, 'Utente');
 INSERT INTO SALA (nome, numeroDiFile, capienza, numeroPostiPerFila) VALUES
                                                                         ('Sala A - Grande', 10, 100, 10),
                                                                         ('Sala B - Media', 8, 64, 8),
@@ -215,6 +212,263 @@ INSERT INTO SLOTORARI (oraInizio, oraFine, stato, data) VALUES
 ('21:30:00', '00:00:00', 'Disponibile', '2025-10-19'),
 ('00:30:00', '03:00:00', 'Disponibile', '2025-10-19');
 
+
+-- Slot per i primi 10 giorni di Febbraio 2026
+-- 4 slot al giorno = 40 slot totali
+
+-- 1 Febbraio 2026
+INSERT INTO SLOTORARI (oraInizio, oraFine, stato, data) VALUES
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-01'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-01'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-01'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-01'),
+
+-- 2 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-02'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-02'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-02'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-02'),
+
+-- 3 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-03'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-03'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-03'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-03'),
+
+-- 4 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-04'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-04'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-04'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-04'),
+
+-- 5 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-05'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-05'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-05'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-05'),
+
+-- 6 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-06'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-06'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-06'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-06'),
+
+-- 7 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-07'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-07'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-07'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-07'),
+
+-- 8 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-08'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-08'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-08'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-08'),
+
+-- 9 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-09'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-09'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-09'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-02-09'),
+
+-- 10 Febbraio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-02-10'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-02-10'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-02-10'),
+
+                                                           ('19:30', '22:30', 'DISPONIBILE', '2026-02-10');
+
+
+
+-- Slot per tutto Gennaio 2026
+-- 4 slot al giorno × 31 giorni = 124 slot totali
+
+-- 1 Gennaio 2026
+INSERT INTO slotorari (oraInizio, oraFine, stato, data) VALUES
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-01'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-01'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-01'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-01'),
+
+-- 2 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-02'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-02'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-02'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-02'),
+
+-- 3 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-03'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-03'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-03'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-03'),
+
+-- 4 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-04'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-04'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-04'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-04'),
+
+-- 5 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-05'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-05'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-05'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-05'),
+
+-- 6 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-06'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-06'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-06'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-06'),
+
+-- 7 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-07'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-07'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-07'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-07'),
+
+-- 8 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-08'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-08'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-08'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-08'),
+
+-- 9 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-09'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-09'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-09'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-09'),
+
+-- 10 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-10'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-10'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-10'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-10'),
+
+-- 11 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-11'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-11'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-11'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-11'),
+
+-- 12 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-12'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-12'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-12'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-12'),
+
+-- 13 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-13'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-13'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-13'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-13'),
+
+-- 14 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-14'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-14'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-14'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-14'),
+
+-- 15 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-15'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-15'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-15'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-15'),
+
+-- 16 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-16'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-16'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-16'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-16'),
+
+-- 17 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-17'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-17'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-17'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-17'),
+
+-- 18 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-18'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-18'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-18'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-18'),
+
+-- 19 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-19'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-19'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-19'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-19'),
+
+-- 20 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-20'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-20'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-20'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-20'),
+
+-- 21 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-21'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-21'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-21'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-21'),
+
+-- 22 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-22'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-22'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-22'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-22'),
+
+-- 23 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-23'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-23'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-23'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-23'),
+
+-- 24 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-24'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-24'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-24'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-24'),
+
+-- 25 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-25'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-25'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-25'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-25'),
+
+-- 26 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-26'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-26'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-26'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-26'),
+
+-- 27 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-27'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-27'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-27'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-27'),
+
+-- 28 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-28'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-28'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-28'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-28'),
+
+-- 29 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-29'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-29'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-29'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-29'),
+
+-- 30 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-30'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-30'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-30'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-30'),
+
+-- 31 Gennaio 2026
+                                                            ('09:00', '12:00', 'DISPONIBILE', '2026-01-31'),
+                                                            ('12:30', '15:30', 'DISPONIBILE', '2026-01-31'),
+                                                            ('16:00', '19:00', 'DISPONIBILE', '2026-01-31'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-31');
 -- 2.6 PROGRAMMAZIONI (20 programmazioni varie)
 INSERT INTO PROGRAMMAZIONE (dataProgrammazione, tipo, prezzoBase, stato, idFilm, idSala, idTariffa, idSlotOrario) VALUES
                                                                                                                       ('2025-10-15', '2D', 10.00, 'Disponibile', 1, 1, 1, 2),

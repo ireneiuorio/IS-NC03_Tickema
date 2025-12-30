@@ -10,13 +10,13 @@ public class Posto {
     private int idPosto;
     private int fila;
     private int numeroPosto;
-    private String stato; //DISPONIBILE, OCCUPATO
+    private String stato; // Disponibile, Occupato
 
     private int idSala;
     private int idProgrammazione;
 
     public Posto() {
-        this.stato = "DISPONIBILE";
+        this.stato = "Disponibile";
     }
 
     public Posto(int idPosto, int fila, int numeroPosto, int idSala, int idProgrammazione, String stato) {
@@ -25,7 +25,7 @@ public class Posto {
         this.setNumeroPosto(numeroPosto);
         this.idSala = idSala;
         this.idProgrammazione = idProgrammazione;
-        this.stato = stato;
+        this.setStato(stato);
     }
 
     public int getIdPosto() {
@@ -83,36 +83,39 @@ public class Posto {
             throw new IllegalArgumentException("Lo stato del posto è un campo obbligatorio.");
         }
 
-        //Validazione degli stati in modo tale da non inserire stati diversi da quelli definiti
-        String statoUpper = stato.toUpperCase();
-        if (!statoUpper.equals("DISPONIBILE") &&
-                !statoUpper.equals("OCCUPATO")) {
+        // Normalizza: prima lettera maiuscola, resto minuscolo
+        String statoNormalizzato = stato.substring(0, 1).toUpperCase() +
+                stato.substring(1).toLowerCase();
+
+        // Validazione degli stati
+        if (!statoNormalizzato.equals("Disponibile") &&
+                !statoNormalizzato.equals("Occupato")) {
             throw new IllegalArgumentException(
-                    "Stato non valido. Stati ammessi: DISPONIBILE, OCCUPATO."
+                    "Stato non valido. Stati ammessi: Disponibile, Occupato."
             );
         }
 
-        this.stato = statoUpper;
+        this.stato = statoNormalizzato;
     }
 
-    //Verifica del posto a sedere
+    // Verifica del posto a sedere
     public boolean isDisponibile() {
-        return this.stato.equals("DISPONIBILE");
+        return "Disponibile".equals(this.stato);
     }
 
     public boolean isOccupato() {
-        return this.stato.equals("OCCUPATO");
+        return "Occupato".equals(this.stato);
     }
 
     public void occupa() {
-        this.stato = "OCCUPATO";
+        this.stato = "Occupato";
     }
 
     public void libera() {
-        this.stato = "DISPONIBILE";
+        this.stato = "Disponibile";
     }
 
-    //Identifica in modo leggibile il posto
+    // Identifica in modo leggibile il posto
     public String getIdentificatore() {
         return String.format("Fila %d, Posto %d", fila, numeroPosto);
     }

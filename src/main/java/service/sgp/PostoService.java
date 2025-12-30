@@ -338,14 +338,13 @@ public class PostoService {
     }
 
     //Libera i posti (annullamento acquisto o timeout prenotazione)
-
     public void liberaPosti(List<Integer> idPosti, int idProgrammazione) {
 
         try {
             connection.setAutoCommit(false);
 
             // Aggiorna stati in batch
-            int aggiornati = postoDAO.doUpdateStatoBatch(idPosti, "DISPONIBILE");
+            int aggiornati = postoDAO.doUpdateStatoBatch(idPosti, "Disponibile");
 
             if (aggiornati != idPosti.size()) {
                 throw new LiberazionePostiException();
@@ -365,11 +364,12 @@ public class PostoService {
         }
     }
 
+    // ========================================
+    // METODO CORRETTO - NO GESTIONE TRANSAZIONI
+    // La transazione è gestita da ProgrammazioneService
+    // ========================================
     public void generaPostiPerProgrammazione(int idProgrammazione) {
-
         try {
-            connection.setAutoCommit(false);
-
             // Recupera programmazione
             Programmazione prog = programmazioneDAO.doRetrieveByKey(idProgrammazione);
             if (prog == null) {
@@ -387,14 +387,12 @@ public class PostoService {
 
             for (int fila = 1; fila <= sala.getNumeroDiFile(); fila++) {
                 for (int numeroPosto = 1; numeroPosto <= sala.getNumeroPostiPerFila(); numeroPosto++) {
-
                     Posto posto = new Posto();
                     posto.setFila(fila);
                     posto.setNumeroPosto(numeroPosto);
-                    posto.setStato("DISPONIBILE");
+                    posto.setStato("Disponibile");
                     posto.setIdSala(prog.getIdSala());
                     posto.setIdProgrammazione(idProgrammazione);
-
                     posti.add(posto);
                 }
             }
@@ -402,17 +400,8 @@ public class PostoService {
             // Salva in batch per performance
             postoDAO.doSaveBatch(posti);
 
-            connection.commit();
-
         } catch (SQLException e) {
-            rollback();
             throw new GenerazionePostiException(e);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                // Log error
-            }
         }
     }
 
@@ -426,7 +415,6 @@ public class PostoService {
 
     //OCCUPA TEMPORANEAMENTE I POSTI per il checkout
     //Setta i posti OCCUPATO ma li salva in sessione per poterli liberare dopo
-
     public boolean occupaTemporaneamente(List<Posto> posti) {
         try {
             connection.setAutoCommit(false);
@@ -469,8 +457,8 @@ public class PostoService {
                     .map(Posto::getIdPosto)
                     .collect(Collectors.toList());
 
-            // Riporta a DISPONIBILE usando il metodo esistente
-            int aggiornati = postoDAO.doUpdateStatoBatch(idPosti, "DISPONIBILE");
+            // Riporta a Disponibile usando il metodo esistente
+            int aggiornati = postoDAO.doUpdateStatoBatch(idPosti, "Disponibile");
 
             if (aggiornati != idPosti.size()) {
                 throw new LiberazionePostiException();
@@ -489,9 +477,4 @@ public class PostoService {
             }
         }
     }
-
-
-
-
-
 }

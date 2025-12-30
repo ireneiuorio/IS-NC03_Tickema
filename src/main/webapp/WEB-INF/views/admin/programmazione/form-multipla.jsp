@@ -7,15 +7,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creazione Multipla - ${film.titolo}</title>
+    <title>Creazione Multipla - ${film.titolo} - Tickema</title>
+
+    <!-- CSS Base -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+
     <style>
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 60px 30px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px 80px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Form Section */
+        .form-section {
+            margin-bottom: 35px;
+            padding-bottom: 35px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .form-section h3 {
+            font-size: 1.3em;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Form Row */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Input Group */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(109, 93, 110, 0.1);
+        }
+
+        .input-group small {
+            color: #6c757d;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        /* Programmazione Row */
         .programmazione-row {
-            background: var(--white);
-            border: 2px solid var(--border);
+            background: white;
+            border: 2px solid #e9ecef;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
+            padding: 30px 20px 20px;
+            margin-bottom: 20px;
             position: relative;
             transition: all 0.3s ease;
         }
@@ -30,7 +152,7 @@
             top: -12px;
             left: 15px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
-            color: var(--white);
+            color: white;
             padding: 5px 15px;
             border-radius: 20px;
             font-weight: 600;
@@ -41,8 +163,8 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: var(--danger);
-            color: var(--white);
+            background: #dc3545;
+            color: white;
             border: none;
             border-radius: 50%;
             width: 30px;
@@ -57,61 +179,153 @@
 
         .btn-rimuovi-row:hover {
             transform: scale(1.1);
-            box-shadow: 0 3px 10px rgba(244, 67, 54, 0.4);
+            box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4);
         }
 
-        .row-fields {
-            margin-top: 10px;
-        }
-
-        #containerProgrammazioni {
-            min-height: 100px;
-        }
-
+        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: var(--text-light);
+            padding: 60px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px dashed #dee2e6;
         }
 
-        .empty-state-icon {
-            font-size: 4em;
-            margin-bottom: 15px;
+        .empty-state h3 {
+            font-size: 1.5em;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #6c757d;
+            font-size: 1em;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Button Group */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20874a 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-success:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
         }
 
         .btn-small {
-            padding: 8px 16px;
+            padding: 10px 20px;
             font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8em;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .section-header .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <div class="admin-card">
+<!-- Header -->
+<jsp:include page="/WEB-INF/includes/header.jsp" />
 
-        <div class="admin-header">
-            <h1>Creazione Multipla Programmazioni</h1>
-            <p>Film: <strong>${film.titolo}</strong> (${film.durata} min)</p>
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Creazione Multipla Programmazioni</h1>
+    <p>Film: <strong>${film.titolo}</strong> (${film.durata} min)</p>
+</section>
+
+<!-- Main Content -->
+<main>
+    <div class="container">
+
+        <!-- MESSAGGI -->
+        <c:if test="${not empty messaggioErrore}">
+            <div class="alert alert-danger">
+                <span>✕ ${messaggioErrore}</span>
+            </div>
+        </c:if>
+
+        <div class="alert alert-info">
+            <div>
+                <strong>ℹ️ Creazione in batch</strong>
+                <p style="margin: 5px 0 0 0;">Aggiungi più programmazioni contemporaneamente. Ogni riga rappresenta una programmazione separata.</p>
+            </div>
         </div>
 
-        <div class="admin-content">
-
-            <!-- MESSAGGI -->
-            <c:if test="${not empty messaggioErrore}">
-                <div class="alert alert-danger">
-                    <span class="alert-icon">✕</span>
-                    <span>${messaggioErrore}</span>
-                </div>
-            </c:if>
-
-            <div class="alert alert-info mb-30">
-                <div>
-                    <strong>Creazione in batch</strong>
-                    <p>Aggiungi più programmazioni contemporaneamente. Ogni riga rappresenta una programmazione separata.</p>
-                </div>
-            </div>
-
+        <!-- FORM -->
+        <div class="form-card">
             <form method="POST" action="${pageContext.request.contextPath}/admin/programmazione"
                   id="formCreaMultipla" onsubmit="return validaFormMultipla()">
 
@@ -120,7 +334,7 @@
 
                 <!-- PARAMETRI COMUNI -->
                 <div class="form-section">
-                    <h3>Parametri Comuni</h3>
+                    <h3>⚙️ Parametri Comuni</h3>
 
                     <div class="form-row">
                         <div class="input-group">
@@ -143,10 +357,10 @@
 
                 <!-- CONTAINER PROGRAMMAZIONI DINAMICHE -->
                 <div class="form-section">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3>Programmazioni</h3>
+                    <div class="section-header">
+                        <h3>🎬 Programmazioni</h3>
                         <button type="button" onclick="aggiungiProgrammazione()" class="btn btn-success btn-small">
-                            Aggiungi Programmazione
+                            + Aggiungi Programmazione
                         </button>
                     </div>
 
@@ -155,7 +369,7 @@
                     </div>
 
                     <div class="empty-state" id="emptyState">
-                        <h3>Nessuna programmazione aggiunta</h3>
+                        <h3>📋 Nessuna programmazione aggiunta</h3>
                         <p>Clicca "Aggiungi Programmazione" per iniziare</p>
                     </div>
                 </div>
@@ -172,11 +386,15 @@
                 </div>
 
             </form>
-
         </div>
-    </div>
-</div>
 
+    </div>
+</main>
+
+<!-- Footer -->
+<jsp:include page="/WEB-INF/includes/footer.jsp" />
+
+<!-- JAVASCRIPT -->
 <script>
     // Dati disponibili dal backend
     const sale = [

@@ -40,7 +40,6 @@ public class ProgrammazioneControl extends HttpServlet {
     private static final String JSP_FORM_MODIFICA = "/WEB-INF/views/admin/programmazione/form-modifica.jsp";
     private static final String JSP_FORM_MULTIPLA = "/WEB-INF/views/admin/programmazione/form-multipla.jsp";
 
-
     // Formattatori
     private static final DateTimeFormatter FORMATTATORE_DATA = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter FORMATTATORE_ORA = DateTimeFormatter.ofPattern("HH:mm");
@@ -58,39 +57,36 @@ public class ProgrammazioneControl extends HttpServlet {
             azione = "lista";
         }
 
-        try {
-            switch (azione) {
-                case "lista":
-                    mostraLista(richiesta, risposta);
-                    break;
+        switch (azione) {
+            case "lista":
+                mostraLista(richiesta, risposta);
+                break;
 
-                case "dettaglio":
-                    mostraDettaglio(richiesta, risposta);
-                    break;
+            case "dettaglio":
+                mostraDettaglio(richiesta, risposta);
+                break;
 
-                case "formCrea":
-                    mostraFormCreazione(richiesta, risposta);
-                    break;
+            case "formCrea":
+                mostraFormCreazione(richiesta, risposta);
+                break;
 
-                case "formModifica":
-                    mostraFormModifica(richiesta, risposta);
-                    break;
+            case "formModifica":
+                mostraFormModifica(richiesta, risposta);
+                break;
+            case "slotDisponibili":
+                caricaSlotDisponibili(richiesta, risposta);
+                break;
+            case "formMultipla":
+                mostraFormCreazioneMultipla(richiesta, risposta);
+                break;
 
-                case "formMultipla":
-                    mostraFormCreazioneMultipla(richiesta, risposta);
-                    break;
 
-                default:
-                    risposta.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                            "Azione non valida: " + azione);
-            }
-
-        } catch (Exception e) {
-            gestisciErrore(richiesta, risposta, e, "Errore nella visualizzazione");
+            default:
+                risposta.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                        "Azione non valida: " + azione);
         }
     }
 
-    //OPERAZIONI CRUD
     @Override
     protected void doPost(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
@@ -105,37 +101,34 @@ public class ProgrammazioneControl extends HttpServlet {
             return;
         }
 
-        try {
-            switch (azione) {
-                case "crea":
-                    creaProgrammazione(richiesta, risposta);
-                    break;
+        switch (azione) {
+            case "crea":
+                creaProgrammazione(richiesta, risposta);
+                break;
 
-                case "creaMultipla":
-                    creaProgrammazioneMultipla(richiesta, risposta);
-                    break;
+            case "creaMultipla":
+                creaProgrammazioneMultipla(richiesta, risposta);
+                break;
 
-                case "modifica":
-                    modificaProgrammazione(richiesta, risposta);
-                    break;
+            case "modifica":
+                modificaProgrammazione(richiesta, risposta);
+                break;
 
-                case "elimina":
-                    eliminaProgrammazione(richiesta, risposta);
-                    break;
+            case "elimina":
+                eliminaProgrammazione(richiesta, risposta);
+                break;
 
-                default:
-                    risposta.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                            "Azione non valida: " + azione);
-            }
-
-        } catch (Exception e) {
-            gestisciErrore(richiesta, risposta, e, "Errore nell'operazione");
+            default:
+                risposta.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                        "Azione non valida: " + azione);
         }
     }
 
-
     // METODI VISUALIZZAZIONE
-    //Mostra lista programmazioni filtrate
+
+    /**
+     * Mostra lista programmazioni filtrate
+     */
     private void mostraLista(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
@@ -186,7 +179,9 @@ public class ProgrammazioneControl extends HttpServlet {
         }
     }
 
-    //Mostra dettaglio singola programmazione
+    /**
+     * Mostra dettaglio singola programmazione
+     */
     private void mostraDettaglio(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
@@ -211,7 +206,58 @@ public class ProgrammazioneControl extends HttpServlet {
         }
     }
 
-    //Mostra form per creare nuova programmazione singola
+    /**
+     * AJAX endpoint per caricare slot disponibili
+     */
+    private void caricaSlotDisponibili(HttpServletRequest richiesta, HttpServletResponse risposta)
+            throws ServletException, IOException {
+
+        try {
+            int idSala = leggiInteroObbligatorio(richiesta, "idSala");
+            LocalDate data = leggiDataObbligatoria(richiesta, "data");
+
+            Connection connessione = ottieniConnessione(richiesta);
+            SlotOrariService servizioSlot = new SlotOrariService(connessione);
+
+            List<SlotOrari> slots = servizioSlot.visualizzaSlotDisponibili(idSala, data);
+
+            // Risposta JSON
+            risposta.setContentType("application/json");
+            risposta.setCharacterEncoding("UTF-8");
+
+            StringBuilder json = new StringBuilder();
+            json.append("{\"slots\":[");
+
+            for (int i = 0; i < slots.size(); i++) {
+                SlotOrari slot = slots.get(i);
+                if (i > 0) json.append(",");
+
+                json.append("{");
+                json.append("\"idSlotOrario\":").append(slot.getIdSlotOrario()).append(",");
+                json.append("\"oraInizio\":\"").append(slot.getOraInizio()).append("\",");
+                json.append("\"oraFine\":\"").append(slot.getOraFine()).append("\",");
+                json.append("\"stato\":\"").append(slot.getStato()).append("\"");
+                json.append("}");
+            }
+
+            json.append("]}");
+
+            risposta.getWriter().write(json.toString());
+
+        } catch (IllegalArgumentException e) {
+            risposta.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            risposta.setContentType("application/json");
+            risposta.getWriter().write("{\"error\":\"" + e.getMessage() + "\"}");
+
+        } catch (Exception e) {
+            risposta.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            risposta.setContentType("application/json");
+            risposta.getWriter().write("{\"error\":\"Errore nel recupero degli slot\"}");
+        }
+    }
+    /**
+     * Mostra form per creare nuova programmazione singola
+     */
     private void mostraFormCreazione(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
@@ -248,13 +294,26 @@ public class ProgrammazioneControl extends HttpServlet {
         }
     }
 
-    //Mostra form per modificare programmazione esistente
+    /**
+     * Mostra form per modificare programmazione esistente
+     */
     private void mostraFormModifica(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
         try {
             Connection connessione = ottieniConnessione(richiesta);
-            int idProgrammazione = leggiInteroObbligatorio(richiesta, "id");
+
+            // Prova prima da parametro, poi da attributo
+            String idParam = richiesta.getParameter("id");
+            if (idParam == null || idParam.isEmpty()) {
+                idParam = (String) richiesta.getAttribute("id");
+            }
+
+            if (idParam == null || idParam.isEmpty()) {
+                throw new IllegalArgumentException("Parametro obbligatorio mancante: id");
+            }
+
+            int idProgrammazione = Integer.parseInt(idParam);
 
             ProgrammazioneService servizio = ottieniServizio(richiesta);
             Programmazione programmazione = servizio.getProgrammazioneById(idProgrammazione);
@@ -289,8 +348,9 @@ public class ProgrammazioneControl extends HttpServlet {
             throw new ServletException("Errore nel caricamento del form modifica", e);
         }
     }
-
-    //Mostra form per creazione multipla
+    /**
+     * Mostra form per creazione multipla
+     */
     private void mostraFormCreazioneMultipla(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
@@ -323,39 +383,45 @@ public class ProgrammazioneControl extends HttpServlet {
         }
     }
 
-
     // METODI OPERAZIONI CRUD
-    //Crea una nuova programmazione singola
+
+    /**
+     * Crea una nuova programmazione singola
+     */
     private void creaProgrammazione(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
         ProgrammazioneService servizio = ottieniServizio(richiesta);
 
         try {
-            // Validazione e parsing parametri
             int idFilm = leggiInteroObbligatorio(richiesta, "idFilm");
             int idSala = leggiInteroObbligatorio(richiesta, "idSala");
             int idSlotOrario = leggiInteroObbligatorio(richiesta, "idSlotOrario");
 
             String tipo = leggiStringaObbligatoria(richiesta, "tipo");
             double prezzoBase = leggiDecimaleObbligatorio(richiesta, "prezzoBase");
-
             LocalDate data = leggiDataObbligatoria(richiesta, "data");
-            LocalTime oraInizio = leggiOraObbligatoria(richiesta, "oraInizio");
 
             Integer idTariffa = leggiInteroOpzionale(richiesta, "idTariffa");
 
+            // RECUPERA L'ORA INIZIO DALLO SLOT
+            Connection connessione = ottieniConnessione(richiesta);
+            SlotOrariService slotService = new SlotOrariService(connessione);
+            SlotOrari slot = slotService.getSlotOrarioById(idSlotOrario);
+
+            if (slot == null) {
+                throw new IllegalArgumentException("Slot orario non trovato");
+            }
+
+            LocalTime oraInizio = slot.getOraInizio();
+
             // Validazioni business
             if (prezzoBase <= 0) {
-                throw new IllegalArgumentException(
-                        "Il prezzo base deve essere maggiore di zero"
-                );
+                throw new IllegalArgumentException("Il prezzo base deve essere maggiore di zero");
             }
 
             if (data.isBefore(LocalDate.now())) {
-                throw new IllegalArgumentException(
-                        "Non è possibile creare programmazioni nel passato"
-                );
+                throw new IllegalArgumentException("Non è possibile creare programmazioni nel passato");
             }
 
             // Creazione programmazione
@@ -364,7 +430,6 @@ public class ProgrammazioneControl extends HttpServlet {
                     idFilm, idSala, idSlotOrario, idTariffa
             );
 
-            // Risposta successo
             HttpSession sessione = richiesta.getSession();
             sessione.setAttribute("messaggioSuccesso",
                     "Programmazione creata con successo! ID: " + programmazione.getIdProgrammazione());
@@ -373,17 +438,47 @@ public class ProgrammazioneControl extends HttpServlet {
                     "/admin/programmazione?action=lista&idFilm=" + idFilm);
 
         } catch (IllegalArgumentException e) {
+            // LOG DETTAGLIATO
+            System.err.println("=== ERRORE IllegalArgumentException ===");
+            System.err.println("Messaggio: " + e.getMessage());
+            e.printStackTrace();
+            System.err.println("=======================================");
+
             richiesta.setAttribute("messaggioErrore", e.getMessage());
             mostraFormCreazione(richiesta, risposta);
 
         } catch (CreazioneProgrammazioneException e) {
+            // LOG DETTAGLIATO
+            System.err.println("=== ERRORE CreazioneProgrammazioneException ===");
+            System.err.println("Messaggio: " + e.getMessage());
+            System.err.println("Causa: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A"));
+            e.printStackTrace();
+            if (e.getCause() != null) {
+                e.getCause().printStackTrace();
+            }
+            System.err.println("===============================================");
+
             richiesta.setAttribute("messaggioErrore",
                     "Impossibile creare la programmazione: " + e.getMessage());
+            mostraFormCreazione(richiesta, risposta);
+
+        } catch (Exception e) {
+            // CATCH-ALL per altri errori
+            System.err.println("=== ERRORE GENERICO ===");
+            System.err.println("Tipo: " + e.getClass().getName());
+            System.err.println("Messaggio: " + e.getMessage());
+            e.printStackTrace();
+            System.err.println("=======================");
+
+            richiesta.setAttribute("messaggioErrore",
+                    "Errore imprevisto: " + e.getMessage());
             mostraFormCreazione(richiesta, risposta);
         }
     }
 
-    //Crea multiple programmazioni in batch
+    /**
+     * Crea multiple programmazioni in batch
+     */
     private void creaProgrammazioneMultipla(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
@@ -463,7 +558,9 @@ public class ProgrammazioneControl extends HttpServlet {
         }
     }
 
-    //Modifica una programmazione esistente
+    /**
+     * Modifica una programmazione esistente
+     */
     private void modificaProgrammazione(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
@@ -477,12 +574,22 @@ public class ProgrammazioneControl extends HttpServlet {
             int idSlotOrario = leggiInteroObbligatorio(richiesta, "idSlotOrario");
 
             LocalDate data = leggiDataObbligatoria(richiesta, "data");
-            LocalTime oraInizio = leggiOraObbligatoria(richiesta, "oraInizio");
             String tipo = leggiStringaObbligatoria(richiesta, "tipo");
             String stato = leggiStringaObbligatoria(richiesta, "stato");
             double prezzoBase = leggiDecimaleObbligatorio(richiesta, "prezzoBase");
 
             Integer idTariffa = leggiInteroOpzionale(richiesta, "idTariffa");
+
+            // RECUPERA L'ORA INIZIO DALLO SLOT
+            Connection connessione = ottieniConnessione(richiesta);
+            SlotOrariService slotService = new SlotOrariService(connessione);
+            SlotOrari slot = slotService.getSlotOrarioById(idSlotOrario);
+
+            if (slot == null) {
+                throw new IllegalArgumentException("Slot orario non trovato");
+            }
+
+            LocalTime oraInizio = slot.getOraInizio();
 
             // Validazioni
             if (prezzoBase <= 0) {
@@ -509,16 +616,22 @@ public class ProgrammazioneControl extends HttpServlet {
 
         } catch (IllegalArgumentException e) {
             richiesta.setAttribute("messaggioErrore", e.getMessage());
+            // Setta l'id come parametro manualmente
+            richiesta.setAttribute("id", richiesta.getParameter("idProgrammazione"));
             mostraFormModifica(richiesta, risposta);
 
         } catch (ModificaProgrammazioneException e) {
             richiesta.setAttribute("messaggioErrore",
                     "Errore nella modifica: " + e.getMessage());
+            // Setta l'id come parametro manualmente
+            richiesta.setAttribute("id", richiesta.getParameter("idProgrammazione"));
             mostraFormModifica(richiesta, risposta);
         }
     }
 
-    //Elimina una programmazione con gestione rimborsi automatici
+    /**
+     * Elimina una programmazione con gestione rimborsi automatici
+     */
     private void eliminaProgrammazione(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
@@ -565,26 +678,26 @@ public class ProgrammazioneControl extends HttpServlet {
         }
     }
 
+    // METODI UTILITY
 
-    //Verifica che l'utente corrente sia un amministratore
     private boolean verificaAccessoAdmin(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws IOException {
 
         HttpSession sessione = richiesta.getSession(false);
 
         if (sessione == null) {
-            risposta.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Sessione non valida");
+            risposta.sendRedirect(richiesta.getContextPath() + "/utente/login");
             return false;
         }
 
-        Utente utente = (Utente) sessione.getAttribute("user");
+        Utente utente = (Utente) sessione.getAttribute("utenteLoggato");
 
         if (utente == null) {
-            risposta.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Autenticazione richiesta");
+            risposta.sendRedirect(richiesta.getContextPath() + "/utente/login");
             return false;
         }
 
-        if (!"ADMIN".equals(utente.getTipoAccount())) {
+        if (!"Admin".equalsIgnoreCase(utente.getTipoAccount())) {
             risposta.sendError(HttpServletResponse.SC_FORBIDDEN,
                     "Accesso negato: permessi amministratore richiesti");
             return false;
@@ -593,44 +706,16 @@ public class ProgrammazioneControl extends HttpServlet {
         return true;
     }
 
-    /**
-     * Recupera il service inizializzato con la connessione
-     */
     private ProgrammazioneService ottieniServizio(HttpServletRequest richiesta) {
         Connection connessione = ottieniConnessione(richiesta);
         return new ProgrammazioneService(connessione);
     }
 
-    /**
-     * Recupera la connessione dal contesto dell'applicazione
-     */
     private Connection ottieniConnessione(HttpServletRequest richiesta) {
-        return (Connection) richiesta.getServletContext().getAttribute("DBConnection");
+        return (Connection) richiesta.getServletContext().getAttribute("dbConnection");
     }
 
-    /**
-     * Gestione centralizzata degli errori
-     */
-    private void gestisciErrore(HttpServletRequest richiesta, HttpServletResponse risposta,
-                                Exception eccezione, String messaggioDefault)
-            throws ServletException, IOException {
-
-        System.err.println("[ERRORE] " + messaggioDefault + ": " + eccezione.getMessage());
-        eccezione.printStackTrace();
-
-        richiesta.setAttribute("messaggioErrore", messaggioDefault + ": " + eccezione.getMessage());
-
-        String azione = richiesta.getParameter("action");
-        if (azione != null && azione.startsWith("form")) {
-            richiesta.getRequestDispatcher(JSP_FORM_CREA).forward(richiesta, risposta);
-        } else {
-            risposta.sendRedirect(richiesta.getContextPath() + "/admin/programmazione?action=lista");
-        }
-    }
-
-    // ========================================
     // PARSING PARAMETRI
-    // ========================================
 
     private int leggiInteroObbligatorio(HttpServletRequest richiesta, String nomeParametro) {
         String valore = richiesta.getParameter(nomeParametro);
@@ -674,46 +759,47 @@ public class ProgrammazioneControl extends HttpServlet {
         String valore = richiesta.getParameter(nomeParametro);
 
         if (valore == null || valore.trim().isEmpty()) {
-        throw new IllegalArgumentException("Parametro obbligatorio mancante: " + nomeParametro);
-}
+            throw new IllegalArgumentException("Parametro obbligatorio mancante: " + nomeParametro);
+        }
+
         try {
-        return Double.parseDouble(valore.trim());
+            return Double.parseDouble(valore.trim());
         } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Formato decimale non valido per " + nomeParametro + ": " + valore);
-    }
-            }
-
-private LocalDate leggiDataObbligatoria(HttpServletRequest richiesta, String nomeParametro) {
-    String valore = richiesta.getParameter(nomeParametro);
-
-    if (valore == null || valore.trim().isEmpty()) {
-        throw new IllegalArgumentException("Parametro obbligatorio mancante: " + nomeParametro);
+            throw new IllegalArgumentException("Formato decimale non valido per " + nomeParametro + ": " + valore);
+        }
     }
 
-    try {
-        return LocalDate.parse(valore.trim(), FORMATTATORE_DATA);
-    } catch (DateTimeParseException e) {
-        throw new IllegalArgumentException(
-                "Formato data non valido per " + nomeParametro + ": " + valore +
-                        " (atteso: yyyy-MM-dd)"
-        );
-    }
-}
+    private LocalDate leggiDataObbligatoria(HttpServletRequest richiesta, String nomeParametro) {
+        String valore = richiesta.getParameter(nomeParametro);
 
-private LocalTime leggiOraObbligatoria(HttpServletRequest richiesta, String nomeParametro) {
-    String valore = richiesta.getParameter(nomeParametro);
+        if (valore == null || valore.trim().isEmpty()) {
+            throw new IllegalArgumentException("Parametro obbligatorio mancante: " + nomeParametro);
+        }
 
-    if (valore == null || valore.trim().isEmpty()) {
-        throw new IllegalArgumentException("Parametro obbligatorio mancante: " + nomeParametro);
+        try {
+            return LocalDate.parse(valore.trim(), FORMATTATORE_DATA);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(
+                    "Formato data non valido per " + nomeParametro + ": " + valore +
+                            " (atteso: yyyy-MM-dd)"
+            );
+        }
     }
 
-    try {
-        return LocalTime.parse(valore.trim(), FORMATTATORE_ORA);
-    } catch (DateTimeParseException e) {
-        throw new IllegalArgumentException(
-                "Formato ora non valido per " + nomeParametro + ": " + valore +
-                        " (atteso: HH:mm)"
-        );
+    private LocalTime leggiOraObbligatoria(HttpServletRequest richiesta, String nomeParametro) {
+        String valore = richiesta.getParameter(nomeParametro);
+
+        if (valore == null || valore.trim().isEmpty()) {
+            throw new IllegalArgumentException("Parametro obbligatorio mancante: " + nomeParametro);
+        }
+
+        try {
+            return LocalTime.parse(valore.trim(), FORMATTATORE_ORA);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(
+                    "Formato ora non valido per " + nomeParametro + ": " + valore +
+                            " (atteso: HH:mm)"
+            );
+        }
     }
-}
 }

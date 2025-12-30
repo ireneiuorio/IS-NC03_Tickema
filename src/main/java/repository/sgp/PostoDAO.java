@@ -109,7 +109,7 @@ public class PostoDAO {
 
     public List<Posto> doRetrieveDisponibili(int idProgrammazione) throws SQLException {
         String sql = "SELECT * FROM posto " +
-                "WHERE idProgrammazione = ? AND stato = 'DISPONIBILE' " +
+                "WHERE idProgrammazione = ? AND stato = 'Disponibile' " + // ← CORRETTO
                 "ORDER BY fila, numeroPosto";
 
         List<Posto> result = new ArrayList<>();
@@ -128,7 +128,7 @@ public class PostoDAO {
 
     public int doCountDisponibili(int idProgrammazione) throws SQLException {
         String sql = "SELECT COUNT(*) FROM posto " +
-                "WHERE idProgrammazione = ? AND stato = 'DISPONIBILE'";
+                "WHERE idProgrammazione = ? AND stato = 'Disponibile'"; // ← CORRETTO
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, idProgrammazione);
