@@ -20,12 +20,17 @@ public class AutenticazioneService {
     }
 
     //REGISTRA NUOVO UTENTE
-    public Utente registraUtente(String nome, String cognome, String email, String password, String numeroDiTelefono)
-            throws SQLException, NoSuchAlgorithmException, EmailGiaRegistrataException {
+    public Utente registraUtente(String nome, String cognome, String email, String password, String confermaPassword, String numeroDiTelefono)
+            throws SQLException, NoSuchAlgorithmException, EmailGiaRegistrataException, PasswordDiverseException {
 
         // Verifica email già esistente
         if (utenteDAO.esisteEmail(email)) {
             throw new EmailGiaRegistrataException();
+        }
+
+        //verifica che le due password corrispondano
+        if(!password.equals(confermaPassword)) {
+            throw new PasswordDiverseException();
         }
 
         // Crea nuovo utente (usa costruttore SENZA idAccount)
@@ -51,13 +56,13 @@ public class AutenticazioneService {
 
     //LOGIN UTENTE
     public Utente login(String email, String passwordInserita)
-            throws SQLException, NoSuchAlgorithmException, PasswordErrataException {
+            throws SQLException, NoSuchAlgorithmException, CredenzialiNonValideException {
 
         // Cerca utente per email
         Utente utenteDalDB = utenteDAO.doRetrieveByEmail(email);
 
         if (utenteDalDB == null) {
-            throw new PasswordErrataException(); // Email non trovata
+            throw new CredenzialiNonValideException(); // Email non trovata
         }
 
         // Hasha la password inserita per confrontarla
@@ -66,7 +71,7 @@ public class AutenticazioneService {
 
         // Confronta le password hashate
         if (!temp.getPassword().equals(utenteDalDB.getPassword())) {
-            throw new PasswordErrataException();
+            throw new CredenzialiNonValideException();
         }
 
         return utenteDalDB; // Login riuscito
@@ -87,5 +92,22 @@ public class AutenticazioneService {
         }
 
         return true;
+    }
+
+    //modifica il profilo (nome, cognome, e numero di telefono)
+    public boolean modificaProfilo(int idAccount, String nome, String cognome, String numeroDiTelefono) throws SQLException {
+        return utenteDAO.doUpdateProfilo(idAccount, nome, cognome, numeroDiTelefono);
+    }
+
+    public boolean modificaCredenziali(int idAccount, String email, String password, String confermaPassword) throws PasswordDiverseException, NoSuchAlgorithmException, SQLException {
+        if (!password.equals(confermaPassword)) {
+            throw new PasswordDiverseException();
+        }
+
+        //creiamo un utente temporaneo per poter hashare la password
+        Utente temp = new Utente();
+        temp.setPassword(password);
+
+        return utenteDAO.doUpdateCredenziali(idAccount, email, temp.getPassword());
     }
 }
