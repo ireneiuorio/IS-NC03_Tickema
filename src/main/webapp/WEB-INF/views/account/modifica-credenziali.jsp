@@ -211,7 +211,7 @@
 
             <!-- Campo Password -->
             <div class="form-group">
-                <label for="password">Password *</label>
+                <label for="password">Nuova Password *</label>
                 <input type="password"
                        id="password"
                        name="password"
@@ -219,12 +219,12 @@
                        minlength="8"
                        required>
                 <div class="password-strength" id="passwordStrength"></div>
-                <span class="password-hint">Almeno 8 caratteri</span>
+                <span class="password-hint">Almeno 6 caratteri</span>
             </div>
 
             <!-- Campo Conferma Password -->
             <div class="form-group">
-                <label for="confermaPassword">Conferma Password *</label>
+                <label for="confermaPassword">Conferma nuova Password *</label>
                 <input type="password"
                        id="confermaPassword"
                        name="confermaPassword"
@@ -258,7 +258,7 @@
     const passwordInput = document.getElementById('password');
     const passwordStrength = document.getElementById('passwordStrength');
     const confermaPasswordInput = document.getElementById('confermaPassword');
-    const form = document.getElementById('form-modifica-credenziali');
+    const form = document.getElementById('form-registrazione');
 
     // Controlla la forza della password mentre l'utente digita
     passwordInput.addEventListener('input', function() {
@@ -284,7 +284,7 @@
     function calcolaForzaPassword(password) {
         let strength = 0;
 
-        if (password.length >= 8) strength++;
+        if (password.length >= 6) strength++;
         if (password.length >= 12) strength++;
         if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
         if (/\d/.test(password)) strength++;
@@ -307,9 +307,17 @@
         }
 
         // Controlla lunghezza minima password
-        if (password.length < 8) {
+        if (password.length < 6) {
             e.preventDefault();
-            alert('La password deve essere di almeno 8 caratteri!');
+            alert('La password deve essere di almeno 6 caratteri!');
+            passwordInput.focus();
+            return false;
+        }
+
+        // Controllo carattere speciale
+        if (!/[^a-zA-Z0-9]/.test(password)) {
+            e.preventDefault();
+            alert('La password deve contenere almeno un carattere speciale!');
             passwordInput.focus();
             return false;
         }
