@@ -1,4 +1,4 @@
-package exception.sgu.autenticazione;
+package exception.sgu;
 
 public class PasswordErrataException extends Exception {
     public PasswordErrataException() {

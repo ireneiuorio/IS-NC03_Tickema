@@ -1,8 +1,7 @@
 package control.sgu;
 
 import entity.sgu.Utente;
-import exception.EmailGiaRegistrataException;
-import exception.PasswordErrataException;
+import exception.sgu.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
