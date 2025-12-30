@@ -19,7 +19,7 @@ import java.sql.SQLException;
 public class UtenteServlet extends HttpServlet {
 
     private AutenticazioneService autenticazioneService;
-
+//ciao ciao
     @Override
     public void init() throws ServletException {
         Connection connection = (Connection) getServletContext().getAttribute("dbConnection");
