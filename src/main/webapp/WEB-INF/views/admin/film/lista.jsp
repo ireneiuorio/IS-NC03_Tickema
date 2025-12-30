@@ -131,8 +131,8 @@
     }
 
     .badge-info {
-      background: #d1ecf1;
-      color: #0c5460;
+      background: white;
+      color: var(--primary);
     }
 
     /* Films Grid */

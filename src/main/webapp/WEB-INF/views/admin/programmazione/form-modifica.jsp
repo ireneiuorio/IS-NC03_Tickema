@@ -67,8 +67,8 @@
     }
 
     .alert-warning {
-      background: #fff3cd;
-      color: #856404;
+      background:var(--primary);
+      color: white;
       border: 1px solid #ffeaa7;
     }
 
@@ -162,7 +162,7 @@
     }
 
     .btn-success {
-      background: linear-gradient(135deg, #28a745 0%, #20874a 100%);
+      background: var(--primary);
       color: white;
       flex: 1;
     }
@@ -228,7 +228,7 @@
     <!-- Alert Warning -->
     <div class="alert alert-warning">
       <div>
-        <strong>⚠️ Attenzione</strong>
+        <strong>Attenzione</strong>
         <p style="margin: 5px 0 0 0;">Modificando slot o sala, il vecchio slot verrà liberato e il nuovo occupato automaticamente.</p>
       </div>
     </div>
@@ -246,7 +246,7 @@
 
         <!-- SEZIONE DATA E SALA -->
         <div class="form-section">
-          <h3>📅 Data e Sala</h3>
+          <h3> Data e Sala</h3>
 
           <div class="form-row">
             <div class="form-group">
@@ -284,7 +284,7 @@
 
         <!-- SEZIONE SLOT ORARIO -->
         <div class="form-section">
-          <h3>🎬 Slot Orario</h3>
+          <h3>Slot Orario</h3>
 
           <div class="form-group">
             <label class="form-label" for="idSlotOrario">
@@ -309,7 +309,7 @@
 
         <!-- SEZIONE PREZZI E STATO -->
         <div class="form-section">
-          <h3>💰 Prezzi, Tipo e Stato</h3>
+          <h3>Prezzi, Tipo e Stato</h3>
 
           <div class="form-row">
             <div class="form-group">
@@ -374,11 +374,11 @@
         <!-- PULSANTI -->
         <div class="form-actions">
           <button type="submit" class="btn btn-success">
-            ✓ Salva Modifiche
+             Salva Modifiche
           </button>
           <a href="${pageContext.request.contextPath}/admin/programmazione?action=dettaglio&id=${programmazione.idProgrammazione}"
              class="btn btn-secondary">
-            ✕ Annulla
+            Annulla
           </a>
         </div>
 

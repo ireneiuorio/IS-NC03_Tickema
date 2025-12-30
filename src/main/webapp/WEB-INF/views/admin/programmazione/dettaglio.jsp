@@ -407,7 +407,7 @@
                 <c:if test="${programmazione.stato == 'Disponibile'}">
                     <a href="?action=formModifica&id=${programmazione.idProgrammazione}"
                        class="btn btn-primary">
-                        ✎ Modifica
+                        Modifica
                     </a>
                 </c:if>
 
