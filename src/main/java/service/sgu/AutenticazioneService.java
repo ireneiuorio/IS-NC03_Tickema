@@ -1,8 +1,8 @@
 package service.sgu;
 
 import entity.sgu.Utente;
-import exception.sgu.EmailGiaRegistrataException;
-import exception.sgu.PasswordErrataException;
+import exception.sgu.autenticazione.*;
+
 import repository.sgu.UtenteDAO;
 
 import java.security.NoSuchAlgorithmException;
