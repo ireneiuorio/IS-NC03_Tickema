@@ -40,7 +40,7 @@ public class AutenticazioneService {
                 numeroDiTelefono,
                 "", // Password vuota, la hashiamo dopo
                 email,
-                "Utente Autenticato"
+                "Utente"
         );
 
         // Hasha la password
