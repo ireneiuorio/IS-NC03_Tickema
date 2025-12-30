@@ -88,7 +88,6 @@ public class ProgrammazioneService {
             // Inizio transazione atomica
             connection.setAutoCommit(false);
 
-
             // 1. Verifica esistenza film
             Film film = filmDAO.doRetrieveByKey(idFilm);
             if (film == null) {
@@ -134,12 +133,12 @@ public class ProgrammazioneService {
                 }
             }
 
-
+            // CREA LA PROGRAMMAZIONE
             Programmazione programmazione = new Programmazione();
             programmazione.setDataProgrammazione(date);
             programmazione.setTipo(tipo);
             programmazione.setPrezzoBase(prezzoBase);
-            programmazione.setStato("DISPONIBILE");
+            programmazione.setStato("Disponibile"); // ← CORRETTO
             programmazione.setIdFilm(idFilm);
             programmazione.setIdSala(idSala);
             programmazione.setIdSlotOrari(idSlotOrario);
@@ -147,8 +146,14 @@ public class ProgrammazioneService {
 
             Programmazione result = programmazioneDAO.doSave(programmazione);
 
+            // ========================================
+            // GENERA I POSTI PER QUESTA PROGRAMMAZIONE
+            // ========================================
+            PostoService postoService = new PostoService(connection);
+            postoService.generaPostiPerProgrammazione(result.getIdProgrammazione());
+
             // AGGIORNAMENTO SLOT ORARIO
-            slot.occupa(); // Cambia stato a OCCUPATO
+            slot.occupa(); // Cambia stato a "Occupato"
             slotOrariDAO.doUpdate(slot);
 
             connection.commit();
@@ -163,7 +168,8 @@ public class ProgrammazioneService {
         } finally {
             try {
                 connection.setAutoCommit(true);
-            } catch (SQLException e) { //
+            } catch (SQLException e) {
+                // Log error
             }
         }
     }
@@ -208,8 +214,7 @@ public class ProgrammazioneService {
         }
     }
 
-    private Programmazione creaProgrammazioneSingolaInternal(LocalDate date, String tipo, double prezzoBase, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa
-    ) throws SQLException{
+    private Programmazione creaProgrammazioneSingolaInternal(LocalDate date, String tipo, double prezzoBase, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa) throws SQLException {
 
         // Validazioni
         SlotOrari slot = slotOrariDAO.doRetrieveByKey(idSlotOrario);
@@ -226,13 +231,19 @@ public class ProgrammazioneService {
         p.setDataProgrammazione(date);
         p.setTipo(tipo);
         p.setPrezzoBase(prezzoBase);
-        p.setStato("DISPONIBILE");
+        p.setStato("Disponibile"); // ← CORRETTO
         p.setIdFilm(idFilm);
         p.setIdSala(idSala);
         p.setIdSlotOrari(idSlotOrario);
         p.setIdTariffa(idTariffa);
 
         Programmazione result = programmazioneDAO.doSave(p);
+
+        // ========================================
+        // GENERA I POSTI PER QUESTA PROGRAMMAZIONE
+        // ========================================
+        PostoService postoService = new PostoService(connection);
+        postoService.generaPostiPerProgrammazione(result.getIdProgrammazione());
 
         // Aggiorna slot
         slot.occupa();
@@ -311,7 +322,6 @@ public class ProgrammazioneService {
         try {
             connection.setAutoCommit(false);
 
-
             //VERIFICA ESISTENZA PROGRAMMAZIONE
             Programmazione prog = programmazioneDAO.doRetrieveByKey(idProgrammazione);
             if (prog == null) {
@@ -322,12 +332,12 @@ public class ProgrammazioneService {
             processaRimborsiAutomatici(idProgrammazione);
 
             // STEP 3: INVALIDAZIONE BIGLIETTI
-            bigliettoDAO.doUpdateStatoByProgrammazione(idProgrammazione, "RIMBORSATO"); //bisogna avere un metodo per cambiare lo stato dei biglietti
+            bigliettoDAO.doUpdateStatoByProgrammazione(idProgrammazione, "Rimborsato"); // ← CORRETTO
 
             // STEP 4: LIBERAZIONE SLOT ORARIO
             SlotOrari slot = slotOrariDAO.doRetrieveByKey(prog.getIdSlotOrari());
             if (slot != null) {
-                slot.libera(); // Cambia stato a DISPONIBILE
+                slot.libera(); // Cambia stato a "Disponibile"
                 slotOrariDAO.doUpdate(slot);
             }
 
@@ -349,31 +359,28 @@ public class ProgrammazioneService {
         }
     }
 
-    private void processaRimborsiAutomatici(int idProgrammazione)
-            throws SQLException{
+    private void processaRimborsiAutomatici(int idProgrammazione) throws SQLException {
 
         // Recupera tutti i biglietti non ancora rimborsati
-        List<Biglietto> biglietti = bigliettoDAO.doRetrieveByProgrammazione(
-                idProgrammazione
-        );
+        List<Biglietto> biglietti = bigliettoDAO.doRetrieveByProgrammazione(idProgrammazione);
 
         for (Biglietto biglietto : biglietti) {
             // Salta biglietti già rimborsati
-            if ("RIMBORSATO".equals(biglietto.getStato())) {
+            if ("Rimborsato".equals(biglietto.getStato())) { // ← CORRETTO
                 continue;
             }
 
             // Recupera acquisto correlato
             Acquisto acquisto = acquistoDAO.doRetrieveById(
-                    biglietto.getAcquisto().getIdAcquisto()//opp non lo so, si può pensare di mettere in Acquisto l'istanza Utente e fare qui acquisto.getUtente().getIdAccount()
+                    biglietto.getAcquisto().getIdAcquisto()
             );
 
             if (acquisto != null) {
-                // Incrementa saldo utente -- bisogna inserire un metodo che incrementi il saldo di un certo biglietto in base al biglietto considerato
+                // Incrementa saldo utente
                 utenteDAO.doIncrementSaldo(acquisto.getUtente().getIdAccount(), biglietto.getPrezzoFinale());
 
                 // Aggiorna stato acquisto
-                acquisto.setStato("RIMBORSATO");
+                acquisto.setStato("Rimborsato"); // ← CORRETTO
                 acquistoDAO.doUpdate(acquisto);
             }
         }

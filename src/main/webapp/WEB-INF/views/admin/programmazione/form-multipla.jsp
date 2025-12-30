@@ -41,7 +41,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: var(--danger);
+            background: var(--primary);
             color: var(--white);
             border: none;
             border-radius: 50%;
@@ -71,7 +71,7 @@
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: var(--text-light);
+            color: var(--primary);
         }
 
         .empty-state-icon {
@@ -243,7 +243,7 @@
                     <label>Sala *</label>
                     <select name="idSale[]" required>
                         <option value="">Seleziona una sala...</option>
-                        ${sale.map(s => '<option value="' + s.id + '">Sala ' + s.nome + ' - ' + s.capienza + ' posti</option>').join('')}
+                        ${sale.map(s = '<option value="' + s.id + '">Sala ' + s.nome + ' - ' + s.capienza + ' posti</option>').join('')}
                     </select>
                 </div>
 
@@ -257,7 +257,7 @@
                     <label>Tariffa (opzionale)</label>
                     <select name="idTariffa[]">
                         <option value="">Nessuna tariffa</option>
-                        ${tariffe.map(t => '<option value="' + t.id + '">' + t.nome + ' (' + t.sconto + '% sconto)</option>').join('')}
+                        ${tariffe.map(t = '<option value="' + t.id + '">' + t.nome + ' (' + t.sconto + '% sconto)</option>').join('')}
                     </select>
                 </div>
             </div>

@@ -19,7 +19,7 @@ public class Programmazione {
     private int idFilm;
     private int idSala;
     private int idSlotOrari;
-    private int idTariffa;
+    private Integer idTariffa;
 
     private Tariffa tariffa;
     private SlotOrari slotOrari;
@@ -30,7 +30,7 @@ public class Programmazione {
         this.stato = "DISPONIBILE";
     }
 
-    public Programmazione(int idProgrammazione, LocalDate dataProgrammazione, String tipo, double prezzoBase, String stato, int idFilm, int idSala, int idSlotOrari, int idTariffa) {
+    public Programmazione(int idProgrammazione, LocalDate dataProgrammazione, String tipo, double prezzoBase, String stato, int idFilm, int idSala, int idSlotOrari, Integer idTariffa) { // ← CAMBIATO
         this.idProgrammazione = idProgrammazione;
         this.setDataProgrammazione(dataProgrammazione);
         this.setTipo(tipo);
@@ -40,7 +40,7 @@ public class Programmazione {
         this.idFilm = idFilm;
         this.idSala = idSala;
         this.idSlotOrari = idSlotOrari;
-        this.idTariffa = idTariffa;
+        this.idTariffa = idTariffa; // ← Ora può essere null
     }
 
     public int getIdProgrammazione() {
@@ -116,14 +116,13 @@ public class Programmazione {
         this.idSlotOrari = idSlotOrari;
     }
 
-    public Integer getIdTariffa() {
+    public Integer getIdTariffa() { // ← Già Integer, ok
         return idTariffa;
     }
 
-    public void setIdTariffa(Integer idTariffa) {
-        this.idTariffa = idTariffa;
+    public void setIdTariffa(Integer idTariffa) { // ← Già Integer, ok
+        this.idTariffa = idTariffa; // ← Ora può accettare null
     }
-
 
     //Verifica se la programmazione può essere acquistata
     public boolean isDisponibile() {
@@ -134,7 +133,6 @@ public class Programmazione {
     public boolean isAnnullata() {
         return this.stato.equals("ANNULLATA");
     }
-
 
     //Verifica se la programmazione è in corso
     public boolean isInCorso() {

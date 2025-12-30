@@ -157,8 +157,20 @@ public class UtenteServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("utenteLoggato", utente);
 
-                // Redirect alla home
-                response.sendRedirect(request.getContextPath() + "/");
+                // Redirect basato sul tipo di account
+                String redirectUrl;
+                if ("Admin".equalsIgnoreCase(utente.getTipoAccount())) {
+                    // Admin → Dashboard amministratore
+                    redirectUrl = request.getContextPath() + "/admin/dashboard";
+                } else if ("Personale".equalsIgnoreCase(utente.getTipoAccount())) {
+                    // Personale → Dashboard staff
+                    redirectUrl = request.getContextPath() + "/personale/dashboard";
+                } else {
+                    // Utente normale → Home
+                    redirectUrl = request.getContextPath() + "/";
+                }
+
+                response.sendRedirect(redirectUrl);
             }
 
         } catch (CredenzialiNonValideException e) {
