@@ -157,16 +157,24 @@ public class UtenteServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("utenteLoggato", utente);
 
-                // Redirect basato sul tipo di account
-                String redirectUrl;
+                // CONTROLLA SE C'È UN REDIRECT SALVATO
+                String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+
+                if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                    //  Rimuovi dalla sessione
+                    session.removeAttribute("redirectAfterLogin");
+
+                    // Redirect alla pagina originale (acquisto)
+                    response.sendRedirect(request.getContextPath() + redirectUrl);
+                    return;
+                }
+
+                //  ALTRIMENTI: Redirect basato sul tipo di account
                 if ("Admin".equalsIgnoreCase(utente.getTipoAccount())) {
-                    // Admin → Dashboard amministratore
                     redirectUrl = request.getContextPath() + "/admin/dashboard";
                 } else if ("Personale".equalsIgnoreCase(utente.getTipoAccount())) {
-                    // Personale → Dashboard staff
                     redirectUrl = request.getContextPath() + "/personale/dashboard";
                 } else {
-                    // Utente normale → Home
                     redirectUrl = request.getContextPath() + "/";
                 }
 

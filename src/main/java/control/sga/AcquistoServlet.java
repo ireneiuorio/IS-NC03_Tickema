@@ -48,8 +48,8 @@ public class AcquistoServlet extends HttpServlet {
         // ===== VERIFICA AUTENTICAZIONE =====
         Utente utente = (Utente) session.getAttribute("utenteLoggato");
         if (utente == null) {
-            // Salva URL originale per redirect dopo login
-            String originalUrl = request.getRequestURI() + "?" + request.getQueryString();
+            // Salva solo il path relativo + query string
+            String originalUrl = "/acquisto?" + request.getQueryString();
             session.setAttribute("redirectAfterLogin", originalUrl);
 
             // Redirect a login
