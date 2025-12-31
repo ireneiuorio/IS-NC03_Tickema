@@ -1,4 +1,4 @@
-package control.sgu;
+package control.sga;
 
 
 import entity.sga.Biglietto;
@@ -77,15 +77,20 @@ public class ValidazioneBigliettoServlet extends HttpServlet {
                 // Recupera biglietto validato per mostrare i dettagli
                 Biglietto biglietto = bigliettoService.getBigliettoByQRCode(qrCode.trim());
 
+
+                if (biglietto.getDataUtilizzo() != null) {
+                    String dataUtilizzoFormattata = biglietto.getDataUtilizzo()
+                            .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                    request.setAttribute("dataUtilizzoFormattata", dataUtilizzoFormattata);
+                }
+
                 request.setAttribute("successo", "Biglietto validato con successo!");
                 request.setAttribute("biglietto", biglietto);
                 request.getRequestDispatcher("/WEB-INF/views/personale/valida-biglietto.jsp")
                         .forward(request, response);
-            } else {
-                request.setAttribute("errore", "Errore durante la validazione");
-                request.getRequestDispatcher("/WEB-INF/views/personale/valida-biglietto.jsp")
-                        .forward(request, response);
             }
+
+
 
         } catch (BigliettoNonTrovatoException e) {
             request.setAttribute("errore", "Biglietto non trovato");

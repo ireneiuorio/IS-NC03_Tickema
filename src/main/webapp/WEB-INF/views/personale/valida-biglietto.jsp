@@ -305,7 +305,7 @@
         </div>
 
         <!-- Form di validazione -->
-        <form method="POST" action="${pageContext.request.contextPath}/valida-biglietto" class="scan-form">
+        <form method="POST" action="${pageContext.request.contextPath}/personale/valida-biglietto" class="scan-form">
           <div class="form-group">
             <label for="qrCode">Codice QR Biglietto</label>
             <input type="text"
@@ -361,12 +361,10 @@
               <span class="dettaglio-value">${biglietto.stato}</span>
             </div>
 
-            <c:if test="${not empty biglietto.dataUtilizzo}">
+            <c:if test="${not empty dataUtilizzoFormattata}">
               <div class="dettaglio-row">
                 <span class="dettaglio-label">Data Utilizzo:</span>
-                <span class="dettaglio-value">
-                                    <fmt:formatDate value="${biglietto.dataUtilizzo}" pattern="dd/MM/yyyy HH:mm" />
-                                </span>
+                <span class="dettaglio-value">${dataUtilizzoFormattata}</span>
               </div>
             </c:if>
 

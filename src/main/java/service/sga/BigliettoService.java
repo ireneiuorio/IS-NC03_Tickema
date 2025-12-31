@@ -6,6 +6,8 @@ import entity.sgp.Posto;
 import entity.sgp.Programmazione;
 import exception.sga.acquisto.biglietto.*;
 import repository.sga.BigliettoDAO;
+import repository.sgp.PostoDAO;
+import service.sgp.ProgrammazioneService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -102,6 +104,9 @@ public class BigliettoService {
         if (biglietto == null) {
             throw new BigliettoNonTrovatoException(qrCode);
         }
+
+
+        caricaRelazioniBiglietto(biglietto);
 
         return biglietto;
     }
@@ -200,6 +205,30 @@ public class BigliettoService {
             throw new BigliettoNonValidoException(
                     "Stato non valido. Stati ammessi: " + statiValidi
             );
+        }
+    }
+
+    /**
+     * Carica tutte le relazioni di un biglietto (programmazione, posto)
+     */
+    private void caricaRelazioniBiglietto(Biglietto biglietto) throws SQLException {
+        if (biglietto == null) {
+            return;
+        }
+
+        // Carica programmazione con tutte le sue relazioni
+        if (biglietto.getProgrammazione() != null && biglietto.getProgrammazione().getIdProgrammazione() > 0) {
+            ProgrammazioneService programmazioneService = new ProgrammazioneService(connection);
+            Programmazione programmazione = programmazioneService.getProgrammazioneById(
+                    biglietto.getProgrammazione().getIdProgrammazione()
+            );
+            biglietto.setProgrammazione(programmazione);
+        }
+
+        if (biglietto.getPosto() != null && biglietto.getPosto().getIdPosto() > 0) {
+            PostoDAO postoDAO = new PostoDAO(connection);
+            Posto posto = postoDAO.doRetrieveByKey(biglietto.getPosto().getIdPosto());
+            biglietto.setPosto(posto);
         }
     }
 }
