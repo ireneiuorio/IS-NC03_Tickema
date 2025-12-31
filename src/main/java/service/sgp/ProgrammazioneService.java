@@ -82,6 +82,17 @@ public class ProgrammazioneService {
         }
     }
 
+    /**
+     * Recupera TUTTE le programmazioni (per la dashboard admin)
+     */
+    public List<Programmazione> getAllProgrammazioni() {
+        try {
+            return programmazioneDAO.doRetrieveAll();
+        } catch (SQLException e) {
+            throw new RecuperoProgrammazioniException(e);
+        }
+    }
+
     public Programmazione creaProgrammazioneSingola(LocalDate date, String tipo, double prezzoBase, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa) {
 
         try {

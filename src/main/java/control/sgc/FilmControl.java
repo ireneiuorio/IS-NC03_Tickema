@@ -30,42 +30,65 @@ public class FilmControl extends HttpServlet {
             throws ServletException, IOException {
 
         String azione = richiesta.getParameter("action");
+
+        // ✅ DEBUG DETTAGLIATO
+        System.out.println("=== FILMCONTROL doGet DEBUG ===");
+        System.out.println("Action ricevuta: [" + azione + "]");
+        System.out.println("Action è null? " + (azione == null));
+
+        if (azione != null) {
+            System.out.println("Action length: " + azione.length());
+            System.out.println("Action bytes: " + java.util.Arrays.toString(azione.getBytes()));
+            System.out.println("Action equals 'api-lista': " + azione.equals("api-lista"));
+            System.out.println("Action equals 'apilista': " + azione.equals("apilista"));
+        }
+
+        System.out.println("URL: " + richiesta.getRequestURL());
+        System.out.println("Query: " + richiesta.getQueryString());
+        System.out.println("================================");
+
         if (azione == null) {
             azione = "catalogo";
         }
 
         switch (azione) {
             case "catalogo":
-                //Visualizzazione catalogo film (pubblico)
+                System.out.println("→ Caso: catalogo");
                 mostraCatalogo(richiesta, risposta);
                 break;
 
             case "dettaglio":
-                //Visualizzazione dettaglio e programmazioni (pubblico)
+                System.out.println("→ Caso: dettaglio");
                 mostraDettaglio(richiesta, risposta);
                 break;
 
+            case "api-lista":
+            case "apilista":  // ✅ Aggiungi entrambi per sicurezza
+                System.out.println("→ Caso: api-lista o apilista");
+                listaFilmJSON(richiesta, risposta);
+                return;
 
             case "admin-lista":
-                //Gestione admin
+                System.out.println("→ Caso: admin-lista");
                 if (!verificaAccessoAdmin(richiesta, risposta)) return;
                 mostraListaAdmin(richiesta, risposta);
                 break;
 
             case "admin-form-crea":
-                //Form inserimento
+                System.out.println("→ Caso: admin-form-crea");
                 if (!verificaAccessoAdmin(richiesta, risposta)) return;
                 mostraFormCreazione(richiesta, risposta);
                 break;
 
             case "admin-form-modifica":
-                //Form modifica
+                System.out.println("→ Caso: admin-form-modifica");
                 if (!verificaAccessoAdmin(richiesta, risposta)) return;
                 mostraFormModifica(richiesta, risposta);
                 break;
 
             default:
-                risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Azione non valida");
+                System.err.println("❌ CASO DEFAULT - Action non riconosciuta: [" + azione + "]");
+                risposta.sendError(HttpServletResponse.SC_BAD_REQUEST, "Azione non valida: " + azione);
         }
     }
 
@@ -319,6 +342,129 @@ public class FilmControl extends HttpServlet {
             sessione.setAttribute("messaggioErrore", "Errore: " + e.getMessage());
             risposta.sendRedirect(richiesta.getContextPath() + "/film?action=admin-lista");
         }
+    }
+
+    //ENDPOINT API
+    /**
+     * Restituisce la lista di tutti i film in formato JSON
+     * Per uso nel modal di selezione film
+     */
+    private void listaFilmJSON(HttpServletRequest richiesta, HttpServletResponse risposta)
+            throws IOException {
+
+        System.out.println("=== LISTA FILM JSON ===");
+
+        FilmService servizio = ottieniServizio(richiesta);
+
+        try {
+            List<Film> films = servizio.visualizzaTuttiFilm();
+            System.out.println("Film recuperati: " + films.size());
+
+            // Imposta headers
+            risposta.setContentType("application/json");
+            risposta.setCharacterEncoding("UTF-8");
+            risposta.setHeader("Cache-Control", "no-cache");
+
+            // Costruisci JSON
+            StringBuilder json = new StringBuilder("[");
+
+            for (int i = 0; i < films.size(); i++) {
+                Film film = films.get(i);
+
+                if (i > 0) {
+                    json.append(",");
+                }
+
+                json.append("{");
+                json.append("\"idFilm\":").append(film.getIdFilm()).append(",");
+                json.append("\"titolo\":\"").append(escapeJson(film.getTitolo())).append("\",");
+                json.append("\"anno\":").append(film.getAnno()).append(",");
+                json.append("\"genere\":\"").append(escapeJson(film.getGenere())).append("\",");
+                json.append("\"durata\":").append(film.getDurata()).append(",");
+                json.append("\"regista\":\"").append(escapeJson(film.getRegista())).append("\"");
+                json.append("}");
+            }
+
+            json.append("]");
+
+            String jsonString = json.toString();
+            System.out.println("JSON generato, lunghezza: " + jsonString.length());
+
+            // Scrivi e chiudi
+            risposta.getWriter().write(jsonString);
+            risposta.getWriter().flush();
+            risposta.getWriter().close();  // ✅ CHIUDI LO STREAM
+
+            System.out.println("✅ Risposta JSON inviata");
+
+            // ✅ IMPORTANTE: NON continuare l'esecuzione
+            return;
+
+        } catch (Exception e) {
+            System.err.println("❌ ERRORE in listaFilmJSON:");
+            e.printStackTrace();
+
+            risposta.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            risposta.setContentType("application/json");
+            risposta.setCharacterEncoding("UTF-8");
+
+            String errorMsg = escapeJson(e.getMessage());
+            risposta.getWriter().write("{\"error\":\"" + errorMsg + "\"}");
+            risposta.getWriter().flush();
+            risposta.getWriter().close();  // ✅ CHIUDI
+
+            return;  // ✅ ESCI
+        }
+    }
+
+    /**
+     * Escape dei caratteri speciali per JSON
+     */
+    private String escapeJson(String str) {
+        if (str == null) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (char c : str.toCharArray()) {
+            switch (c) {
+                case '"':
+                    sb.append("\\\"");
+                    break;
+                case '\\':
+                    sb.append("\\\\");
+                    break;
+                case '/':
+                    sb.append("\\/");
+                    break;
+                case '\b':
+                    sb.append("\\b");
+                    break;
+                case '\f':
+                    sb.append("\\f");
+                    break;
+                case '\n':
+                    sb.append("\\n");
+                    break;
+                case '\r':
+                    sb.append("\\r");
+                    break;
+                case '\t':
+                    sb.append("\\t");
+                    break;
+                default:
+                    // Caratteri speciali Unicode
+                    if (c < ' ' || c > '~') {
+                        sb.append(String.format("\\u%04x", (int) c));
+                    } else {
+                        sb.append(c);
+                    }
+                    break;
+            }
+        }
+
+        return sb.toString();
     }
 
 

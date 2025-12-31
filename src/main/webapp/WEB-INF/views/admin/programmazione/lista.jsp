@@ -65,20 +65,39 @@
       border: 1px solid #f5c6cb;
     }
 
-    /* Toolbar */
+    /* Toolbar Migliorata */
     .toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
       flex-wrap: wrap;
+      gap: 20px;
+      background: white;
+      padding: 25px 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
       gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-title {
+      font-size: 1.8em;
+      color: var(--dark);
+      font-weight: 700;
+      margin: 0;
     }
 
     .toolbar-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .badge {
@@ -89,9 +108,8 @@
     }
 
     .badge-info {
-      background: white;
-      color:var(--primary);
-
+      background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+      color: white;
     }
 
     .btn {
@@ -103,7 +121,9 @@
       cursor: pointer;
       transition: all 0.3s ease;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       text-align: center;
     }
 
@@ -126,6 +146,160 @@
     .btn-secondary:hover {
       border-color: var(--primary);
       background: var(--light-gray);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--dark);
+      border: 2px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      background: var(--light-gray);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 9998;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e9ecef;
+    }
+
+    .modal-header h3 {
+      font-size: 1.8em;
+      color: var(--dark);
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 2em;
+      color: #999;
+      cursor: pointer;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: #f8f9fa;
+      color: var(--dark);
+    }
+
+    .film-search {
+      margin-bottom: 20px;
+    }
+
+    .film-search input {
+      width: 100%;
+      padding: 12px 20px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+
+    .film-search input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .film-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .film-item {
+      padding: 15px 20px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .film-item:hover {
+      border-color: var(--primary);
+      background: #f8f9fa;
+      transform: translateX(5px);
+    }
+
+    .film-item-info h4 {
+      margin: 0 0 5px 0;
+      color: var(--dark);
+      font-size: 1.1em;
+    }
+
+    .film-item-info p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    .film-item-arrow {
+      color: var(--primary);
+      font-size: 1.5em;
     }
 
     /* Table */
@@ -181,7 +355,7 @@
 
     .badge-success {
       background: var(--primary);
-      color:white;
+      color: white;
     }
 
     .badge-danger {
@@ -279,6 +453,15 @@
         align-items: flex-start;
       }
 
+      .toolbar-left {
+        width: 100%;
+      }
+
+      .toolbar-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
       .programmazioni-table {
         font-size: 0.9em;
       }
@@ -327,21 +510,56 @@
       <c:remove var="messaggioErrore" scope="session"/>
     </c:if>
 
-    <!-- TOOLBAR -->
+    <!-- TOOLBAR MIGLIORATA -->
     <div class="toolbar">
+      <div class="toolbar-left">
+        <h2 class="toolbar-title">
+          <c:choose>
+            <c:when test="${not empty film}">
+              ${film.titolo}
+            </c:when>
+            <c:otherwise>
+              Tutte le Programmazioni
+            </c:otherwise>
+          </c:choose>
+        </h2>
+        <span class="badge badge-info">
+          ${programmazioni.size()} Programmazioni
+        </span>
+      </div>
+
       <div class="toolbar-actions">
+        <!-- Bottone Nuova Programmazione -->
+        <button onclick="mostraModalSelezionaFilm(false)" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nuova Programmazione
+        </button>
+
+        <!-- Bottone Creazione Multipla -->
+        <button onclick="mostraModalSelezionaFilm(true)" class="btn btn-secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+          </svg>
+          Creazione Multipla
+        </button>
+
+        <!-- Link per rimuovere filtro film -->
         <c:if test="${not empty param.idFilm}">
-          <a href="?action=formCrea&idFilm=${param.idFilm}" class="btn btn-primary">
-            Nuova Programmazione
-          </a>
-          <a href="?action=formMultipla&idFilm=${param.idFilm}" class="btn btn-secondary">
-            Creazione Multipla
+          <a href="?action=lista" class="btn btn-outline">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Rimuovi Filtro
           </a>
         </c:if>
       </div>
-      <span class="badge badge-info">
-        ${programmazioni.size()} Programmazioni
-      </span>
     </div>
 
     <!-- TABELLA PROGRAMMAZIONI -->
@@ -349,12 +567,10 @@
       <c:when test="${empty programmazioni}">
         <div class="empty-state">
           <h3>Nessuna programmazione trovata</h3>
-          <p>Non ci sono programmazioni per i filtri selezionati</p>
-          <c:if test="${not empty param.idFilm}">
-            <a href="?action=formCrea&idFilm=${param.idFilm}" class="btn btn-primary">
-              Crea la prima programmazione
-            </a>
-          </c:if>
+          <p>Non ci sono programmazioni nel sistema</p>
+          <button onclick="mostraModalSelezionaFilm(false)" class="btn btn-primary">
+            Crea la prima programmazione
+          </button>
         </div>
       </c:when>
 
@@ -434,11 +650,151 @@
   </div>
 </main>
 
+<!-- MODAL SELEZIONE FILM -->
+<div id="modalSelezionaFilm" class="modal-overlay" onclick="chiudiModalSeClickFuori(event, 'modalSelezionaFilm')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Seleziona Film</h3>
+      <button class="modal-close" onclick="chiudiModal('modalSelezionaFilm')">&times;</button>
+    </div>
+
+    <div class="film-search">
+      <input type="text" id="searchFilm" placeholder="Cerca film per titolo..." onkeyup="filtraFilm()">
+    </div>
+
+    <div class="film-list" id="filmList">
+      <p style="text-align: center; color: #999;">Caricamento film...</p>
+    </div>
+  </div>
+</div>
+
 <!-- Footer -->
 <jsp:include page="/WEB-INF/includes/footer.jsp" />
 
 <!-- JAVASCRIPT -->
 <script>
+  // Variabile globale con il context path
+  const CONTEXT_PATH = '${pageContext.request.contextPath}';
+
+  // Variabile globale per sapere se stiamo creando multipla o singola
+  let creazioneMultipla = false;
+
+  // Funzione per mostrare il modal
+  function mostraModalSelezionaFilm(isMultipla) {
+    console.log('=== APERTURA MODAL ===');
+    console.log('isMultipla:', isMultipla);
+    console.log('======================');
+
+    creazioneMultipla = isMultipla;
+    document.getElementById('modalSelezionaFilm').classList.add('active');
+    caricaFilm();
+  }
+
+  // Funzione per chiudere il modal
+  function chiudiModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+  }
+
+  // Funzione per chiudere se si clicca fuori dal modal
+  function chiudiModalSeClickFuori(event, modalId) {
+    if (event.target.id === modalId) {
+      chiudiModal(modalId);
+    }
+  }
+
+  // Carica lista film dal server
+  function caricaFilm() {
+    const filmList = document.getElementById('filmList');
+    filmList.innerHTML = '<p style="text-align: center; color: #999;">Caricamento...</p>';
+
+    fetch(CONTEXT_PATH + '/film?action=api-lista')
+            .then(response => {
+              console.log('Response status:', response.status);
+              console.log('Response headers:', response.headers);
+
+              if (!response.ok) {
+                throw new Error('HTTP error ' + response.status);
+              }
+
+              return response.json();
+            })
+            .then(films => {
+              console.log('Films ricevuti:', films);
+
+              if (films.length === 0) {
+                filmList.innerHTML = '<p style="text-align: center; color: #999;">Nessun film disponibile</p>';
+                return;
+              }
+
+              filmList.innerHTML = '';
+              films.forEach(film => {
+                const filmItem = document.createElement('div');
+                filmItem.className = 'film-item';
+                filmItem.dataset.titolo = film.titolo.toLowerCase();
+                filmItem.dataset.idFilm = film.idFilm;
+
+                filmItem.innerHTML = `
+            <div class="film-item-info">
+              <h4>\${film.titolo}</h4>
+              <p>\${film.anno} • \${film.genere} • \${film.durata} min</p>
+            </div>
+            <div class="film-item-arrow">→</div>
+          `;
+
+                // Aggiungi evento click
+                filmItem.onclick = function() {
+                  selezionaFilm(this.dataset.idFilm);
+                };
+
+                filmList.appendChild(filmItem);
+              });
+            })
+            .catch(error => {
+              console.error('Errore nel caricamento dei film:', error);
+              filmList.innerHTML = '<p style="text-align: center; color: #dc3545;">Errore nel caricamento: ' + error.message + '</p>';
+            });
+  }
+
+  // Filtra film durante la digitazione
+  function filtraFilm() {
+    const searchTerm = document.getElementById('searchFilm').value.toLowerCase();
+    const filmItems = document.querySelectorAll('.film-item');
+
+    filmItems.forEach(item => {
+      const titolo = item.dataset.titolo;
+      if (titolo.includes(searchTerm)) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+
+  // Seleziona film e vai alla pagina appropriata
+  function selezionaFilm(idFilm) {
+    console.log('=== SELEZIONE FILM ===');
+    console.log('idFilm ricevuto:', idFilm);
+    console.log('tipo di idFilm:', typeof idFilm);
+
+    if (!idFilm || idFilm === 'undefined') {
+      console.error('❌ idFilm non valido!');
+      alert('Errore: ID film non valido');
+      return;
+    }
+
+    const action = creazioneMultipla ? 'formMultipla' : 'formCrea';
+    const url = `?action=\${action}&idFilm=\${idFilm}`;
+
+    console.log('creazioneMultipla:', creazioneMultipla);
+    console.log('action:', action);
+    console.log('URL finale:', url);
+    console.log('URL completo:', window.location.origin + window.location.pathname + url);
+    console.log('======================');
+
+    window.location.href = url;
+  }
+
+  // Funzione per confermare eliminazione
   function confermaEliminazione(idProgrammazione, idFilm) {
     if (confirm('ATTENZIONE!\n\nSei sicuro di voler eliminare questa programmazione?\n\n• Tutti i biglietti venduti verranno RIMBORSATI automaticamente\n• Lo slot orario verrà liberato\n• Questa azione NON può essere annullata')) {
       const form = document.createElement('form');
@@ -464,6 +820,13 @@
       form.submit();
     }
   }
+
+  // Chiudi modal con tasto ESC
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      chiudiModal('modalSelezionaFilm');
+    }
+  });
 </script>
 
 </body>

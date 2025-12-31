@@ -572,3 +572,42 @@ WHERE idSlot IN (
 
 -- Riattiva check chiavi esterne
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- Programmazioni per Gennaio 2026 (usando gli slot che hai già creato)
+INSERT INTO PROGRAMMAZIONE (dataProgrammazione, tipo, prezzoBase, stato, idFilm, idSala, idTariffa, idSlotOrario) VALUES
+-- 1 Gennaio 2026
+('2026-01-01', '2D', 10.00, 'Disponibile', 1, 1, 1, 65),  -- Dune Parte 2
+('2026-01-01', '3D', 12.00, 'Disponibile', 3, 2, 1, 66),  -- Inside Out 2
+('2026-01-01', 'IMAX', 15.00, 'Disponibile', 2, 4, 1, 67), -- Oppenheimer
+('2026-01-01', '2D', 9.00, 'Disponibile', 10, 3, 1, 68),  -- Deadpool & Wolverine
+
+-- 2 Gennaio 2026
+('2026-01-02', '2D', 10.00, 'Disponibile', 5, 1, 1, 69),  -- Minecraft
+('2026-01-02', '2D', 11.00, 'Disponibile', 6, 2, 1, 70),  -- Mission Impossible 8
+('2026-01-02', '2D', 9.50, 'Disponibile', 7, 3, 1, 71),   -- Joker 2
+('2026-01-02', '3D', 13.00, 'Disponibile', 8, 4, 1, 72),  -- Gladiator 2
+
+-- 3 Gennaio 2026
+('2026-01-03', '2D', 10.00, 'Disponibile', 11, 1, 1, 73), -- Il Re Leone
+('2026-01-03', '2D', 12.00, 'Disponibile', 12, 2, 1, 74), -- Il Padrino
+('2026-01-03', '2D', 10.50, 'Disponibile', 13, 3, 1, 75), -- Jurassic Park
+('2026-01-03', 'IMAX', 16.00, 'Disponibile', 14, 4, 1, 76); -- Inception
+
+-- Genera posti per le nuove programmazioni
+CALL GeneraPostiProgrammazione(21, 1);
+CALL GeneraPostiProgrammazione(22, 2);
+CALL GeneraPostiProgrammazione(23, 4);
+CALL GeneraPostiProgrammazione(24, 3);
+CALL GeneraPostiProgrammazione(25, 1);
+CALL GeneraPostiProgrammazione(26, 2);
+CALL GeneraPostiProgrammazione(27, 3);
+CALL GeneraPostiProgrammazione(28, 4);
+CALL GeneraPostiProgrammazione(29, 1);
+CALL GeneraPostiProgrammazione(30, 2);
+CALL GeneraPostiProgrammazione(31, 3);
+CALL GeneraPostiProgrammazione(32, 4);
+
+-- Aggiorna gli slot come occupati
+UPDATE SLOTORARI
+SET stato = 'Occupato'
+WHERE idSlot BETWEEN 65 AND 76;

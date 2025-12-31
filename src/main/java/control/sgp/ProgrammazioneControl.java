@@ -132,6 +132,11 @@ public class ProgrammazioneControl extends HttpServlet {
     private void mostraLista(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
+        System.out.println("=== DEBUG MOSTRA LISTA ===");
+        System.out.println("Context Path: " + richiesta.getContextPath());
+        System.out.println("Servlet Path: " + richiesta.getServletPath());
+        System.out.println("JSP Path: " + JSP_LISTA);
+
         ProgrammazioneService servizio = ottieniServizio(richiesta);
 
         try {
@@ -139,43 +144,69 @@ public class ProgrammazioneControl extends HttpServlet {
             String parametroData = richiesta.getParameter("data");
             String parametroIdSala = richiesta.getParameter("idSala");
 
+            System.out.println("Parametri ricevuti:");
+            System.out.println("- idFilm: " + parametroIdFilm);
+            System.out.println("- data: " + parametroData);
+            System.out.println("- idSala: " + parametroIdSala);
+
             List<Programmazione> programmazioni;
 
             if (parametroIdFilm != null && !parametroIdFilm.isEmpty()) {
-                // Lista per film specifico
+                System.out.println("→ Recupero programmazioni per film ID: " + parametroIdFilm);
                 int idFilm = Integer.parseInt(parametroIdFilm);
                 programmazioni = servizio.visualizzaProgrammazioniFilm(idFilm);
 
-                // Carica dettagli film
                 FilmService servizioFilm = new FilmService(ottieniConnessione(richiesta));
                 Film film = servizioFilm.visualizzaDettagliFilm(idFilm);
+                System.out.println("→ Film trovato: " + (film != null ? film.getTitolo() : "NULL"));
                 richiesta.setAttribute("film", film);
 
             } else if (parametroData != null && !parametroData.isEmpty()) {
-                // Lista per data specifica
+                System.out.println("→ Recupero programmazioni per data: " + parametroData);
                 LocalDate data = LocalDate.parse(parametroData, FORMATTATORE_DATA);
 
                 if (parametroIdSala != null && !parametroIdSala.isEmpty()) {
                     int idSala = Integer.parseInt(parametroIdSala);
+                    System.out.println("→ Con filtro sala ID: " + idSala);
                     programmazioni = servizio.getProgrammazioniPerSala(idSala, data);
                 } else {
                     programmazioni = servizio.getProgrammazioniPerData(data);
                 }
 
             } else {
-                // Programmazioni di oggi
-                programmazioni = servizio.getProgrammazioniPerData(LocalDate.now());
+                // ✅ MODIFICA: Recupera TUTTE le programmazioni
+                System.out.println("→ Nessun parametro: recupero TUTTE le programmazioni");
+                programmazioni = servizio.getAllProgrammazioni();
             }
 
+            System.out.println("→ Programmazioni trovate: " + (programmazioni != null ? programmazioni.size() : "NULL"));
+
             richiesta.setAttribute("programmazioni", programmazioni);
+
+            System.out.println("→ Tentativo di forward verso: " + JSP_LISTA);
             richiesta.getRequestDispatcher(JSP_LISTA).forward(richiesta, risposta);
 
+            System.out.println("→ Forward completato con successo");
+            System.out.println("=== FINE DEBUG MOSTRA LISTA ===");
+
         } catch (NumberFormatException e) {
+            System.err.println("ERRORE: Parametro ID non valido");
+            e.printStackTrace();
             throw new ServletException("Parametro ID non valido", e);
         } catch (DateTimeParseException e) {
+            System.err.println("ERRORE: Formato data non valido");
+            e.printStackTrace();
             throw new ServletException("Formato data non valido", e);
         } catch (RecuperoProgrammazioniException e) {
+            System.err.println("ERRORE: Recupero programmazioni fallito");
+            e.printStackTrace();
             throw new ServletException("Errore nel recupero delle programmazioni", e);
+        } catch (Exception e) {
+            System.err.println("ERRORE GENERICO in mostraLista:");
+            System.err.println("Tipo: " + e.getClass().getName());
+            System.err.println("Messaggio: " + e.getMessage());
+            e.printStackTrace();
+            throw new ServletException("Errore imprevisto", e);
         }
     }
 
