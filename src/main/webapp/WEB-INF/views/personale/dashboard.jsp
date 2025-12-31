@@ -333,8 +333,9 @@
 
       <div class="actions-grid">
         <!-- Validazione Acquisti -->
-        <a href="${pageContext.request.contextPath}/staff/validazione-acquisti"
+        <a href="${pageContext.request.contextPath}/personale/valida-biglietto"
            class="action-card">
+
           <div class="action-icon-wrapper">
             <div class="action-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
