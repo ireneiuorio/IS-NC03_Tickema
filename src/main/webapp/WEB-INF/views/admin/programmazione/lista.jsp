@@ -668,21 +668,23 @@
   </div>
 </div>
 
-<script>
-  // Variabile globale con il context path
-  const CONTEXT_PATH = '${pageContext.request.contextPath}';
-</script>
-
 <!-- Footer -->
 <jsp:include page="/WEB-INF/includes/footer.jsp" />
 
 <!-- JAVASCRIPT -->
 <script>
+  // Variabile globale con il context path
+  const CONTEXT_PATH = '${pageContext.request.contextPath}';
+
   // Variabile globale per sapere se stiamo creando multipla o singola
   let creazioneMultipla = false;
 
   // Funzione per mostrare il modal
   function mostraModalSelezionaFilm(isMultipla) {
+    console.log('=== APERTURA MODAL ===');
+    console.log('isMultipla:', isMultipla);
+    console.log('======================');
+
     creazioneMultipla = isMultipla;
     document.getElementById('modalSelezionaFilm').classList.add('active');
     caricaFilm();
@@ -705,8 +707,7 @@
     const filmList = document.getElementById('filmList');
     filmList.innerHTML = '<p style="text-align: center; color: #999;">Caricamento...</p>';
 
-    // ✅ USA CONTEXT_PATH invece di ${pageContext.request.contextPath}
-    fetch(CONTEXT_PATH + '/film?action=apilista')
+    fetch(CONTEXT_PATH + '/film?action=api-lista')
             .then(response => {
               console.log('Response status:', response.status);
               console.log('Response headers:', response.headers);
@@ -730,15 +731,20 @@
                 const filmItem = document.createElement('div');
                 filmItem.className = 'film-item';
                 filmItem.dataset.titolo = film.titolo.toLowerCase();
-                filmItem.onclick = () => selezionaFilm(film.idFilm);
+                filmItem.dataset.idFilm = film.idFilm;
 
                 filmItem.innerHTML = `
-          <div class="film-item-info">
-            <h4>${film.titolo}</h4>
-            <p>${film.anno} • ${film.genere} • ${film.durata} min</p>
-          </div>
-          <div class="film-item-arrow">→</div>
-        `;
+            <div class="film-item-info">
+              <h4>\${film.titolo}</h4>
+              <p>\${film.anno} • \${film.genere} • \${film.durata} min</p>
+            </div>
+            <div class="film-item-arrow">→</div>
+          `;
+
+                // Aggiungi evento click
+                filmItem.onclick = function() {
+                  selezionaFilm(this.dataset.idFilm);
+                };
 
                 filmList.appendChild(filmItem);
               });
@@ -766,8 +772,26 @@
 
   // Seleziona film e vai alla pagina appropriata
   function selezionaFilm(idFilm) {
+    console.log('=== SELEZIONE FILM ===');
+    console.log('idFilm ricevuto:', idFilm);
+    console.log('tipo di idFilm:', typeof idFilm);
+
+    if (!idFilm || idFilm === 'undefined') {
+      console.error('❌ idFilm non valido!');
+      alert('Errore: ID film non valido');
+      return;
+    }
+
     const action = creazioneMultipla ? 'formMultipla' : 'formCrea';
-    window.location.href = `?action=${action}&idFilm=${idFilm}`;
+    const url = `?action=\${action}&idFilm=\${idFilm}`;
+
+    console.log('creazioneMultipla:', creazioneMultipla);
+    console.log('action:', action);
+    console.log('URL finale:', url);
+    console.log('URL completo:', window.location.origin + window.location.pathname + url);
+    console.log('======================');
+
+    window.location.href = url;
   }
 
   // Funzione per confermare eliminazione
