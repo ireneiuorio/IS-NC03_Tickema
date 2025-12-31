@@ -229,7 +229,7 @@ public class AcquistoServlet extends HttpServlet {
                     Utente utenteAggiornato = utenteDAO.doRetrieveById(utente.getIdAccount());
 
                     if (utenteAggiornato != null) {
-                        session.setAttribute("utenteLoggato", utenteAggiornato);  // ✅ CORRETTO
+                        session.setAttribute("utenteLoggato", utenteAggiornato);
                     }
 
                 } catch (SQLException e) {

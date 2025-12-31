@@ -31,7 +31,7 @@ public class SaldoService {
         }
 
         // Verifica che sia un utente autenticato (non admin/personale)
-        if (!"Utente Autenticato".equals(utente.getTipoAccount())) {
+        if (!"Utente".equals(utente.getTipoAccount())) {
             throw new TipoAccountNonValidoException(idAccount, utente.getTipoAccount());
         }
 

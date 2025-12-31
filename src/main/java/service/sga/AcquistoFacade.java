@@ -69,9 +69,9 @@ public class AcquistoFacade {
         try {
             connection.setAutoCommit(false);
 
-            // STEP 1: VERIFICA PROGRAMMAZIONE
+            // DOPO - Carica programmazione con TUTTE le relazioni
             Programmazione programmazione = programmazioneService
-                    .getProgrammazioneByKey(idProgrammazione);
+                    .getProgrammazioneById(idProgrammazione);  // Questo metodo carica le relazioni!;
 
             if (programmazione == null) {
                 throw new IllegalStateException(
@@ -136,6 +136,11 @@ public class AcquistoFacade {
                         posto.getIdPosto(),
                         importoTotale / numeroBiglietti
                 );
+
+                // CARICA LE RELAZIONI NEL BIGLIETTO
+                biglietto.setProgrammazione(programmazione);
+                biglietto.setPosto(posto);
+
                 biglietti.add(biglietto);
             }
 
