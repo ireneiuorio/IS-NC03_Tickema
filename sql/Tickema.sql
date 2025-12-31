@@ -492,94 +492,83 @@ INSERT INTO PROGRAMMAZIONE (dataProgrammazione, tipo, prezzoBase, stato, idFilm,
                                                                                                                       ('2025-10-19', '2D', 9.00, 'Disponibile', 19, 5, 1, 17),
                                                                                                                       ('2025-10-20', 'IMAX', 17.00, 'Disponibile', 20, 1, 1, 17);
 
--- 2.7 POSTI (Generazione parziale per prime 3 programmazioni come esempio)
--- PROGRAMMAZIONE 1 (Dune - Sala A, 100 posti)
-INSERT INTO POSTO (stato, fila, numeroPosto, idProgrammazione, idSala) VALUES
--- Fila 1 (parzialmente occupata)
-('Occupato', 1, 1, 1, 1), ('Occupato', 1, 2, 1, 1), ('Disponibile', 1, 3, 1, 1), ('Disponibile', 1, 4, 1, 1),
-('Disponibile', 1, 5, 1, 1), ('Disponibile', 1, 6, 1, 1), ('Disponibile', 1, 7, 1, 1), ('Disponibile', 1, 8, 1, 1),
-('Disponibile', 1, 9, 1, 1), ('Disponibile', 1, 10, 1, 1),
--- Fila 2 (tutta disponibile)
-('Disponibile', 2, 1, 1, 1), ('Disponibile', 2, 2, 1, 1), ('Disponibile', 2, 3, 1, 1), ('Disponibile', 2, 4, 1, 1),
-('Disponibile', 2, 5, 1, 1), ('Disponibile', 2, 6, 1, 1), ('Disponibile', 2, 7, 1, 1), ('Disponibile', 2, 8, 1, 1),
-('Disponibile', 2, 9, 1, 1), ('Disponibile', 2, 10, 1, 1),
--- Fila 3 (parzialmente occupata)
-('Disponibile', 3, 1, 1, 1), ('Disponibile', 3, 2, 1, 1), ('Disponibile', 3, 3, 1, 1), ('Occupato', 3, 4, 1, 1),
-('Occupato', 3, 5, 1, 1), ('Occupato', 3, 6, 1, 1), ('Disponibile', 3, 7, 1, 1), ('Disponibile', 3, 8, 1, 1),
-('Disponibile', 3, 9, 1, 1), ('Disponibile', 3, 10, 1, 1);
 
--- PROGRAMMAZIONE 2 (Inside Out 2 - Sala B, 64 posti)
-INSERT INTO POSTO (stato, fila, numeroPosto, idProgrammazione, idSala) VALUES
--- Fila 1
-('Occupato', 1, 1, 2, 2), ('Occupato', 1, 2, 2, 2), ('Occupato', 1, 3, 2, 2), ('Disponibile', 1, 4, 2, 2),
-('Disponibile', 1, 5, 2, 2), ('Disponibile', 1, 6, 2, 2), ('Disponibile', 1, 7, 2, 2), ('Disponibile', 1, 8, 2, 2),
--- Fila 2
-('Disponibile', 2, 1, 2, 2), ('Disponibile', 2, 2, 2, 2), ('Disponibile', 2, 3, 2, 2), ('Disponibile', 2, 4, 2, 2),
-('Disponibile', 2, 5, 2, 2), ('Disponibile', 2, 6, 2, 2), ('Disponibile', 2, 7, 2, 2), ('Disponibile', 2, 8, 2, 2);
 
--- PROGRAMMAZIONE 3 (Mission Impossible - Sala A)
-INSERT INTO POSTO (stato, fila, numeroPosto, idProgrammazione, idSala) VALUES
--- Fila 1
-('Disponibile', 1, 1, 3, 1), ('Disponibile', 1, 2, 3, 1), ('Disponibile', 1, 3, 3, 1), ('Disponibile', 1, 4, 3, 1),
-('Occupato', 1, 5, 3, 1), ('Occupato', 1, 6, 3, 1), ('Disponibile', 1, 7, 3, 1), ('Disponibile', 1, 8, 3, 1),
-('Disponibile', 1, 9, 3, 1), ('Disponibile', 1, 10, 3, 1);
 
--- 2.8 ACQUISTI (20 acquisti diversificati)
-INSERT INTO ACQUISTO (importoTotale, dataOraAcquisto, stato, numeroBiglietti, idAccount) VALUES
-                                                                                             (20.00, '2025-10-10 14:30:00', 'Completato', 2, 4),
-                                                                                             (36.00, '2025-10-11 09:00:00', 'Completato', 3, 5),
-                                                                                             (30.00, '2025-10-11 15:20:00', 'Completato', 3, 6),
-                                                                                             (10.00, '2025-10-12 10:15:00', 'Completato', 1, 7),
-                                                                                             (50.00, '2025-10-12 18:45:00', 'Completato', 5, 8),
-                                                                                             (18.00, '2025-10-13 11:30:00', 'Completato', 2, 9),
-                                                                                             (12.00, '2025-10-13 16:00:00', 'Completato', 1, 10),
-                                                                                             (40.00, '2025-10-14 09:45:00', 'Completato', 4, 11),
-                                                                                             (24.00, '2025-10-14 13:20:00', 'Completato', 2, 12),
-                                                                                             (15.00, '2025-10-14 17:30:00', 'Completato', 1, 13),
-                                                                                             (60.00, '2025-10-15 08:00:00', 'Completato', 6, 14),
-                                                                                             (22.00, '2025-10-15 12:15:00', 'Completato', 2, 15),
-                                                                                             (35.00, '2025-10-15 14:45:00', 'Rimborsato', 3, 16),
-                                                                                             (10.00, '2025-10-16 10:30:00', 'Completato', 1, 17),
-                                                                                             (48.00, '2025-10-16 15:00:00', 'Completato', 4, 18),
-                                                                                             (26.00, '2025-10-16 19:20:00', 'Completato', 2, 19),
-                                                                                             (12.00, '2025-10-17 11:00:00', 'Completato', 1, 20),
-                                                                                             (55.00, '2025-10-17 14:30:00', 'Completato', 5, 4),
-                                                                                             (30.00, '2025-10-17 18:45:00', 'Annullato', 3, 5),
-                                                                                             (20.00, '2025-10-18 09:15:00', 'Completato', 2, 6);
+-- ============================================================
+-- GENERA POSTI PER TUTTE LE PROGRAMMAZIONI AUTOMATICAMENTE
+-- ============================================================
+-- ============================================================
+-- GENERA POSTI PER TUTTE LE PROGRAMMAZIONI
+-- ============================================================
 
--- 2.9 PAGAMENTI (20 pagamenti con modalità diverse)
-INSERT INTO PAGAMENTO (metodoPagamento, importo, dataOraPagamento, tipo, idAcquisto) VALUES
-                                                                                         ('Saldo Utente', 10.00, '2025-10-10 14:30:00', 'SALDO', 1),
-                                                                                         ('Visa **** 8024', 35.00, '2025-10-15 14:45:00', 'CARTA', 13),
-                                                                                         ('American Express **** 6420', 10.00, '2025-10-16 10:30:00', 'CARTA', 14),
-                                                                                         ('Saldo Utente', 20.00, '2025-10-16 15:00:00', 'SALDO', 15),
-                                                                                         ('Mastercard **** 9753', 28.00, '2025-10-16 15:00:00', 'CARTA', 15),
-                                                                                         ('PayPal', 26.00, '2025-10-16 19:20:00', 'CARTA', 16),
-                                                                                         ('Saldo Utente', 12.00, '2025-10-17 11:00:00', 'SALDO', 17),
-                                                                                         ('Visa **** 1122', 55.00, '2025-10-17 14:30:00', 'CARTA', 18);
+DELIMITER $$
 
--- 2.10 BIGLIETTI (20 biglietti con stati diversi)
-INSERT INTO BIGLIETTO (prezzoFinale, stato, QRCode, dataUtilizzo, idAcquisto, idProgrammazione, idPosto, idPersonaleValidazione) VALUES
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_001', NULL, 1, 1, 1, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_002', NULL, 1, 1, 2, NULL),
-                                                                                                                                     (12.00, 'Validato', 'QR_TKT_003', '2025-10-15 15:05:00', 2, 2, 31, 2),
-                                                                                                                                     (12.00, 'Validato', 'QR_TKT_004', '2025-10-15 15:05:05', 2, 2, 32, 2),
-                                                                                                                                     (12.00, 'Validato', 'QR_TKT_005', '2025-10-15 15:05:10', 2, 2, 33, 2),
-                                                                                                                                     (10.00, 'Validato', 'QR_TKT_006', '2025-10-16 20:10:00', 3, 1, 23, 3),
-                                                                                                                                     (10.00, 'Validato', 'QR_TKT_007', '2025-10-16 20:10:05', 3, 1, 24, 3),
-                                                                                                                                     (10.00, 'Validato', 'QR_TKT_008', '2025-10-16 20:10:10', 3, 1, 25, 3),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_009', NULL, 4, 3, 55, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_010', NULL, 5, 11, 1, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_011', NULL, 5, 11, 2, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_012', NULL, 5, 11, 3, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_013', NULL, 5, 11, 4, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_014', NULL, 5, 11, 5, NULL),
-                                                                                                                                     (9.00, 'Validato', 'QR_TKT_015', '2025-10-17 18:15:00', 6, 12, 1, 2),
-                                                                                                                                     (9.00, 'Validato', 'QR_TKT_016', '2025-10-17 18:15:05', 6, 12, 2, 2),
-                                                                                                                                     (12.00, 'Emesso', 'QR_TKT_017', NULL, 7, 2, 40, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_018', NULL, 8, 7, 1, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_019', NULL, 8, 7, 2, NULL),
-                                                                                                                                     (10.00, 'Emesso', 'QR_TKT_020', NULL, 8, 7, 3, NULL);
+DROP PROCEDURE IF EXISTS GeneraPostiProgrammazione$$
+
+CREATE PROCEDURE GeneraPostiProgrammazione(
+    IN p_idProgrammazione INT,
+    IN p_idSala INT
+)
+BEGIN
+    DECLARE v_numeroDiFile INT;
+    DECLARE v_numeroPostiPerFila INT;
+    DECLARE v_fila INT DEFAULT 1;
+    DECLARE v_posto INT;
+
+    -- Recupera dimensioni sala
+    SELECT numeroDiFile, numeroPostiPerFila
+    INTO v_numeroDiFile, v_numeroPostiPerFila
+    FROM SALA
+    WHERE idSala = p_idSala;
+
+    -- Genera posti
+    WHILE v_fila <= v_numeroDiFile DO
+            SET v_posto = 1;
+            WHILE v_posto <= v_numeroPostiPerFila DO
+                    INSERT INTO POSTO (stato, fila, numeroPosto, idProgrammazione, idSala)
+                    VALUES ('Disponibile', v_fila, v_posto, p_idProgrammazione, p_idSala);  -- ✅ "Disponibile"!
+                    SET v_posto = v_posto + 1;
+                END WHILE;
+            SET v_fila = v_fila + 1;
+        END WHILE;
+END$$
+
+DELIMITER ;
+-- Genera posti per TUTTE le programmazioni (da 4 a 20, escluse 1,2,3 già fatte manualmente)
+
+-- Genera posti per TUTTE le 20 programmazioni
+CALL GeneraPostiProgrammazione(1, 1);   -- Prog 1, Sala A
+CALL GeneraPostiProgrammazione(2, 2);   -- Prog 2, Sala B
+CALL GeneraPostiProgrammazione(3, 1);   -- Prog 3, Sala A
+CALL GeneraPostiProgrammazione(4, 3);   -- Prog 4, Sala C
+CALL GeneraPostiProgrammazione(5, 1);   -- Prog 5, Sala A
+CALL GeneraPostiProgrammazione(6, 4);   -- Prog 6, Sala D
+CALL GeneraPostiProgrammazione(7, 2);   -- Prog 7, Sala B
+CALL GeneraPostiProgrammazione(8, 3);   -- Prog 8, Sala C
+CALL GeneraPostiProgrammazione(9, 1);   -- Prog 9, Sala A
+CALL GeneraPostiProgrammazione(10, 1);  -- Prog 10, Sala A
+CALL GeneraPostiProgrammazione(11, 1);  -- Prog 11, Sala A
+CALL GeneraPostiProgrammazione(12, 2);  -- Prog 12, Sala B
+CALL GeneraPostiProgrammazione(13, 4);  -- Prog 13, Sala D
+CALL GeneraPostiProgrammazione(14, 5);  -- Prog 14, Sala E
+CALL GeneraPostiProgrammazione(15, 3);  -- Prog 15, Sala C
+CALL GeneraPostiProgrammazione(16, 2);  -- Prog 16, Sala B
+CALL GeneraPostiProgrammazione(17, 2);  -- Prog 17, Sala B
+CALL GeneraPostiProgrammazione(18, 4);  -- Prog 18, Sala D
+CALL GeneraPostiProgrammazione(19, 5);  -- Prog 19, Sala E
+CALL GeneraPostiProgrammazione(20, 1);  -- Prog 20, Sala A
+-- ============================================================
+-- AGGIORNA SLOT COME OCCUPATI (solo quelli con programmazioni)
+-- ============================================================
+
+UPDATE SLOTORARI
+SET stato = 'Occupato'
+WHERE idSlot IN (
+    SELECT DISTINCT idSlotOrario
+    FROM PROGRAMMAZIONE
+);
+
 
 -- Riattiva check chiavi esterne
 SET FOREIGN_KEY_CHECKS = 1;
