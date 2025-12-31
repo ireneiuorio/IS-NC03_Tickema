@@ -28,17 +28,25 @@
 
     /* Header successo */
     .success-header {
-      background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
       color: white;
       padding: 50px 30px;
       border-radius: 20px 20px 0 0;
       text-align: center;
-      box-shadow: 0 10px 40px rgba(76, 175, 80, 0.3);
+      box-shadow: 0 10px 40px rgba(109, 93, 110, 0.3);
     }
 
     .success-icon {
-      font-size: 5em;
-      margin-bottom: 20px;
+      width: 80px;
+      height: 80px;
+      background: white;
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3em;
+      margin: 0 auto 20px;
       animation: successPop 0.6s ease-out;
     }
 
@@ -50,7 +58,7 @@
 
     .success-header h1 {
       font-size: 2.5em;
-      font-weight: 300;
+      font-weight: 700;
       margin-bottom: 10px;
       letter-spacing: 1px;
     }
@@ -89,10 +97,7 @@
       color: var(--primary);
       font-size: 1.6em;
       margin-bottom: 20px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-weight: 600;
     }
 
     /* Grid dettagli */
@@ -126,7 +131,7 @@
     /* Biglietti */
     .biglietti-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
     }
 
@@ -137,17 +142,6 @@
       border-radius: 15px;
       box-shadow: 0 5px 20px rgba(109, 93, 110, 0.3);
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .biglietto-card::before {
-      content: '🎬';
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      font-size: 8em;
-      opacity: 0.1;
     }
 
     .biglietto-card:hover {
@@ -156,8 +150,8 @@
     }
 
     .biglietto-header {
-      font-size: 1.1em;
-      font-weight: 600;
+      font-size: 1.2em;
+      font-weight: 700;
       margin-bottom: 15px;
       padding-bottom: 15px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -176,6 +170,7 @@
 
     .biglietto-value {
       font-weight: 600;
+      text-align: right;
     }
 
     /* QR Code */
@@ -229,7 +224,7 @@
       padding: 15px;
       border-radius: 10px;
       margin-top: 15px;
-      border-left: 4px solid #4caf50;
+      border-left: 4px solid var(--primary);
     }
 
     .payment-method-label {
@@ -291,23 +286,19 @@
 
     /* Alert info */
     .info-alert {
-      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-      border-left: 4px solid #2196F3;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-left: 4px solid var(--primary);
       padding: 20px;
       border-radius: 10px;
       margin-top: 30px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 15px;
-    }
-
-    .info-alert-icon {
-      font-size: 2em;
     }
 
     .info-alert-text {
       flex: 1;
-      color: #1565c0;
+      color: var(--dark);
       line-height: 1.6;
     }
 
@@ -318,7 +309,9 @@
       }
 
       .success-icon {
-        font-size: 4em;
+        width: 60px;
+        height: 60px;
+        font-size: 2em;
       }
 
       .details-grid {
@@ -341,6 +334,25 @@
         font-size: 1.2em;
       }
     }
+
+    @media print {
+      .actions, .info-alert, header, footer {
+        display: none;
+      }
+
+      .success-header {
+        background: var(--primary);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .biglietto-card {
+        background: var(--primary);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        page-break-inside: avoid;
+      }
+    }
   </style>
 </head>
 <body>
@@ -353,7 +365,7 @@
 
     <!-- Success Header -->
     <div class="success-header">
-      <div class="success-icon">✅</div>
+      <div class="success-icon">✓</div>
       <h1>Acquisto Completato!</h1>
       <p>Grazie per aver scelto Tickema</p>
     </div>
@@ -363,7 +375,7 @@
 
         <!-- Dettagli Acquisto -->
         <div class="info-section">
-          <h2>📋 Dettagli Acquisto</h2>
+          <h2>Dettagli Acquisto</h2>
           <div class="details-grid">
             <div class="detail-box">
               <div class="detail-label">Numero Ordine</div>
@@ -372,8 +384,16 @@
             <div class="detail-box">
               <div class="detail-label">Data e Ora</div>
               <div class="detail-value">
-                <fmt:formatDate value="${risultato.acquisto.dataOraAcquisto}"
-                                pattern="dd/MM/yyyy HH:mm" />
+                <c:set var="dataOra" value="${risultato.acquisto.dataOraAcquisto}" />
+                <c:choose>
+                  <c:when test="${not empty dataOra}">
+                    <fmt:parseDate value="${dataOra}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDate" type="both" />
+                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy HH:mm" />
+                  </c:when>
+                  <c:otherwise>
+                    ${dataOra}
+                  </c:otherwise>
+                </c:choose>
               </div>
             </div>
             <div class="detail-box">
@@ -383,8 +403,7 @@
             <div class="detail-box">
               <div class="detail-label">Importo Totale</div>
               <div class="detail-value">
-                €<fmt:formatNumber value="${risultato.acquisto.importoTotale}"
-                                   pattern="#,##0.00"/>
+                €<fmt:formatNumber value="${risultato.acquisto.importoTotale}" pattern="#,##0.00"/>
               </div>
             </div>
           </div>
@@ -392,53 +411,59 @@
 
         <!-- Biglietti -->
         <div class="info-section">
-          <h2>🎟️ I Tuoi Biglietti</h2>
+          <h2>I Tuoi Biglietti</h2>
           <div class="biglietti-grid">
-            <c:forEach var="biglietto" items="${risultato.biglietti}">
+            <c:forEach var="biglietto" items="${risultato.biglietti}" varStatus="status">
               <div class="biglietto-card">
                 <div class="biglietto-header">
-                  🎬 ${biglietto.programmazione.film.titolo}
+                  Biglietto ${status.index + 1}
                 </div>
 
                 <div class="biglietto-info">
-                  <span class="biglietto-label">📅 Data:</span>
+                  <span class="biglietto-label">Film:</span>
+                  <span class="biglietto-value">
+                      ${biglietto.programmazione.film.titolo}
+                  </span>
+                </div>
+
+                <div class="biglietto-info">
+                  <span class="biglietto-label">Data:</span>
                   <span class="biglietto-value">
                       ${biglietto.programmazione.dataProgrammazione}
                   </span>
                 </div>
 
                 <div class="biglietto-info">
-                  <span class="biglietto-label">🕐 Orario:</span>
+                  <span class="biglietto-label">Orario:</span>
                   <span class="biglietto-value">
                       ${biglietto.programmazione.slotOrari.oraInizio}
                   </span>
                 </div>
 
                 <div class="biglietto-info">
-                  <span class="biglietto-label">🎭 Sala:</span>
+                  <span class="biglietto-label">Sala:</span>
                   <span class="biglietto-value">
                       ${biglietto.programmazione.sala.nome}
                   </span>
                 </div>
 
                 <div class="biglietto-info">
-                  <span class="biglietto-label">💺 Posto:</span>
+                  <span class="biglietto-label">Posto:</span>
                   <span class="biglietto-value">
-                                        Fila ${biglietto.posto.fila}, Posto ${biglietto.posto.numeroPosto}
-                                    </span>
+                    Fila ${biglietto.posto.fila}, Numero ${biglietto.posto.numeroPosto}
+                  </span>
                 </div>
 
                 <div class="biglietto-info">
-                  <span class="biglietto-label">💰 Prezzo:</span>
+                  <span class="biglietto-label">Prezzo:</span>
                   <span class="biglietto-value">
-                                        €<fmt:formatNumber value="${biglietto.prezzoFinale}"
-                                                           pattern="#,##0.00"/>
-                                    </span>
+                    €<fmt:formatNumber value="${biglietto.prezzoFinale}" pattern="#,##0.00"/>
+                  </span>
                 </div>
 
                 <!-- QR Code -->
                 <div class="qr-section">
-                  <div class="biglietto-label">📱 Codice Biglietto</div>
+                  <div class="biglietto-label">Codice Biglietto</div>
                   <div class="qr-code">
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${biglietto.QRCode}"
                          alt="QR Code Biglietto">
@@ -454,39 +479,36 @@
 
         <!-- Riepilogo Pagamento -->
         <div class="info-section">
-          <h2>💳 Riepilogo Pagamento</h2>
+          <h2>Riepilogo Pagamento</h2>
 
           <div class="payment-summary">
             <c:forEach var="pagamento" items="${risultato.pagamenti}">
               <div class="payment-row">
-                                <span>
-                                    <c:choose>
-                                      <c:when test="${pagamento.metodoPagamento == 'Saldo'}">
-                                        💰 Pagato con Saldo
-                                      </c:when>
-                                      <c:otherwise>
-                                        💳 Pagato con Carta
-                                      </c:otherwise>
-                                    </c:choose>
-                                </span>
-                <span>€<fmt:formatNumber value="${pagamento.importo}"
-                                         pattern="#,##0.00"/></span>
+                <span>
+                  <c:choose>
+                    <c:when test="${pagamento.metodoPagamento == 'Saldo'}">
+                      Pagato con Saldo
+                    </c:when>
+                    <c:otherwise>
+                      Pagato con Carta
+                    </c:otherwise>
+                  </c:choose>
+                </span>
+                <span>€<fmt:formatNumber value="${pagamento.importo}" pattern="#,##0.00"/></span>
               </div>
             </c:forEach>
 
             <div class="payment-row total">
               <span>TOTALE PAGATO</span>
-              <span>€<fmt:formatNumber value="${risultato.acquisto.importoTotale}"
-                                       pattern="#,##0.00"/></span>
+              <span>€<fmt:formatNumber value="${risultato.acquisto.importoTotale}" pattern="#,##0.00"/></span>
             </div>
           </div>
 
-          <c:if test="${not empty risultato.nuovoSaldo}">
+          <c:if test="${sessionScope.utenteLoggato != null}">
             <div class="payment-method">
-              <div class="payment-method-label">💰 Saldo Rimanente</div>
+              <div class="payment-method-label">Saldo Rimanente</div>
               <div class="payment-method-value">
-                €<fmt:formatNumber value="${risultato.nuovoSaldo}"
-                                   pattern="#,##0.00"/>
+                €<fmt:formatNumber value="${sessionScope.utenteLoggato.saldo}" pattern="#,##0.00"/>
               </div>
             </div>
           </c:if>
@@ -494,21 +516,19 @@
 
         <!-- Info Alert -->
         <div class="info-alert">
-          <div class="info-alert-icon">ℹ️</div>
           <div class="info-alert-text">
             <strong>Importante:</strong> Ricorda di presentare il QR Code all'ingresso.
             Puoi salvare questa pagina o fare uno screenshot dei biglietti.
-            Ti abbiamo anche inviato una conferma via email.
           </div>
         </div>
 
         <!-- Azioni -->
         <div class="actions">
-          <a href="${pageContext.request.contextPath}/programmazioni" class="btn btn-secondary">
-            🏠 Torna alla Home
+          <a href="${pageContext.request.contextPath}/" class="btn btn-secondary">
+            Torna alla Home
           </a>
           <button onclick="window.print()" class="btn btn-primary">
-            🖨️ Stampa Biglietti
+            Stampa Biglietti
           </button>
         </div>
 
@@ -519,18 +539,6 @@
 
 <!-- Footer -->
 <jsp:include page="/WEB-INF/includes/footer.jsp" />
-
-<script>
-  // Animazione di ingresso
-  window.addEventListener('load', function() {
-    const cards = document.querySelectorAll('.biglietto-card');
-    cards.forEach((card, index) => {
-      setTimeout(() => {
-        card.style.animation = 'slideInUp 0.5s ease-out';
-      }, index * 100);
-    });
-  });
-</script>
 
 </body>
 </html>

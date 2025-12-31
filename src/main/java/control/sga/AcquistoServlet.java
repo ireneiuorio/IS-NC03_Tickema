@@ -21,7 +21,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @WebServlet("/acquisto")
 public class AcquistoServlet extends HttpServlet {
@@ -46,10 +45,15 @@ public class AcquistoServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        // Verifica autenticazione
-        Utente utente = (Utente) session.getAttribute("utente");
+        // ===== VERIFICA AUTENTICAZIONE =====
+        Utente utente = (Utente) session.getAttribute("utenteLoggato");
         if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            // Salva solo il path relativo + query string
+            String originalUrl = "/acquisto?" + request.getQueryString();
+            session.setAttribute("redirectAfterLogin", originalUrl);
+
+            // Redirect a login
+            response.sendRedirect(request.getContextPath() + "/utente/login");
             return;
         }
 
@@ -72,12 +76,12 @@ public class AcquistoServlet extends HttpServlet {
                 return;
             }
 
-
-            if (!"Disponibile".equalsIgnoreCase(programmazione.getStato())) {  // ← .equalsIgnoreCase()
+            if (!"Disponibile".equalsIgnoreCase(programmazione.getStato())) {
                 request.setAttribute("errore", "Programmazione non disponibile");
                 request.getRequestDispatcher("/WEB-INF/views/errore.jsp").forward(request, response);
                 return;
             }
+
             // Verifica disponibilità posti
             List<Posto> postiDisponibili = postoService.verificaDisponibilitaPosti(
                     idProgrammazione,
@@ -152,10 +156,10 @@ public class AcquistoServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        // Verifica autenticazione
-        Utente utente = (Utente) session.getAttribute("utente");
+        // ===== VERIFICA AUTENTICAZIONE =====
+        Utente utente = (Utente) session.getAttribute("utenteLoggato");
         if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/utente/login");
             return;
         }
 
@@ -225,7 +229,7 @@ public class AcquistoServlet extends HttpServlet {
                     Utente utenteAggiornato = utenteDAO.doRetrieveById(utente.getIdAccount());
 
                     if (utenteAggiornato != null) {
-                        session.setAttribute("utente", utenteAggiornato);
+                        session.setAttribute("utenteLoggato", utenteAggiornato);
                     }
 
                 } catch (SQLException e) {
@@ -234,7 +238,7 @@ public class AcquistoServlet extends HttpServlet {
 
                 // Passa risultato alla pagina riepilogo
                 request.setAttribute("risultato", risultato);
-                request.getRequestDispatcher("/WEB-INF/views/riepilogo-acquisto.jsp")
+                request.getRequestDispatcher("/WEB-INF/views/acquisto/riepilogo-acquisto.jsp")
                         .forward(request, response);
 
             } else {
