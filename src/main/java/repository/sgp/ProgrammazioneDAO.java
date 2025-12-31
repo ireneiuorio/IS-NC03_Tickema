@@ -90,6 +90,8 @@ public class ProgrammazioneDAO {
         return prog;
     }
 
+
+
     //Recupera le programmazioni di un film nello specifico e li ordina per data e ora
     public List<Programmazione> doRetrieveAllByFilm(int idFilm) throws SQLException {
         String sql = "SELECT p.* FROM programmazione p " +
@@ -172,7 +174,29 @@ public class ProgrammazioneDAO {
         return result;
     }
 
+    /**
+     * Recupera TUTTE le programmazioni ordinate per data e ora
+     */
+    public List<Programmazione> doRetrieveAll() throws SQLException {
+        String sql = "SELECT p.* FROM programmazione p " +
+                "JOIN SLOTORARI s ON p.idSlotOrario = s.idSlot " +
+                "ORDER BY p.dataProgrammazione DESC, s.oraInizio";
 
+        List<Programmazione> result = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Programmazione prog = popolaOggetto(rs);
+                // Carica anche le relazioni
+                caricaOggettiCorrelati(prog);
+                result.add(prog);
+            }
+        }
+
+        return result;
+    }
 
     public boolean doUpdate(Programmazione p) throws SQLException {
         String sql = "UPDATE programmazione SET dataProgrammazione = ?, tipo = ?, " +
