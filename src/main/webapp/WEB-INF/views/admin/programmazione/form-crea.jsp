@@ -12,6 +12,11 @@
     <!-- CSS Base -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* Hero Section */
         .hero {
@@ -19,20 +24,47 @@
             color: white;
             padding: 60px 30px;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
 
         .hero h1 {
-            font-size: 2.5em;
-            font-weight: bold;
-            font-style: italic;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
         }
 
         .hero p {
-            font-size: 1.1em;
+            font-size: 1.2em;
             opacity: 0.95;
+        }
+
+        .film-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 10px;
+            backdrop-filter: blur(10px);
         }
 
         /* Container */
@@ -45,32 +77,30 @@
         /* Form Card */
         .form-card {
             background: white;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         /* Messaggi */
         .alert {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary);
         }
 
         .alert-danger {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left-color: #f44336;
+            color: #c62828;
         }
 
         /* Form Sections */
         .form-section {
-            margin-bottom: 35px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         .form-section:last-of-type {
@@ -78,42 +108,56 @@
         }
 
         .form-section h3 {
-            font-size: 1.4em;
-            color: var(--dark);
-            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: var(--primary);
+            margin-bottom: 25px;
             font-weight: 600;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .form-section h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            border-radius: 2px;
         }
 
         /* Form Groups */
         .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 25px;
+            margin-bottom: 25px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-label {
             display: block;
             font-weight: 600;
             color: var(--dark);
-            margin-bottom: 8px;
-            font-size: 0.95em;
+            margin-bottom: 10px;
+            font-size: 1em;
         }
 
         .form-label span {
-            color: #dc3545;
+            color: var(--primary);
         }
 
         .form-input,
         .form-select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 15px;
             border: 2px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1em;
             transition: all 0.3s ease;
             font-family: inherit;
@@ -123,30 +167,31 @@
         .form-select:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(109, 93, 110, 0.1);
+            box-shadow: 0 0 0 4px rgba(109, 93, 110, 0.1);
         }
 
         .form-help {
-            font-size: 0.85em;
+            font-size: 0.9em;
             color: #666;
-            margin-top: 5px;
+            margin-top: 8px;
             display: block;
+            font-style: italic;
         }
 
         /* Form Actions */
         .form-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid var(--border);
+            gap: 20px;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #f0f0f0;
         }
 
         .btn {
-            padding: 12px 30px;
+            padding: 18px 40px;
             border: none;
-            border-radius: 8px;
-            font-size: 1em;
+            border-radius: 12px;
+            font-size: 1.2em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -159,32 +204,47 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
             color: white;
             flex: 1;
+            box-shadow: 0 5px 20px rgba(109, 93, 110, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(109, 93, 110, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(109, 93, 110, 0.4);
         }
 
         .btn-secondary {
             background: white;
-            color: var(--dark);
-            border: 2px solid var(--border);
+            color: var(--primary);
+            border: 2px solid var(--primary);
         }
 
         .btn-secondary:hover {
-            border-color: var(--primary);
             background: var(--light-gray);
+            transform: translateY(-2px);
+        }
+
+        /* Loading State */
+        .loading-state {
+            color: #666;
+            font-style: italic;
+        }
+
+        .success-state {
+            color: var(--primary);
+        }
+
+        .error-state {
+            color: #f44336;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 1.8em;
+                font-size: 2em;
             }
 
             .form-card {
-                padding: 25px;
+                padding: 30px;
             }
 
             .form-row {
@@ -204,8 +264,11 @@
 
 <!-- Hero Section -->
 <section class="hero">
-    <h1>Nuova Programmazione</h1>
-    <p>Film: <strong>${film.titolo}</strong> (${film.durata} min)</p>
+    <div class="hero-content">
+        <h1>Nuova Programmazione</h1>
+        <p>Film: ${film.titolo}</p>
+        <div class="film-badge">Durata: ${film.durata} minuti</div>
+    </div>
 </section>
 
 <!-- Main Content -->
@@ -215,7 +278,7 @@
         <!-- Messaggi di Errore -->
         <c:if test="${not empty messaggioErrore}">
             <div class="alert alert-danger">
-                <span>${messaggioErrore}</span>
+                    ${messaggioErrore}
             </div>
         </c:if>
 
@@ -258,7 +321,7 @@
                                     class="form-select"
                                     required
                                     onchange="caricaSlotDisponibili()">
-                                <option value="">Seleziona una sala...</option>
+                                <option value="">Seleziona una sala</option>
                                 <c:forEach var="sala" items="${sale}">
                                     <option value="${sala.idSala}">
                                         Sala ${sala.nome} - ${sala.capienza} posti
@@ -281,7 +344,7 @@
                                 name="idSlotOrario"
                                 class="form-select"
                                 required>
-                            <option value="">Prima seleziona sala e data...</option>
+                            <option value="">Prima seleziona sala e data</option>
                         </select>
                         <small class="form-help" id="slotInfo">Gli slot disponibili verranno caricati automaticamente</small>
                     </div>
@@ -294,7 +357,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="prezzoBase">
-                                Prezzo Base (€) <span>*</span>
+                                Prezzo Base <span>*</span>
                             </label>
                             <input type="number"
                                    id="prezzoBase"
@@ -312,17 +375,17 @@
                                 Tipo Programmazione <span>*</span>
                             </label>
                             <select id="tipo" name="tipo" class="form-select" required>
-                                <option value="STANDARD">STANDARD</option>
+                                <option value="STANDARD">Standard</option>
                                 <option value="3D">3D</option>
                                 <option value="IMAX">IMAX</option>
-                                <option value="DOLBY_ATMOS">DOLBY ATMOS</option>
+                                <option value="DOLBY_ATMOS">Dolby Atmos</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="idTariffa">
-                            Tariffa Speciale (opzionale)
+                            Tariffa Speciale
                         </label>
                         <select id="idTariffa" name="idTariffa" class="form-select">
                             <option value="">Nessuna tariffa</option>
@@ -358,12 +421,11 @@
 
 <!-- JavaScript -->
 <script>
-    // Validazione form
     function validaFormCreazione() {
         const prezzoBase = parseFloat(document.getElementById('prezzoBase').value);
 
         if (prezzoBase <= 0) {
-            alert('Il prezzo base deve essere maggiore di zero!');
+            alert('Il prezzo base deve essere maggiore di zero');
             return false;
         }
 
@@ -372,73 +434,128 @@
         oggi.setHours(0, 0, 0, 0);
 
         if (data < oggi) {
-            alert('Non è possibile creare programmazioni nel passato!');
+            alert('Non è possibile creare programmazioni nel passato');
             return false;
         }
 
         const idSlot = document.getElementById('idSlotOrario').value;
         if (!idSlot) {
-            alert('Seleziona uno slot orario valido!');
+            alert('Seleziona uno slot orario valido');
             return false;
         }
 
         return true;
     }
 
-    // Caricamento dinamico slot disponibili
-    function caricaSlotDisponibili() {
-        const idSala = document.getElementById('idSala').value;
-        const data = document.getElementById('data').value;
-        const selectSlot = document.getElementById('idSlotOrario');
-        const slotInfo = document.getElementById('slotInfo');
+    // Carica slot disponibili per una specifica riga
+    function caricaSlotPerRiga(rowId) {
+        console.log('=== INIZIO caricaSlotPerRiga ===');
+        console.log('rowId:', rowId);
 
-        if (!idSala || !data) {
-            selectSlot.innerHTML = '<option value="">Prima seleziona sala e data...</option>';
-            slotInfo.innerHTML = 'Gli slot disponibili verranno caricati automaticamente';
+        const dataInput = document.querySelector('#row-' + rowId + ' input[name="date[]"]');
+        const salaSelect = document.querySelector('#row-' + rowId + ' select[name="idSale[]"]');
+        const slotSelect = document.querySelector('#row-' + rowId + ' select[name="idSlot[]"]');
+        const slotInfo = document.querySelector('#row-' + rowId + ' .slot-info');
+
+        console.log('Elementi trovati:', {
+            dataInput: dataInput,
+            salaSelect: salaSelect,
+            slotSelect: slotSelect,
+            slotInfo: slotInfo
+        });
+
+        const dataValue = dataInput.value;
+        const idSala = salaSelect.value;
+
+        console.log('Valori:', {
+            data: dataValue,
+            idSala: idSala
+        });
+
+        if (!dataValue || !idSala) {
+            console.log('Data o sala mancante, esco');
+            slotSelect.innerHTML = '<option value="">Prima seleziona sala e data</option>';
+            slotInfo.innerHTML = 'Seleziona sala e data per caricare gli slot';
+            slotInfo.className = 'form-help';
             return;
         }
 
-        // Disabilita select durante caricamento
-        selectSlot.disabled = true;
-        selectSlot.innerHTML = '<option value="">Caricamento slot...</option>';
-        slotInfo.innerHTML = '<em>Caricamento in corso...</em>';
+        const url = contextPath + '/admin/programmazione?action=slotDisponibili&idSala=' + idSala + '&data=' + dataValue;
+        console.log('URL fetch:', url);
+        console.log('contextPath:', contextPath);
 
-        // AJAX per caricare slot disponibili
-        fetch('${pageContext.request.contextPath}/admin/programmazione?action=slotDisponibili&idSala=' + idSala + '&data=' + data)
-            .then(response => {
+        slotSelect.disabled = true;
+        slotSelect.innerHTML = '<option value="">Caricamento slot in corso</option>';
+        slotInfo.innerHTML = 'Caricamento in corso';
+        slotInfo.className = 'form-help loading-state';
+
+        console.log('Inizio fetch...');
+
+        fetch(url)
+            .then(function(response) {
+                console.log('Response ricevuta:', response);
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+
                 if (!response.ok) {
-                    throw new Error('Errore nel caricamento degli slot');
+                    throw new Error('HTTP error! status: ' + response.status);
                 }
                 return response.json();
             })
-            .then(data => {
-                selectSlot.innerHTML = '';
+            .then(function(jsonData) {
+                console.log('JSON ricevuto:', jsonData);
+                console.log('Slots:', jsonData.slots);
+                console.log('Numero slots:', jsonData.slots ? jsonData.slots.length : 0);
 
-                if (data.slots && data.slots.length > 0) {
-                    selectSlot.innerHTML = '<option value="">Seleziona uno slot...</option>';
-                    data.slots.forEach(slot => {
+                slotSelect.innerHTML = '';
+
+                if (jsonData.slots && jsonData.slots.length > 0) {
+                    console.log('Popolamento select con', jsonData.slots.length, 'slot');
+                    slotSelect.innerHTML = '<option value="">Seleziona uno slot</option>';
+
+                    for (let i = 0; i < jsonData.slots.length; i++) {
+                        const slot = jsonData.slots[i];
+                        console.log('Slot', i, ':', slot);
+
                         const option = document.createElement('option');
                         option.value = slot.idSlotOrario;
                         option.textContent = slot.oraInizio + ' - ' + slot.oraFine;
+
                         if (slot.stato === 'OCCUPATO') {
                             option.disabled = true;
                             option.textContent += ' (Occupato)';
                         }
-                        selectSlot.appendChild(option);
-                    });
-                    slotInfo.innerHTML = '<em style="color: green;">' + data.slots.length + ' slot trovati</em>';
+
+                        slotSelect.appendChild(option);
+                    }
+
+                    slotInfo.innerHTML = jsonData.slots.length + ' slot disponibili';
+                    slotInfo.className = 'form-help success-state';
+                    console.log('Popolamento completato');
+
                 } else {
-                    selectSlot.innerHTML = '<option value="">Nessuno slot disponibile</option>';
-                    slotInfo.innerHTML = '<em style="color: orange;">Nessuno slot disponibile per questa combinazione</em>';
+                    console.log('Nessuno slot disponibile');
+                    slotSelect.innerHTML = '<option value="">Nessuno slot disponibile</option>';
+                    slotInfo.innerHTML = 'Nessuno slot disponibile per questa combinazione';
+                    slotInfo.className = 'form-help error-state';
                 }
 
-                selectSlot.disabled = false;
+                slotSelect.disabled = false;
+                console.log('=== FINE caricaSlotPerRiga (SUCCESS) ===');
             })
-            .catch(error => {
-                console.error('Errore:', error);
-                selectSlot.innerHTML = '<option value="">Errore nel caricamento</option>';
-                slotInfo.innerHTML = '<em style="color: red;">Errore nel caricamento degli slot. Riprova.</em>';
-                selectSlot.disabled = false;
+            .catch(function(error) {
+                console.error('=== ERRORE CATCH ===');
+                console.error('Tipo errore:', error.name);
+                console.error('Messaggio:', error.message);
+                console.error('Stack:', error.stack);
+                console.error('Error completo:', error);
+
+                slotSelect.innerHTML = '<option value="">Errore nel caricamento</option>';
+                slotInfo.innerHTML = 'Errore nel caricamento degli slot';
+                slotInfo.className = 'form-help error-state';
+                slotSelect.disabled = false;
+
+                console.log('=== FINE caricaSlotPerRiga (ERROR) ===');
             });
     }
 </script>

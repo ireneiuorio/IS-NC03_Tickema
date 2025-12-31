@@ -407,6 +407,9 @@ public class ProgrammazioneControl extends HttpServlet {
             richiesta.setAttribute("sale", sale);
             richiesta.setAttribute("tariffe", tariffe);
 
+            // ✅ AGGIUNGI QUESTA RIGA
+            richiesta.setAttribute("dataOggi", LocalDate.now().toString());
+
             richiesta.getRequestDispatcher(JSP_FORM_MULTIPLA).forward(richiesta, risposta);
 
         } catch (Exception e) {
@@ -510,6 +513,9 @@ public class ProgrammazioneControl extends HttpServlet {
     /**
      * Crea multiple programmazioni in batch
      */
+    /**
+     * Crea multiple programmazioni in batch
+     */
     private void creaProgrammazioneMultipla(HttpServletRequest richiesta, HttpServletResponse risposta)
             throws ServletException, IOException {
 
@@ -522,7 +528,6 @@ public class ProgrammazioneControl extends HttpServlet {
             double prezzoBase = leggiDecimaleObbligatorio(richiesta, "prezzoBase");
 
             String[] arrayDate = richiesta.getParameterValues("date[]");
-            String[] arrayOre = richiesta.getParameterValues("ore[]");
             String[] arraySale = richiesta.getParameterValues("idSale[]");
             String[] arraySlot = richiesta.getParameterValues("idSlot[]");
             String[] arrayTariffe = richiesta.getParameterValues("idTariffa[]");
@@ -535,13 +540,16 @@ public class ProgrammazioneControl extends HttpServlet {
 
             // Validazione lunghezze array
             int numeroProgrammazioni = arrayDate.length;
-            if (arrayOre.length != numeroProgrammazioni ||
-                    arraySale.length != numeroProgrammazioni ||
+            if (arraySale.length != numeroProgrammazioni ||
                     arraySlot.length != numeroProgrammazioni) {
                 throw new IllegalArgumentException(
                         "I parametri delle programmazioni non corrispondono"
                 );
             }
+
+            // ✅ RECUPERA LE ORE DAGLI SLOT
+            Connection connessione = ottieniConnessione(richiesta);
+            SlotOrariService slotService = new SlotOrariService(connessione);
 
             // Converti in liste
             List<LocalDate> date = new ArrayList<>();
@@ -551,11 +559,26 @@ public class ProgrammazioneControl extends HttpServlet {
             List<Integer> idTariffe = new ArrayList<>();
 
             for (int i = 0; i < numeroProgrammazioni; i++) {
+                // Data
                 date.add(LocalDate.parse(arrayDate[i], FORMATTATORE_DATA));
-                ore.add(LocalTime.parse(arrayOre[i], FORMATTATORE_ORA));
-                idSale.add(Integer.parseInt(arraySale[i]));
-                idSlot.add(Integer.parseInt(arraySlot[i]));
 
+                // ✅ RECUPERA ORA INIZIO DALLO SLOT
+                int idSlotOrario = Integer.parseInt(arraySlot[i]);
+                SlotOrari slot = slotService.getSlotOrarioById(idSlotOrario);
+                if (slot == null) {
+                    throw new IllegalArgumentException(
+                            "Slot orario non trovato per la programmazione " + (i + 1)
+                    );
+                }
+                ore.add(slot.getOraInizio());
+
+                // Sala
+                idSale.add(Integer.parseInt(arraySale[i]));
+
+                // Slot
+                idSlot.add(idSlotOrario);
+
+                // Tariffa (opzionale)
                 if (arrayTariffe != null && i < arrayTariffe.length &&
                         !arrayTariffe[i].isEmpty()) {
                     idTariffe.add(Integer.parseInt(arrayTariffe[i]));
@@ -585,6 +608,13 @@ public class ProgrammazioneControl extends HttpServlet {
         } catch (CreazioneProgrammazioneMultiplaException e) {
             richiesta.setAttribute("messaggioErrore",
                     "Errore nella creazione multipla: " + e.getMessage());
+            mostraFormCreazioneMultipla(richiesta, risposta);
+
+        } catch (Exception e) {
+            // ✅ CATCH GENERICO PER ALTRI ERRORI
+            e.printStackTrace();
+            richiesta.setAttribute("messaggioErrore",
+                    "Errore imprevisto: " + e.getMessage());
             mostraFormCreazioneMultipla(richiesta, risposta);
         }
     }
