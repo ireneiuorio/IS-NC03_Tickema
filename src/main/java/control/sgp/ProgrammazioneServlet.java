@@ -32,7 +32,7 @@ import java.util.List;
  * Servlet per la gestione delle programmazioni singole e multiple (metodi crud)
  */
 @WebServlet("/admin/programmazione")
-public class ProgrammazioneControl extends HttpServlet {
+public class ProgrammazioneServlet extends HttpServlet {
 
     private static final String JSP_LISTA = "/WEB-INF/views/admin/programmazione/lista.jsp";
     private static final String JSP_DETTAGLIO = "/WEB-INF/views/admin/programmazione/dettaglio.jsp";

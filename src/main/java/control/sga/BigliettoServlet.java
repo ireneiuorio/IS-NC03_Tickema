@@ -17,7 +17,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet("/biglietto/dettaglio")
-public class BigliettoControl extends HttpServlet {
+public class BigliettoServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

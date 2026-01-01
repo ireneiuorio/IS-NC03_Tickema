@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Gestisce la vista pubblica delle proiezioni disponibili
  */
 @WebServlet("/programmazioni")
-public class ProgrammazioniControl extends HttpServlet {
+public class DettaglioProgrammazioniServelt extends HttpServlet {
 
     private static final String JSP_DETTAGLIO = "/WEB-INF/views/programmazioni-dettaglio.jsp";
 
