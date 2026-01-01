@@ -1025,7 +1025,7 @@
 
                     setTimeout(function() {
                         alert("Il tempo per completare l'acquisto è scaduto. I posti sono stati liberati.");
-                        window.location.href = "${pageContext.request.contextPath}/programmazioni";
+                        window.location.href ="${pageContext.request.contextPath}/dettaglio-film?idFilm=${programmazione.film.idFilm}";
                     }, 1000);
 
                     return;
