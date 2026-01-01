@@ -1,5 +1,7 @@
 package control.sgu;
 
+import entity.sga.Acquisto;
+import entity.sga.Biglietto;
 import entity.sgu.Utente;
 import exception.sgu.autenticazione.*;
 
@@ -9,12 +11,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import service.sga.AcquistoService;
+import service.sga.BigliettoService;
 import service.sgu.AutenticazioneService;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet("/utente/*")
 public class UtenteServlet extends HttpServlet {
@@ -71,11 +78,17 @@ public class UtenteServlet extends HttpServlet {
                         .forward(request, response);
                 break;
 
+            case "/storico-acquisti":
+                mostraStoricoAcquisti(request, response);
+                break;
+
             case "/modifica-profilo":
                 if (utente == null) {
                     response.sendRedirect(request.getContextPath() + "/utente/login");
                     return;
                 }
+
+
 
                 // Passa l'utente alla JSP per pre-compilare i campi
                 request.setAttribute("utente", utente);
@@ -114,6 +127,10 @@ public class UtenteServlet extends HttpServlet {
 
             case "/modifica-credenziali":
                 eseguiModificaCredenziali(request, response);
+                break;
+
+            case "/storico-acquisti":
+                mostraStoricoAcquisti(request, response);
                 break;
 
             default:
@@ -343,5 +360,48 @@ public class UtenteServlet extends HttpServlet {
                     "Errore del server. Riprova più tardi.");
         }
 
+    }
+
+    /**
+     * Mostra lo storico degli acquisti dell'utente
+     */
+    private void mostraStoricoAcquisti(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        HttpSession session = request.getSession(false);
+        Utente utente = (session != null) ? (Utente) session.getAttribute("utenteLoggato") : null;
+
+        if (utente == null) {
+            response.sendRedirect(request.getContextPath() + "/utente/login");
+            return;
+        }
+
+        try {
+            Connection connection = (Connection) getServletContext().getAttribute("dbConnection");
+
+            // Recupera gli acquisti dell'utente
+            AcquistoService acquistoService = new AcquistoService(connection);
+            List<Acquisto> acquisti = acquistoService.getAcquistiUtente(utente.getIdAccount());
+
+            // Crea una mappa: idAcquisto -> Lista Biglietti
+            BigliettoService bigliettoService = new BigliettoService(connection);
+            Map<Integer, List<Biglietto>> bigliettiPerAcquisto = new HashMap<>();
+
+            for (Acquisto acquisto : acquisti) {
+                List<Biglietto> biglietti = bigliettoService.getBigliettiPerAcquisto(acquisto.getIdAcquisto());
+                bigliettiPerAcquisto.put(acquisto.getIdAcquisto(), biglietti);
+            }
+
+            // Passa entrambi alla JSP
+            request.setAttribute("acquisti", acquisti);
+            request.setAttribute("bigliettiPerAcquisto", bigliettiPerAcquisto);
+
+            request.getRequestDispatcher("/WEB-INF/views/account/storico-acquisti.jsp")
+                    .forward(request, response);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Errore nel recupero dello storico acquisti");
+        }
     }
 }

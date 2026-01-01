@@ -5,6 +5,7 @@ import entity.sga.Biglietto;
 import entity.sgp.Posto;
 import entity.sgp.Programmazione;
 import exception.sga.acquisto.biglietto.*;
+import repository.sga.AcquistoDAO;
 import repository.sga.BigliettoDAO;
 import repository.sgp.PostoDAO;
 import service.sgp.ProgrammazioneService;
@@ -89,6 +90,16 @@ public class BigliettoService {
             throw new BigliettoNonTrovatoException(idBiglietto);
         }
 
+        // ✅ CARICA TUTTE LE RELAZIONI (programmazione, posto, acquisto)
+        caricaRelazioniBiglietto(biglietto);
+
+        // ✅ CARICA ANCHE L'UTENTE DELL'ACQUISTO
+        if (biglietto.getAcquisto() != null && biglietto.getAcquisto().getIdAcquisto() > 0) {
+            AcquistoDAO acquistoDAO = new AcquistoDAO(connection);
+            Acquisto acquisto = acquistoDAO.doRetrieveById(biglietto.getAcquisto().getIdAcquisto());
+            biglietto.setAcquisto(acquisto);
+        }
+
         return biglietto;
     }
 
@@ -112,7 +123,14 @@ public class BigliettoService {
     }
 
     public List<Biglietto> getBigliettiPerAcquisto(int idAcquisto) throws SQLException {
-        return bigliettoDAO.doRetrieveByAcquisto(idAcquisto);
+        List<Biglietto> biglietti = bigliettoDAO.doRetrieveByAcquisto(idAcquisto);
+
+        // ✅ CARICA LE RELAZIONI PER OGNI BIGLIETTO
+        for (Biglietto biglietto : biglietti) {
+            caricaRelazioniBiglietto(biglietto);
+        }
+
+        return biglietti;
     }
 
     public List<Biglietto> getBigliettiPerUtente(int idAccount, boolean soloValidi)

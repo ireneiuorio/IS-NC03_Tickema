@@ -414,7 +414,17 @@ public class ProgrammazioneService {
 
     public Programmazione getProgrammazioneById(int id) {
         try {
-            return programmazioneDAO.doRetrieveByKeyWithRelations(id);
+            Programmazione programmazione = programmazioneDAO.doRetrieveByKey(id);
+
+            if (programmazione == null) {
+                throw new ProgrammazioneNonTrovataException(id);
+            }
+
+
+            caricaRelazioniProgrammazione(programmazione);
+
+            return programmazione;
+
         } catch (SQLException e) {
             throw new RecuperoProgrammazioniException(e);
         }
