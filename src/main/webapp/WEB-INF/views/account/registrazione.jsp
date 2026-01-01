@@ -42,7 +42,7 @@
             color: var(--dark);
             text-align: center;
             margin-bottom: 15px;
-            font-weight: 300;
+            font-weight: 700;
             letter-spacing: 2px;
         }
 
@@ -112,34 +112,44 @@
             gap: 10px;
         }
 
-        /* Indicatore forza password */
+        /* Password Strength Indicator */
         .password-strength {
-            height: 4px;
-            border-radius: 2px;
-            background: var(--border);
-            margin-top: 5px;
+            margin-top: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
             transition: all 0.3s ease;
+            display: none; /* Nascosto di default */
         }
 
         .password-strength.weak {
-            width: 33%;
-            background: #ff4444;
+            display: block;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #c62828;
+            border-left: 4px solid #c62828;
         }
 
         .password-strength.medium {
-            width: 66%;
-            background: #ffaa00;
+            display: block;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            color: #f57c00;
+            border-left: 4px solid #f57c00;
         }
 
         .password-strength.strong {
-            width: 100%;
-            background: #00cc66;
+            display: block;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
         }
 
         .password-hint {
             font-size: 0.85em;
             color: #666;
             margin-top: 5px;
+            display: block;
         }
 
         /* Bottone di submit */
@@ -214,7 +224,6 @@
         <!-- Messaggio di errore (si mostra solo se c'è un errore) -->
         <c:if test="${not empty errore}">
             <div class="error-message">
-                <span>⚠️</span>
                 <span>${errore}</span>
             </div>
         </c:if>
@@ -282,10 +291,10 @@
                        id="password"
                        name="password"
                        placeholder="Crea una password sicura"
-                       minlength="8"
+                       minlength="6"
                        required>
                 <div class="password-strength" id="passwordStrength"></div>
-                <span class="password-hint">Almeno 6 caratteri</span>
+                <span class="password-hint">Almeno 6 caratteri, una maiuscola e un carattere speciale</span>
             </div>
 
             <!-- Campo Conferma Password -->
@@ -295,7 +304,7 @@
                        id="confermaPassword"
                        name="confermaPassword"
                        placeholder="Reinserisci la password"
-                       minlength="8"
+                       minlength="6"
                        required>
             </div>
 
@@ -335,13 +344,18 @@
 
         // Aggiungi la classe appropriata
         if (password.length > 0) {
-            if (strength < 3) {
+            if (strength < 2) {
                 passwordStrength.classList.add('weak');
-            } else if (strength < 5) {
+                passwordStrength.textContent = 'Debole';
+            } else if (strength < 3) {
                 passwordStrength.classList.add('medium');
+                passwordStrength.textContent = 'Media';
             } else {
                 passwordStrength.classList.add('strong');
+                passwordStrength.textContent = 'Forte';
             }
+        } else {
+            passwordStrength.textContent = '';
         }
     });
 
@@ -349,10 +363,13 @@
     function calcolaForzaPassword(password) {
         let strength = 0;
 
+        // Lunghezza minima 6 caratteri
         if (password.length >= 6) strength++;
-        if (password.length >= 12) strength++;
-        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-        if (/\d/.test(password)) strength++;
+
+        // Contiene almeno una lettera maiuscola
+        if (/[A-Z]/.test(password)) strength++;
+
+        // Contiene almeno un carattere speciale
         if (/[^a-zA-Z0-9]/.test(password)) strength++;
 
         return strength;
@@ -363,14 +380,6 @@
         const password = passwordInput.value;
         const confermaPassword = confermaPasswordInput.value;
 
-        // Controlla che le password corrispondano
-        if (password !== confermaPassword) {
-            e.preventDefault();
-            alert('Le password non corrispondono!');
-            confermaPasswordInput.focus();
-            return false;
-        }
-
         // Controlla lunghezza minima password
         if (password.length < 6) {
             e.preventDefault();
@@ -379,11 +388,27 @@
             return false;
         }
 
+        // Controlla lettera maiuscola
+        if (!/[A-Z]/.test(password)) {
+            e.preventDefault();
+            alert('La password deve contenere almeno una lettera maiuscola!');
+            passwordInput.focus();
+            return false;
+        }
+
         // Controllo carattere speciale
         if (!/[^a-zA-Z0-9]/.test(password)) {
             e.preventDefault();
-            alert('La password deve contenere almeno un carattere speciale!');
+            alert('La password deve contenere almeno un carattere speciale (es: !@#$%^&*)!');
             passwordInput.focus();
+            return false;
+        }
+
+        // Controlla che le password corrispondano
+        if (password !== confermaPassword) {
+            e.preventDefault();
+            alert('Le password non corrispondono!');
+            confermaPasswordInput.focus();
             return false;
         }
 

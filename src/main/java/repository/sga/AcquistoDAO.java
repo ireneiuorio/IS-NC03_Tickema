@@ -73,20 +73,7 @@ public class AcquistoDAO {
         return acquisti;
     }
 
-    // Recupera tutti gli acquisti
-    public List<Acquisto> doRetrieveAll() throws SQLException {
-        List<Acquisto> acquisti = new ArrayList<>();
-        String query = "SELECT * FROM ACQUISTO ORDER BY dataOraAcquisto DESC";
 
-        try (PreparedStatement ps = connection.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                acquisti.add(extractAcquistoFromResultSet(rs));
-            }
-        }
-        return acquisti;
-    }
 
     //Recupera acquisti per stato
     public List<Acquisto> doRetrieveByStato(String stato) throws SQLException {
@@ -193,5 +180,23 @@ public class AcquistoDAO {
             }
         }
         return 0;
+    }
+
+    /**
+     * RECUPERA TUTTI GLI ACQUISTI
+     */
+
+    public List<Acquisto> doRetrieveAll() throws SQLException {
+        List<Acquisto> acquisti = new ArrayList<>();
+        String query = "SELECT * FROM ACQUISTO ORDER BY dataOraAcquisto DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                acquisti.add(extractAcquistoFromResultSet(rs));
+            }
+        }
+        return acquisti;
     }
 }

@@ -18,7 +18,7 @@ import java.util.Map;
 
 @WebServlet("/film")
 @MultipartConfig
-public class FilmControl extends HttpServlet {
+public class FilmServlet extends HttpServlet {
 
     private static final String JSP_CATALOGO = "/WEB-INF/views/film/catalogo.jsp";
     private static final String JSP_DETTAGLIO = "/WEB-INF/views/film/dettaglio.jsp";

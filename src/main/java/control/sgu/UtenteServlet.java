@@ -88,8 +88,6 @@ public class UtenteServlet extends HttpServlet {
                     return;
                 }
 
-
-
                 // Passa l'utente alla JSP per pre-compilare i campi
                 request.setAttribute("utente", utente);
                 request.getRequestDispatcher("/WEB-INF/views/account/modifica-profilo.jsp")
@@ -250,6 +248,12 @@ public class UtenteServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/account/registrazione.jsp")
                     .forward(request, response);
 
+            // ✅ CATCH PER VALIDAZIONE PASSWORD
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("errore", e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/account/registrazione.jsp")
+                    .forward(request, response);
+
         } catch (SQLException | NoSuchAlgorithmException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
@@ -320,7 +324,11 @@ public class UtenteServlet extends HttpServlet {
         }
     }
 
-    private void eseguiModificaCredenziali(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    /**
+     * Gestisce la modifica delle credenziali
+     */
+    private void eseguiModificaCredenziali(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         HttpSession session = request.getSession(false);
         Utente utente = (session != null) ? (Utente) session.getAttribute("utenteLoggato") : null;
 
@@ -352,14 +360,22 @@ public class UtenteServlet extends HttpServlet {
 
         } catch (PasswordDiverseException e) {
             request.setAttribute("errore", "Le password non corrispondono");
+            request.setAttribute("utente", utente);
             request.getRequestDispatcher("/WEB-INF/views/account/modifica-credenziali.jsp")
                     .forward(request, response);
+
+            // ✅ CATCH PER VALIDAZIONE PASSWORD
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("errore", e.getMessage());
+            request.setAttribute("utente", utente);
+            request.getRequestDispatcher("/WEB-INF/views/account/modifica-credenziali.jsp")
+                    .forward(request, response);
+
         } catch (SQLException | NoSuchAlgorithmException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Errore del server. Riprova più tardi.");
         }
-
     }
 
     /**

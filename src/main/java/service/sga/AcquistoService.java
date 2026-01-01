@@ -153,4 +153,36 @@ public class AcquistoService {
 
         return "Completato".equals(acquisto.getStato());
     }
+
+    /**
+     * Recupera tutti gli acquisti
+     */
+    public List<Acquisto> getAllAcquisti() throws SQLException {
+        return acquistoDAO.doRetrieveAll();
+    }
+
+    /**
+     * Conta totale acquisti
+     */
+    public int contaTotaleAcquisti() throws SQLException {
+        return acquistoDAO.doRetrieveAll().size();
+    }
+
+    /**
+     * Conta acquisti per stato
+     */
+    public int contaAcquistiPerStato(String stato) throws SQLException {
+        return (int) acquistoDAO.doRetrieveAll().stream()
+                .filter(a -> stato.equals(a.getStato()))
+                .count();
+    }
+
+    /**
+     * Calcola importo totale di tutti gli acquisti
+     */
+    public double calcolaImportoTotaleAcquisti() throws SQLException {
+        return acquistoDAO.doRetrieveAll().stream()
+                .mapToDouble(Acquisto::getImportoTotale)
+                .sum();
+    }
 }
