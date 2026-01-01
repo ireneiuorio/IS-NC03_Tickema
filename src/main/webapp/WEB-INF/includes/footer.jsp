@@ -18,7 +18,7 @@
       <ul>
         <li><a href="${pageContext.request.contextPath}/">Home</a></li>
         <li><a href="${pageContext.request.contextPath}/programmazioniutente">Programmazione</a></li>
-        <li><a href="${pageContext.request.contextPath}/i-miei-biglietti">I Miei Biglietti</a></li>
+        <li><a href="${pageContext.request.contextPath}/utente/storico-acquisti">I Miei Biglietti</a></li>
       </ul>
     </div>
 

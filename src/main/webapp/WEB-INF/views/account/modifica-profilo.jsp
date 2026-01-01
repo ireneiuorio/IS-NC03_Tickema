@@ -196,7 +196,7 @@
     <div class="edit-card">
 
         <!-- Titolo -->
-        <h1 class="edit-title">Modifica Profilo</h1>
+        <h1 class="edit-title" style="font-weight: bold">Modifica Profilo</h1>
         <p class="edit-subtitle">Aggiorna i tuoi dati personali</p>
 
         <!-- Messaggio di errore (si mostra solo se c'è un errore) -->

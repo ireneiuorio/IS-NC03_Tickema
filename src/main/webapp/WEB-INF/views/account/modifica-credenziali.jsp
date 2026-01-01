@@ -42,7 +42,7 @@
             color: var(--dark);
             text-align: center;
             margin-bottom: 15px;
-            font-weight: 300;
+            font-weight: 700;
             letter-spacing: 2px;
         }
 
@@ -90,6 +90,46 @@
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(109, 93, 110, 0.1);
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .password-strength.weak {
+            display: block;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        .password-strength.medium {
+            display: block;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            color: #f57c00;
+            border-left: 4px solid #f57c00;
+        }
+
+        .password-strength.strong {
+            display: block;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .password-hint {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+            display: block;
         }
 
         /* Messaggio di errore */
@@ -161,11 +201,6 @@
                 font-size: 2em;
             }
 
-            /* Su mobile i campi vanno in colonna */
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
             .form-actions {
                 flex-direction: column;
             }
@@ -183,7 +218,7 @@
 
         <!-- Titolo -->
         <h1 class="edit-title">Modifica Credenziali</h1>
-        <p class="edit-subtitle">Aggiorna le tue credenziali</p>
+        <p class="edit-subtitle">Aggiorna le tue credenziali di accesso</p>
 
         <!-- Messaggio di errore (si mostra solo se c'è un errore) -->
         <c:if test="${not empty errore}">
@@ -205,7 +240,7 @@
                        id="email"
                        name="email"
                        placeholder="tua@email.com"
-                       value="${param.email}"
+                       value="${utente.email}"
                        required>
             </div>
 
@@ -216,20 +251,20 @@
                        id="password"
                        name="password"
                        placeholder="Crea una password sicura"
-                       minlength="8"
+                       minlength="6"
                        required>
                 <div class="password-strength" id="passwordStrength"></div>
-                <span class="password-hint">Almeno 6 caratteri</span>
+                <span class="password-hint">Almeno 6 caratteri, una maiuscola e un carattere speciale</span>
             </div>
 
             <!-- Campo Conferma Password -->
             <div class="form-group">
-                <label for="confermaPassword">Conferma nuova Password *</label>
+                <label for="confermaPassword">Conferma Nuova Password *</label>
                 <input type="password"
                        id="confermaPassword"
                        name="confermaPassword"
                        placeholder="Reinserisci la password"
-                       minlength="8"
+                       minlength="6"
                        required>
             </div>
 
@@ -258,7 +293,7 @@
     const passwordInput = document.getElementById('password');
     const passwordStrength = document.getElementById('passwordStrength');
     const confermaPasswordInput = document.getElementById('confermaPassword');
-    const form = document.getElementById('form-registrazione');
+    const form = document.getElementById('form-modifica-credenziali'); // ✅ CORRETTO
 
     // Controlla la forza della password mentre l'utente digita
     passwordInput.addEventListener('input', function() {
@@ -270,13 +305,18 @@
 
         // Aggiungi la classe appropriata
         if (password.length > 0) {
-            if (strength < 3) {
+            if (strength < 2) {
                 passwordStrength.classList.add('weak');
-            } else if (strength < 5) {
+                passwordStrength.textContent = 'Debole';
+            } else if (strength < 3) {
                 passwordStrength.classList.add('medium');
+                passwordStrength.textContent = 'Media';
             } else {
                 passwordStrength.classList.add('strong');
+                passwordStrength.textContent = 'Forte';
             }
+        } else {
+            passwordStrength.textContent = '';
         }
     });
 
@@ -284,10 +324,13 @@
     function calcolaForzaPassword(password) {
         let strength = 0;
 
+        // Lunghezza minima 6 caratteri
         if (password.length >= 6) strength++;
-        if (password.length >= 12) strength++;
-        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-        if (/\d/.test(password)) strength++;
+
+        // Contiene almeno una lettera maiuscola
+        if (/[A-Z]/.test(password)) strength++;
+
+        // Contiene almeno un carattere speciale
         if (/[^a-zA-Z0-9]/.test(password)) strength++;
 
         return strength;
@@ -298,14 +341,6 @@
         const password = passwordInput.value;
         const confermaPassword = confermaPasswordInput.value;
 
-        // Controlla che le password corrispondano
-        if (password !== confermaPassword) {
-            e.preventDefault();
-            alert('Le password non corrispondono!');
-            confermaPasswordInput.focus();
-            return false;
-        }
-
         // Controlla lunghezza minima password
         if (password.length < 6) {
             e.preventDefault();
@@ -314,11 +349,27 @@
             return false;
         }
 
+        // ✅ AGGIUNTO: Controlla lettera maiuscola
+        if (!/[A-Z]/.test(password)) {
+            e.preventDefault();
+            alert('La password deve contenere almeno una lettera maiuscola!');
+            passwordInput.focus();
+            return false;
+        }
+
         // Controllo carattere speciale
         if (!/[^a-zA-Z0-9]/.test(password)) {
             e.preventDefault();
-            alert('La password deve contenere almeno un carattere speciale!');
+            alert('La password deve contenere almeno un carattere speciale (es: !@#$%^&*)!');
             passwordInput.focus();
+            return false;
+        }
+
+        // Controlla che le password corrispondano
+        if (password !== confermaPassword) {
+            e.preventDefault();
+            alert('Le password non corrispondono!');
+            confermaPasswordInput.focus();
             return false;
         }
 

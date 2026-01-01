@@ -166,7 +166,7 @@
     <div class="login-card">
 
         <!-- Titolo -->
-        <h1 class="login-title">Accedi</h1>
+        <h1 class="login-title" style="font-weight: bold">Accedi</h1>
         <p class="login-subtitle">Bentornato su Tickema!</p>
 
         <!-- Messaggio di errore (si mostra solo se c'è un errore) -->
