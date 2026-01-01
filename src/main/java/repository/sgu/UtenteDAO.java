@@ -3,6 +3,8 @@ package repository.sgu;
 import entity.sgu.Utente;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UtenteDAO {
 
@@ -189,5 +191,30 @@ public class UtenteDAO {
 
             return ps.executeUpdate() > 0;
         }
+    }
+
+    /**
+     * RECUPERA TUTTI GLI UTENTI
+     */
+    public List<Utente> doRetrieveAll() throws SQLException {
+        String sql = "SELECT * FROM utente ORDER BY idAccount DESC";
+        List<Utente> utenti = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                utenti.add(extractUtenteFromResultSet(rs));
+            }
+        }
+
+        return utenti;
+    }
+
+    /**
+     * RECUPERA UTENTE PER CHIAVE (alias di doRetrieveById)
+     */
+    public Utente doRetrieveByKey(int idAccount) throws SQLException {
+        return doRetrieveById(idAccount);
     }
 }
