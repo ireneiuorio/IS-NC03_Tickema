@@ -416,9 +416,6 @@
                         <input type="hidden" name="action" value="elimina">
                         <input type="hidden" name="id" value="${programmazione.idProgrammazione}">
                         <input type="hidden" name="idFilm" value="${programmazione.idFilm}">
-                        <button type="submit" class="btn btn-danger">
-                            Elimina
-                        </button>
                     </form>
                 </c:if>
             </div>

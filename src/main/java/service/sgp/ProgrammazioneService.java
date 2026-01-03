@@ -263,7 +263,9 @@ public class ProgrammazioneService {
         return result;
     }
 
-    public boolean modificaProgrammazione(int idProgrammazione, LocalDate date, String tipo, double prezzoBase, String stato, LocalTime oraInizio, int idFilm, int idSala, int idSlotOrario, Integer idTariffa) {
+    public boolean modificaProgrammazione(int idProgrammazione, LocalDate date, String tipo,
+                                          double prezzoBase, String stato, LocalTime oraInizio,
+                                          int idFilm, int idSala, int idSlotOrario, Integer idTariffa) {
 
         try {
             connection.setAutoCommit(false);
@@ -274,31 +276,51 @@ public class ProgrammazioneService {
                 throw new ProgrammazioneNonTrovataException(idProgrammazione);
             }
 
-            // Verifica se sta cambiando slot/sala
-            boolean cambioSlot = (prog.getIdSlotOrari() != idSlotOrario);
-            boolean cambioSala = (prog.getIdSala() != idSala);
+            // CORRETTO: statoOriginale è una String
+            String statoOriginale = prog.getStato();
+            boolean diventaAnnullata = "Annullata".equalsIgnoreCase(stato) &&
+                    !"Annullata".equalsIgnoreCase(statoOriginale);
 
-            if (cambioSlot || cambioSala) {
-                // Verifica disponibilità nuovo slot/sala
-                if (programmazioneDAO.existsBySlotAndSalaExcluding(
-                        idSlotOrario, idSala, idProgrammazione)) {
-                    throw new SlotNonDisponibileException("");
+            if (diventaAnnullata) {
+                // RIMBORSI AUTOMATICI
+                processaRimborsiAutomatici(idProgrammazione);
+
+                // INVALIDAZIONE BIGLIETTI
+                bigliettoDAO.doUpdateStatoByProgrammazione(idProgrammazione, "Rimborsato");
+
+                // LIBERAZIONE SLOT
+                SlotOrari slot = slotOrariDAO.doRetrieveByKey(prog.getIdSlotOrari());
+                if (slot != null) {
+                    slot.libera();
+                    slotOrariDAO.doUpdate(slot);
                 }
+            }
 
-                // Libera vecchio slot
-                SlotOrari vecchioSlot = slotOrariDAO.doRetrieveByKey(
-                        prog.getIdSlotOrari()
-                );
-                if (vecchioSlot != null) {
-                    vecchioSlot.libera();
-                    slotOrariDAO.doUpdate(vecchioSlot);
-                }
+            // Verifica se sta cambiando slot/sala (SOLO SE NON ANNULLATA)
+            if (!diventaAnnullata) {
+                boolean cambioSlot = (prog.getIdSlotOrari() != idSlotOrario);
+                boolean cambioSala = (prog.getIdSala() != idSala);
 
-                // Occupa nuovo slot
-                SlotOrari nuovoSlot = slotOrariDAO.doRetrieveByKey(idSlotOrario);
-                if (nuovoSlot != null) {
-                    nuovoSlot.occupa();
-                    slotOrariDAO.doUpdate(nuovoSlot);
+                if (cambioSlot || cambioSala) {
+                    // Verifica disponibilità nuovo slot/sala
+                    if (programmazioneDAO.existsBySlotAndSalaExcluding(
+                            idSlotOrario, idSala, idProgrammazione)) {
+                        throw new SlotNonDisponibileException("");
+                    }
+
+                    // Libera vecchio slot
+                    SlotOrari vecchioSlot = slotOrariDAO.doRetrieveByKey(prog.getIdSlotOrari());
+                    if (vecchioSlot != null) {
+                        vecchioSlot.libera();
+                        slotOrariDAO.doUpdate(vecchioSlot);
+                    }
+
+                    // Occupa nuovo slot
+                    SlotOrari nuovoSlot = slotOrariDAO.doRetrieveByKey(idSlotOrario);
+                    if (nuovoSlot != null) {
+                        nuovoSlot.occupa();
+                        slotOrariDAO.doUpdate(nuovoSlot);
+                    }
                 }
             }
 
