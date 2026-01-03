@@ -90,10 +90,10 @@ public class BigliettoService {
             throw new BigliettoNonTrovatoException(idBiglietto);
         }
 
-        // ✅ CARICA TUTTE LE RELAZIONI (programmazione, posto, acquisto)
+        // CARICA TUTTE LE RELAZIONI (programmazione, posto, acquisto)
         caricaRelazioniBiglietto(biglietto);
 
-        // ✅ CARICA ANCHE L'UTENTE DELL'ACQUISTO
+        // CARICA ANCHE L'UTENTE DELL'ACQUISTO
         if (biglietto.getAcquisto() != null && biglietto.getAcquisto().getIdAcquisto() > 0) {
             AcquistoDAO acquistoDAO = new AcquistoDAO(connection);
             Acquisto acquisto = acquistoDAO.doRetrieveById(biglietto.getAcquisto().getIdAcquisto());
@@ -125,7 +125,7 @@ public class BigliettoService {
     public List<Biglietto> getBigliettiPerAcquisto(int idAcquisto) throws SQLException {
         List<Biglietto> biglietti = bigliettoDAO.doRetrieveByAcquisto(idAcquisto);
 
-        // ✅ CARICA LE RELAZIONI PER OGNI BIGLIETTO
+        // CARICA LE RELAZIONI PER OGNI BIGLIETTO
         for (Biglietto biglietto : biglietti) {
             caricaRelazioniBiglietto(biglietto);
         }
