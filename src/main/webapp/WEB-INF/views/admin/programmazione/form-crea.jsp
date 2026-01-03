@@ -421,6 +421,8 @@
 
 <!-- JavaScript -->
 <script>
+    const contextPath = '${pageContext.request.contextPath}';
+
     function validaFormCreazione() {
         const prezzoBase = parseFloat(document.getElementById('prezzoBase').value);
 
@@ -447,76 +449,45 @@
         return true;
     }
 
-    // Carica slot disponibili per una specifica riga
-    function caricaSlotPerRiga(rowId) {
-        console.log('=== INIZIO caricaSlotPerRiga ===');
-        console.log('rowId:', rowId);
+    // ✅ FUNZIONE COMPLETA COME NELLA FORM MULTIPLA
+    function caricaSlotDisponibili() {
+        const dataInput = document.getElementById('data');
+        const salaSelect = document.getElementById('idSala');
+        const slotSelect = document.getElementById('idSlotOrario');
+        const slotInfo = document.getElementById('slotInfo');
 
-        const dataInput = document.querySelector('#row-' + rowId + ' input[name="date[]"]');
-        const salaSelect = document.querySelector('#row-' + rowId + ' select[name="idSale[]"]');
-        const slotSelect = document.querySelector('#row-' + rowId + ' select[name="idSlot[]"]');
-        const slotInfo = document.querySelector('#row-' + rowId + ' .slot-info');
+        const data = dataInput.value;
+        const sala = salaSelect.value;
 
-        console.log('Elementi trovati:', {
-            dataInput: dataInput,
-            salaSelect: salaSelect,
-            slotSelect: slotSelect,
-            slotInfo: slotInfo
-        });
-
-        const dataValue = dataInput.value;
-        const idSala = salaSelect.value;
-
-        console.log('Valori:', {
-            data: dataValue,
-            idSala: idSala
-        });
-
-        if (!dataValue || !idSala) {
-            console.log('Data o sala mancante, esco');
+        if (!data || !sala) {
             slotSelect.innerHTML = '<option value="">Prima seleziona sala e data</option>';
-            slotInfo.innerHTML = 'Seleziona sala e data per caricare gli slot';
+            slotInfo.innerHTML = 'Gli slot disponibili verranno caricati automaticamente';
             slotInfo.className = 'form-help';
             return;
         }
 
-        const url = contextPath + '/admin/programmazione?action=slotDisponibili&idSala=' + idSala + '&data=' + dataValue;
-        console.log('URL fetch:', url);
-        console.log('contextPath:', contextPath);
+        const url = contextPath + '/admin/programmazione?action=slotDisponibili&idSala=' + sala + '&data=' + data;
 
         slotSelect.disabled = true;
-        slotSelect.innerHTML = '<option value="">Caricamento slot in corso</option>';
-        slotInfo.innerHTML = 'Caricamento in corso';
+        slotSelect.innerHTML = '<option value="">Caricamento slot in corso...</option>';
+        slotInfo.innerHTML = 'Caricamento in corso...';
         slotInfo.className = 'form-help loading-state';
-
-        console.log('Inizio fetch...');
 
         fetch(url)
             .then(function(response) {
-                console.log('Response ricevuta:', response);
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-
                 if (!response.ok) {
-                    throw new Error('HTTP error! status: ' + response.status);
+                    throw new Error('Errore nel caricamento');
                 }
                 return response.json();
             })
-            .then(function(jsonData) {
-                console.log('JSON ricevuto:', jsonData);
-                console.log('Slots:', jsonData.slots);
-                console.log('Numero slots:', jsonData.slots ? jsonData.slots.length : 0);
-
+            .then(function(data) {
                 slotSelect.innerHTML = '';
 
-                if (jsonData.slots && jsonData.slots.length > 0) {
-                    console.log('Popolamento select con', jsonData.slots.length, 'slot');
+                if (data.slots && data.slots.length > 0) {
                     slotSelect.innerHTML = '<option value="">Seleziona uno slot</option>';
 
-                    for (let i = 0; i < jsonData.slots.length; i++) {
-                        const slot = jsonData.slots[i];
-                        console.log('Slot', i, ':', slot);
-
+                    for (let i = 0; i < data.slots.length; i++) {
+                        const slot = data.slots[i];
                         const option = document.createElement('option');
                         option.value = slot.idSlotOrario;
                         option.textContent = slot.oraInizio + ' - ' + slot.oraFine;
@@ -529,33 +500,22 @@
                         slotSelect.appendChild(option);
                     }
 
-                    slotInfo.innerHTML = jsonData.slots.length + ' slot disponibili';
+                    slotInfo.innerHTML = data.slots.length + ' slot disponibili';
                     slotInfo.className = 'form-help success-state';
-                    console.log('Popolamento completato');
-
                 } else {
-                    console.log('Nessuno slot disponibile');
                     slotSelect.innerHTML = '<option value="">Nessuno slot disponibile</option>';
-                    slotInfo.innerHTML = 'Nessuno slot disponibile per questa combinazione';
+                    slotInfo.innerHTML = 'Nessuno slot disponibile per questa data/sala';
                     slotInfo.className = 'form-help error-state';
                 }
 
                 slotSelect.disabled = false;
-                console.log('=== FINE caricaSlotPerRiga (SUCCESS) ===');
             })
             .catch(function(error) {
-                console.error('=== ERRORE CATCH ===');
-                console.error('Tipo errore:', error.name);
-                console.error('Messaggio:', error.message);
-                console.error('Stack:', error.stack);
-                console.error('Error completo:', error);
-
+                console.error('Errore:', error);
                 slotSelect.innerHTML = '<option value="">Errore nel caricamento</option>';
                 slotInfo.innerHTML = 'Errore nel caricamento degli slot';
                 slotInfo.className = 'form-help error-state';
                 slotSelect.disabled = false;
-
-                console.log('=== FINE caricaSlotPerRiga (ERROR) ===');
             });
     }
 </script>

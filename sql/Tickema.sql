@@ -276,9 +276,8 @@ INSERT INTO SLOTORARI (oraInizio, oraFine, stato, data) VALUES
                                                             ('12:30', '15:30', 'DISPONIBILE', '2026-02-10'),
                                                             ('16:00', '19:00', 'DISPONIBILE', '2026-02-10'),
 
-                                                           ('19:30', '22:30', 'DISPONIBILE', '2026-02-10');
-
-
+                                                           ('19:30', '22:30', 'DISPONIBILE', '2026-02-10'),
+                                                            ('19:30', '22:30', 'DISPONIBILE', '2026-01-03');
 
 -- Slot per tutto Gennaio 2026
 -- 4 slot al giorno × 31 giorni = 124 slot totali
