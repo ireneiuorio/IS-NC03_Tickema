@@ -12,6 +12,11 @@
   <!-- CSS Base -->
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     /* Hero Section */
     .hero {
@@ -19,19 +24,37 @@
       color: white;
       padding: 60px 30px;
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+      background-size: cover;
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
     }
 
     .hero h1 {
-      font-size: 2.5em;
-      font-weight: bold;
-      font-style: italic;
-      margin-bottom: 10px;
-      letter-spacing: 2px;
+      font-size: 2.8em;
+      font-weight: 700;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
     }
 
     .hero p {
-      font-size: 1.1em;
+      font-size: 1.2em;
       opacity: 0.95;
     }
 
@@ -45,38 +68,35 @@
     /* Form Card */
     .form-card {
       background: white;
-      border-radius: 15px;
-      padding: 40px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      padding: 50px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     }
 
     /* Messaggi */
     .alert {
-      padding: 15px 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border-left: 4px solid var(--primary);
     }
 
     .alert-danger {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+      background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+      border-left-color: #f44336;
+      color: #c62828;
     }
 
     .alert-warning {
-      background:var(--primary);
-      color: white;
-      border: 1px solid #ffeaa7;
+      background: white;
+      color: var(--primary);
     }
 
     /* Form Sections */
     .form-section {
-      margin-bottom: 35px;
-      padding-bottom: 25px;
-      border-bottom: 2px solid #e9ecef;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 2px solid #f0f0f0;
     }
 
     .form-section:last-of-type {
@@ -84,42 +104,56 @@
     }
 
     .form-section h3 {
-      font-size: 1.4em;
-      color: var(--dark);
-      margin-bottom: 20px;
+      font-size: 1.5em;
+      color: var(--primary);
+      margin-bottom: 25px;
       font-weight: 600;
+      position: relative;
+      padding-left: 15px;
+    }
+
+    .form-section h3::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+      border-radius: 2px;
     }
 
     /* Form Groups */
     .form-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-bottom: 20px;
+      gap: 25px;
+      margin-bottom: 25px;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     .form-label {
       display: block;
       font-weight: 600;
       color: var(--dark);
-      margin-bottom: 8px;
-      font-size: 0.95em;
+      margin-bottom: 10px;
+      font-size: 1em;
     }
 
     .form-label span {
-      color: #dc3545;
+      color: var(--primary);
     }
 
     .form-input,
     .form-select {
       width: 100%;
-      padding: 12px 15px;
+      padding: 15px;
       border: 2px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 1em;
       transition: all 0.3s ease;
       font-family: inherit;
@@ -129,30 +163,45 @@
     .form-select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(109, 93, 110, 0.1);
+      box-shadow: 0 0 0 4px rgba(109, 93, 110, 0.1);
     }
 
     .form-help {
-      font-size: 0.85em;
+      font-size: 0.9em;
       color: #666;
-      margin-top: 5px;
+      margin-top: 8px;
       display: block;
+      font-style: italic;
+    }
+
+    /* Loading State */
+    .loading-state {
+      color: #666;
+      font-style: italic;
+    }
+
+    .success-state {
+      color: var(--primary);
+    }
+
+    .error-state {
+      color: #f44336;
     }
 
     /* Form Actions */
     .form-actions {
       display: flex;
-      gap: 15px;
-      margin-top: 30px;
-      padding-top: 30px;
-      border-top: 2px solid var(--border);
+      gap: 20px;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 2px solid #f0f0f0;
     }
 
     .btn {
-      padding: 12px 30px;
+      padding: 18px 40px;
       border: none;
-      border-radius: 8px;
-      font-size: 1em;
+      border-radius: 12px;
+      font-size: 1.2em;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -161,36 +210,37 @@
       text-align: center;
     }
 
-    .btn-success {
-      background: var(--primary);
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
       color: white;
       flex: 1;
+      box-shadow: 0 5px 20px rgba(109, 93, 110, 0.3);
     }
 
-    .btn-success:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(109, 93, 110, 0.4);
     }
 
     .btn-secondary {
       background: white;
-      color: var(--dark);
-      border: 2px solid var(--border);
+      color: var(--primary);
+      border: 2px solid var(--primary);
     }
 
     .btn-secondary:hover {
-      border-color: var(--primary);
       background: var(--light-gray);
+      transform: translateY(-2px);
     }
 
     /* Responsive */
     @media (max-width: 768px) {
       .hero h1 {
-        font-size: 1.8em;
+        font-size: 2em;
       }
 
       .form-card {
-        padding: 25px;
+        padding: 30px;
       }
 
       .form-row {
@@ -210,8 +260,10 @@
 
 <!-- Hero Section -->
 <section class="hero">
-  <h1>Modifica Programmazione</h1>
-  <p>ID: #${programmazione.idProgrammazione} - ${programmazione.film.titolo}</p>
+  <div class="hero-content">
+    <h1>Modifica Programmazione</h1>
+    <p>ID: #${programmazione.idProgrammazione} - ${programmazione.film.titolo}</p>
+  </div>
 </section>
 
 <!-- Main Content -->
@@ -221,7 +273,7 @@
     <!-- Messaggi di Errore -->
     <c:if test="${not empty messaggioErrore}">
       <div class="alert alert-danger">
-        <span>${messaggioErrore}</span>
+          ${messaggioErrore}
       </div>
     </c:if>
 
@@ -246,7 +298,7 @@
 
         <!-- SEZIONE DATA E SALA -->
         <div class="form-section">
-          <h3> Data e Sala</h3>
+          <h3>Data e Sala</h3>
 
           <div class="form-row">
             <div class="form-group">
@@ -303,18 +355,18 @@
                 </option>
               </c:forEach>
             </select>
-            <small class="form-help">Slot attualmente selezionato + altri disponibili</small>
+            <small class="form-help" id="slotInfo">Slot attualmente selezionato + altri disponibili</small>
           </div>
         </div>
 
-        <!-- SEZIONE PREZZI E STATO -->
+        <!-- SEZIONE PREZZI E TIPO -->
         <div class="form-section">
-          <h3>Prezzi, Tipo e Stato</h3>
+          <h3>Prezzi e Tipo</h3>
 
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="prezzoBase">
-                Prezzo Base (€) <span>*</span>
+                Prezzo Base <span>*</span>
               </label>
               <input type="number"
                      id="prezzoBase"
@@ -332,13 +384,18 @@
                 Tipo Programmazione <span>*</span>
               </label>
               <select id="tipo" name="tipo" class="form-select" required>
-                <option value="STANDARD" ${programmazione.tipo == 'STANDARD' ? 'selected' : ''}>STANDARD</option>
+                <option value="STANDARD" ${programmazione.tipo == 'STANDARD' ? 'selected' : ''}>Standard</option>
                 <option value="3D" ${programmazione.tipo == '3D' ? 'selected' : ''}>3D</option>
                 <option value="IMAX" ${programmazione.tipo == 'IMAX' ? 'selected' : ''}>IMAX</option>
-                <option value="DOLBY_ATMOS" ${programmazione.tipo == 'DOLBY_ATMOS' ? 'selected' : ''}>DOLBY ATMOS</option>
+                <option value="DOLBY_ATMOS" ${programmazione.tipo == 'DOLBY_ATMOS' ? 'selected' : ''}>Dolby Atmos</option>
               </select>
             </div>
           </div>
+        </div>
+
+        <!-- SEZIONE STATO E TARIFFA -->
+        <div class="form-section">
+          <h3>Stato e Tariffa</h3>
 
           <div class="form-row">
             <div class="form-group">
@@ -351,11 +408,12 @@
                 <option value="In Corso" ${programmazione.stato == 'In Corso' ? 'selected' : ''}>In Corso</option>
                 <option value="Conclusa" ${programmazione.stato == 'Conclusa' ? 'selected' : ''}>Conclusa</option>
               </select>
+              <small class="form-help">Cambiando a "Annullata" verranno rimborsati automaticamente tutti i biglietti</small>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="idTariffa">
-                Tariffa Speciale (opzionale)
+                Tariffa Speciale
               </label>
               <select id="idTariffa" name="idTariffa" class="form-select">
                 <option value="">Nessuna tariffa</option>
@@ -373,8 +431,8 @@
 
         <!-- PULSANTI -->
         <div class="form-actions">
-          <button type="submit" class="btn btn-success">
-             Salva Modifiche
+          <button type="submit" class="btn btn-primary">
+            Salva Modifiche
           </button>
           <a href="${pageContext.request.contextPath}/admin/programmazione?action=dettaglio&id=${programmazione.idProgrammazione}"
              class="btn btn-secondary">
@@ -393,25 +451,42 @@
 
 <!-- JavaScript -->
 <script>
-  // Validazione form
+  const contextPath = '${pageContext.request.contextPath}';
+
   function validaFormModifica() {
     const prezzoBase = parseFloat(document.getElementById('prezzoBase').value);
 
     if (prezzoBase <= 0) {
-      alert('Il prezzo base deve essere maggiore di zero!');
+      alert('Il prezzo base deve essere maggiore di zero');
       return false;
     }
 
-    // Conferma se sta cambiando slot/sala
     const salaOriginale = ${programmazione.idSala};
     const slotOriginale = ${programmazione.idSlotOrari};
+    const statoOriginale = '${programmazione.stato}';
 
     const salaNuova = parseInt(document.getElementById('idSala').value);
     const slotNuovo = parseInt(document.getElementById('idSlotOrario').value);
+    const statoNuovo = document.getElementById('stato').value;
 
+    // Conferma annullamento
+    if (statoNuovo === 'Annullata' && statoOriginale !== 'Annullata') {
+      return confirm(
+              'ATTENZIONE: Annullamento Programmazione\n\n' +
+              'Confermando questa operazione:\n\n' +
+              '• Tutti i biglietti venduti verranno RIMBORSATI automaticamente\n' +
+              '• Gli importi verranno restituiti sul saldo degli utenti\n' +
+              '• Lo slot orario verrà LIBERATO\n' +
+              '• Lo stato diventerà ANNULLATA\n\n' +
+              'Questa operazione è irreversibile.\n\n' +
+              'Confermi l\'annullamento della programmazione?'
+      );
+    }
+
+    // Conferma cambio slot/sala
     if (salaNuova !== salaOriginale || slotNuovo !== slotOriginale) {
       return confirm(
-              'ATTENZIONE!\n\n' +
+              'ATTENZIONE: Modifica Slot/Sala\n\n' +
               'Stai modificando sala o slot orario.\n\n' +
               '• Il vecchio slot verrà LIBERATO\n' +
               '• Il nuovo slot verrà OCCUPATO\n\n' +
@@ -422,44 +497,76 @@
     return true;
   }
 
-  // Caricamento dinamico slot disponibili (opzionale per modifica)
   function caricaSlotDisponibili() {
-    const idSala = document.getElementById('idSala').value;
-    const data = document.getElementById('data').value;
-    const selectSlot = document.getElementById('idSlotOrario');
+    const dataInput = document.getElementById('data');
+    const salaSelect = document.getElementById('idSala');
+    const slotSelect = document.getElementById('idSlotOrario');
+    const slotInfo = document.getElementById('slotInfo');
 
-    if (!idSala || !data) {
+    const data = dataInput.value;
+    const sala = salaSelect.value;
+
+    if (!data || !sala) {
+      slotInfo.innerHTML = 'Seleziona sala e data per caricare gli slot';
+      slotInfo.className = 'form-help';
       return;
     }
 
-    // AJAX per caricare slot disponibili
-    fetch('${pageContext.request.contextPath}/admin/programmazione?action=slotDisponibili&idSala=' + idSala + '&data=' + data)
-            .then(response => response.json())
-            .then(data => {
-              // Mantieni lo slot corrente come prima opzione
-              const slotCorrente = selectSlot.options[0].value;
-              const slotCorrenteTesto = selectSlot.options[0].text;
+    const url = contextPath + '/admin/programmazione?action=slotDisponibili&idSala=' + sala + '&data=' + data;
 
-              selectSlot.innerHTML = '';
+    slotSelect.disabled = true;
+    slotInfo.innerHTML = 'Caricamento in corso...';
+    slotInfo.className = 'form-help loading-state';
 
-              // Aggiungi slot corrente
+    // Salva lo slot corrente
+    const slotCorrente = slotSelect.options[0].value;
+    const slotCorrenteTesto = slotSelect.options[0].text;
+
+    fetch(url)
+            .then(function(response) {
+              if (!response.ok) {
+                throw new Error('Errore nel caricamento');
+              }
+              return response.json();
+            })
+            .then(function(data) {
+              slotSelect.innerHTML = '';
+
+              // Ripristina slot corrente come prima opzione
               const optionCorrente = document.createElement('option');
               optionCorrente.value = slotCorrente;
               optionCorrente.textContent = slotCorrenteTesto;
-              selectSlot.appendChild(optionCorrente);
+              slotSelect.appendChild(optionCorrente);
 
               // Aggiungi altri slot disponibili
               if (data.slots && data.slots.length > 0) {
-                data.slots.forEach(slot => {
+                for (let i = 0; i < data.slots.length; i++) {
+                  const slot = data.slots[i];
                   const option = document.createElement('option');
                   option.value = slot.idSlotOrario;
                   option.textContent = slot.oraInizio + ' - ' + slot.oraFine + ' (' + slot.stato + ')';
-                  selectSlot.appendChild(option);
-                });
+
+                  if (slot.stato === 'OCCUPATO') {
+                    option.disabled = true;
+                  }
+
+                  slotSelect.appendChild(option);
+                }
+
+                slotInfo.innerHTML = data.slots.length + ' slot disponibili';
+                slotInfo.className = 'form-help success-state';
+              } else {
+                slotInfo.innerHTML = 'Nessun altro slot disponibile';
+                slotInfo.className = 'form-help';
               }
+
+              slotSelect.disabled = false;
             })
-            .catch(error => {
-              console.error('Errore nel caricamento slot:', error);
+            .catch(function(error) {
+              console.error('Errore:', error);
+              slotInfo.innerHTML = 'Errore nel caricamento degli slot';
+              slotInfo.className = 'form-help error-state';
+              slotSelect.disabled = false;
             });
   }
 </script>
