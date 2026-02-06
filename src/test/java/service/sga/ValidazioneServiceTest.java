@@ -48,7 +48,7 @@ class ValidazioneServiceTest {
     void setUp() throws Exception {
         validazioneService = new ValidazioneService(mockConnection);
 
-        // ✅ USA REFLECTION per iniettare i mock
+        // USA REFLECTION per iniettare i mock
         Field bigliettoDAOField = ValidazioneService.class.getDeclaredField("bigliettoDAO");
         bigliettoDAOField.setAccessible(true);
         bigliettoDAOField.set(validazioneService, mockBigliettoDAO);
@@ -248,7 +248,7 @@ class ValidazioneServiceTest {
     }
 
     @Test
-    @DisplayName("TC7_PER_1: Validazione con successo ✅")
+    @DisplayName("TC7_PER_1: Validazione con successo")
     void testValidazioneConSuccesso() throws Exception {
         // Arrange
         Biglietto bigliettoValido = creaBigliettoConStato("Emesso", LocalDate.now());

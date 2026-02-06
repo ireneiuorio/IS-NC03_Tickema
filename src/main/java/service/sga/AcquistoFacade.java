@@ -26,7 +26,7 @@ import java.util.List;
  * FACADE PATTERN per il processo di ACQUISTO BIGLIETTI
  *
  * IMPORTANTE: Questa facade viene chiamata DOPO che i posti sono già stati
- * occupati temporaneamente dal checkout (via PostoService.occupaTemporaneamente).
+ * occupati temporaneamente dal checkout
  * Quindi i posti sono GIÀ OCCUPATO quando arriviamo qui.
  */
 public class AcquistoFacade {

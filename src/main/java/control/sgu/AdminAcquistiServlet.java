@@ -43,11 +43,11 @@ public class AdminAcquistiServlet extends HttpServlet {
             List<Acquisto> acquisti;
 
             if (statoFiltro != null && !statoFiltro.isEmpty()) {
-                // Filtra per stato
-                acquisti = acquistoService.getAcquistiPerStato(statoFiltro);
+                // Filtra per stato CON dati utente
+                acquisti = acquistoService.getAcquistiPerStatoConUtenti(statoFiltro);
             } else {
-                // Tutti gli acquisti
-                acquisti = acquistoService.getAllAcquisti();
+                // Tutti gli acquisti CON dati utente
+                acquisti = acquistoService.getAllAcquistiConUtenti();
             }
 
             // Statistiche

@@ -7,6 +7,7 @@ import exception.sga.acquisto.AcquistoNonValidoException;
 import exception.sga.acquisto.RimborsoNonConsentitoException;
 import exception.sga.acquisto.SalvataggioAcquistoException;
 import repository.sga.AcquistoDAO;
+import repository.sgu.UtenteDAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -185,4 +186,36 @@ public class AcquistoService {
                 .mapToDouble(Acquisto::getImportoTotale)
                 .sum();
     }
+
+
+    public List<Acquisto> getAllAcquistiConUtenti() throws SQLException {
+        List<Acquisto> acquisti = acquistoDAO.doRetrieveAll();
+        UtenteDAO utenteDAO = new UtenteDAO(connection);
+
+        for (Acquisto acquisto : acquisti) {
+            Utente utenteCompleto = utenteDAO.doRetrieveById(acquisto.getUtente().getIdAccount());
+            if (utenteCompleto != null) {
+                acquisto.setUtente(utenteCompleto);
+            }
+        }
+
+        return acquisti;
+    }
+
+    public List<Acquisto> getAcquistiPerStatoConUtenti(String stato)
+            throws AcquistoNonValidoException, SQLException {
+        validaStato(stato);
+        List<Acquisto> acquisti = acquistoDAO.doRetrieveByStato(stato);
+        UtenteDAO utenteDAO = new UtenteDAO(connection);
+
+        for (Acquisto acquisto : acquisti) {
+            Utente utenteCompleto = utenteDAO.doRetrieveById(acquisto.getUtente().getIdAccount());
+            if (utenteCompleto != null) {
+                acquisto.setUtente(utenteCompleto);
+            }
+        }
+
+        return acquisti;
+    }
 }
+
